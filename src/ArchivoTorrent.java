@@ -3,7 +3,8 @@ import java.net.URL;
 
 public class ArchivoTorrent {
 	private String titulo;
-	private URL url;
+	private URL torrentUrl;
+	private URL detailsURL;
 	private String categoria;
 	public String getTitulo() {
 		return titulo;
@@ -11,16 +12,22 @@ public class ArchivoTorrent {
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
 	}
-	public URL getUrl() {
-		return url;
-	}
-	public void setUrl(URL url) {
-		this.url = url;
-	}
 	public String getCategoria() {
 		return categoria;
 	}
 	public void setCategoria(String categoria) {
 		this.categoria = categoria;
+	}
+	public URL getDetailsURL() {
+		return detailsURL;
+	}
+	public void setDetailsURL(URL detailsURL) {
+		this.detailsURL = detailsURL;
+	}
+	public URL getTorrentUrl() {
+		return torrentUrl;
+	}
+	public void setTorrentUrl(URL torrentUrl) {
+		this.torrentUrl = torrentUrl;
 	}	
 }

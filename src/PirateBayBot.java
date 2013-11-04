@@ -1,13 +1,15 @@
 import java.net.URI;
 import java.net.URL;
+import java.util.Locale.Category;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 
 public class PirateBayBot {
+	private static String urlBase = "thepiratebay.sx";
+	
 	public static void searchTorrent(String search) throws Exception{
-		String urlBase = "thepiratebay.sx";
         String query = "/search/" + search + "/0/99/0";
         
         URI uri = new URI("http", urlBase, query, null);
@@ -37,26 +39,27 @@ public class PirateBayBot {
             while(m.find()){
             	count++;
                 System.out.println("------------ " + count + " ------------");
-                //String fieldRegex = "<td.*?>(.*?)</td>";
-                String fieldRegex = "\\<td\\sclass=\"vertTh\"\\>\\<a.*?\\>(.*?)\\</a\\>";//.*?<div.*?class=\"detName\".*?<a href=\"(.*?)\".*?class=\"detLink\".*?>(.*?)</a>.*?</td>";
+                String fieldRegex = "\\<td.*?\\>(.*?)\\</td\\>";
+                fieldRegex = "<a href.*?>.*?</a>";//"\\<a href=\"(.*?)\".*?title=\"(.*?)\".*?\\>(.*?)\\</a\\>";
                 Pattern subP = Pattern.compile(fieldRegex);
                 //System.out.println(m.group());
                 Matcher subM = subP.matcher(m.group());
-                int count2 = 0;
+                String link = "";
+                String title = "";
+                String text = "";
                 while (subM.find()) {
-                    count2++;
-                    System.out.println(subM.groupCount() + " grupos");
-                    for (int i = 1; i < subM.groupCount(); i++) {
-                        if(i == 1){
-                        	System.out.print("Categoría: ");
-                        }else{
-                            System.out.print("Titulo: ");
-                        }
-                        System.out.println(subM.group(i));
-                    }
+                	//System.out.println("Num. grupos: " + subM.groupCount());
+                    for (int i = 0; i < subM.groupCount(); i++) {
+						System.out.println(subM.group(i));
+						if(i == 1){
+							link = subM.group(i);
+						}else if(i == 2){
+							title = subM.group(i);
+						}else if(i == 3){
+							text = subM.group(i);
+						}
+					}
                 }
-                if(count2 == 0)
-        			System.out.println("NOTHING FOUND");
             }
         }
         return new String[5];
