@@ -24,12 +24,11 @@ public class PirateBayBot {
 	}
 	
 	private static String[] listResults(String httpResponse){
-		String tableRowsRegex = ".*?<table id=\"searchResult\"><thead.*?</thead>(.*?)</table>.*?";
+		String tableRowsRegex = ".*?<table id=\"searchResult\".*?<thead.*?</thead>(.*?)</table>.*?";
 		Pattern p = Pattern.compile(tableRowsRegex);
 		Matcher m = p.matcher(httpResponse);
 	    String resultados;
 	    if(m.find()) {
-            System.out.println("Num de grupos: " + m.group(1));
             resultados = m.group(1);
             String rowRegex = "<tr>(.*?)</tr>";
             p = Pattern.compile(rowRegex);
@@ -38,14 +37,29 @@ public class PirateBayBot {
             while(m.find()){
             	count++;
             	System.out.println("------------ " + count + " ------------");
-            	String fieldRegex = "<td.*?>(.*?)</td>";
+            	//String fieldRegex = "<td.*?>(.*?)</td>";
+            	String fieldRegex = "<td.*?>.*?<div.*?class=\"detName\".*?<a\\s*?href=\"(.*?)\".*?class=\"detLink\".*?>(.*?)</a>.*?</td>";
             	Pattern subP = Pattern.compile(fieldRegex);
-            	System.out.println(m.group());
+            	//System.out.println(m.group());
             	Matcher subM = subP.matcher(m.group());
+            	int count2 = 0;
             	while (subM.find()) {
-					System.out.println(subM.group());
+            		count2++;
+            		System.out.println(subM.groupCount() + " grupos");
+            		for (int i = 0; i < subM.groupCount(); i++) {
+            			if(i == 0){
+            				System.out.print("Enlace: ");
+            			}else{
+            				System.out.print("Titulo: ");
+            			}
+            			System.out.println(subM.group(i));
+					}
 				}
+            	if(count2 == 0)
+            		System.out.println("NOTHING FOUND");
             }
+	    }else{
+	    	System.out.println("NOTHING FOUND!!!");
 	    }
 		return new String[5];
 	}
