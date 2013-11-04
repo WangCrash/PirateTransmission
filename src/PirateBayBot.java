@@ -40,7 +40,7 @@ public class PirateBayBot {
             	count++;
                 System.out.println("------------ " + count + " ------------");
                 String fieldRegex = "\\<td.*?\\>(.*?)\\</td\\>";
-                fieldRegex = "<a href.*?>.*?</a>";//"\\<a href=\"(.*?)\".*?title=\"(.*?)\".*?\\>(.*?)\\</a\\>";
+                fieldRegex = "\\<a href=\"(.*?)\".*?title=\"(.*?)\".*?\\>(.*?)\\</a\\>";
                 Pattern subP = Pattern.compile(fieldRegex);
                 //System.out.println(m.group());
                 Matcher subM = subP.matcher(m.group());
