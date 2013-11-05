@@ -1,5 +1,6 @@
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,7 +24,7 @@ public class PirateBayBot {
             
     }
     
-    private static String[] listResults(String httpResponse){
+    private static String[] listResults(String httpResponse) throws Exception{
     	String tableRowsRegex = ".*?\\<table id=\"searchResult\".*?\\<thead.*?\\</thead\\>(.*?)\\</table\\>.*?";
         Pattern p = Pattern.compile(tableRowsRegex);
         Matcher m = p.matcher(httpResponse);

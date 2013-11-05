@@ -36,7 +36,7 @@ public class ConnectionManager {
 		in.close();
  
 		//print result
-		return response.toString();
+		return new String(response.toString().getBytes(), "UTF-8");
 	}
 	
 	private static String getHTMLStreamForTesting(String testUrl) throws Exception{
@@ -52,7 +52,7 @@ public class ConnectionManager {
             result += inputLine;
         }
         in.close();
-        return result;
+        return new String(result.getBytes(), "UTF-8");//result;
 	}
 
 }
