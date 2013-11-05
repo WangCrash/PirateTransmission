@@ -30,4 +30,13 @@ public class ArchivoTorrent {
 	public void setTorrentUrl(URL torrentUrl) {
 		this.torrentUrl = torrentUrl;
 	}	
+	@Override
+	public String toString(){
+		String respuesta = ""; 
+		respuesta = "Titulo: " + this.getTitulo() + "\n";
+		respuesta += "Categoría: " + this.getCategoria() + "\n";
+		respuesta += "Details URL: " + this.getDetailsURL().toString() + "\n";
+		respuesta += "Torrent URL: " + this.getTorrentUrl().toString() + "\n";
+		return respuesta;
+	}
 }
