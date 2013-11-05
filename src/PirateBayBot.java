@@ -1,6 +1,6 @@
 import java.net.URI;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 public class PirateBayBot {
 	private static String urlBase = "thepiratebay.sx";
 	
-	public static void searchTorrent(String search) throws Exception{
+	public static ArchivoTorrent[] searchTorrent(String search) throws Exception{
         String query = "/search/" + search + "/0/99/0";
         
         URI uri = new URI("http", urlBase, query, null);
@@ -18,8 +18,7 @@ public class PirateBayBot {
         
         String response = ConnectionManager.responseByGetRequest(url, true);
         
-        ArchivoTorrent[] lista = listResults(response);
-        System.out.println(lista.toString());
+        return listResults(response);
 	}
         
     public static void getTorrent(){
@@ -41,21 +40,20 @@ public class PirateBayBot {
             int count = 0;
             while(m.find()){
             	count++;
+            	ArchivoTorrent at = new ArchivoTorrent();
                 System.out.println("------------ " + count + " ------------");
-                String fieldRegex = "\\<td.*?\\>(.*?)\\</td\\>";
-                fieldRegex = "<a href=\"(.*?)\".*?title=\"(.*?)\">(.*?)</a>";//"\\<a href=\"(.*?)\".*?title=\"(.*?)\".*?\\>(.*?)\\</a\\>";
+                //String fieldRegex = "\\<td.*?\\>(.*?)\\</td\\>";
+                String fieldRegex = "<a href=\"(.*?)\".*?title=\"(.*?)\">(.*?)</a>";
                 Pattern subP = Pattern.compile(fieldRegex);
                 //System.out.println(m.group());
                 Matcher subM = subP.matcher(m.group());
                 String link = "";
                 String title = "";
                 String text = "";
-                int field = 0;
-                ArchivoTorrent at = new ArchivoTorrent();
                 while (subM.find()) {
                 	//System.out.println("Num. grupos: " + subM.groupCount());
                     for (int i = 0; i <= subM.groupCount(); i++) {
-						System.out.println(subM.group(i));
+						//System.out.println(subM.group(i));
 						switch(i){
 						case 1:
 							link = subM.group(i);
@@ -68,29 +66,26 @@ public class PirateBayBot {
 							break;
 						}
 					}
-                    switch(field%3){
-					case 0:
-						at.setCategoria(text);
-						break;
-					case 1:
-						at.setDetailsURL(new URI(link).toURL());
+                    if(title.contains("categor")){
+                    	if((at.getCategoria() != null) && !at.getCategoria().isEmpty()){
+                    		at.setCategoria(at.getCategoria() + " -> " + text);
+                    	}else{
+                    		at.setCategoria(text);
+                    	}
+                    }else if(title.contains("Detalles")){
+                    	at.setDetailsURL(new URI("http", urlBase, link, null).toURL());
 						at.setTitulo(text);
-						break;
-					case 2:
-						if(link.contains("//torrents.") || link.contains("magnet:")){
-							at.setTorrentUrl(new URI("http", urlBase, link, null).toURL());
-						}
-						break;
-					}
-					
-					field++;
-                    System.out.println("------fin-------");
+                    }else if(title.contains("magnet")){
+                    	
+                    	at.setMagneticLink(link);
+                    }else if(title.contains("torrent")){
+                    	at.setTorrentUrl(link);
+                    }
+                    //System.out.println("------fin-------");
                 }
-                if(!(at.getTorrentUrl() == null) || (at.getTorrentUrl().toString().isEmpty())){
-                	lista.add(at);
-                }
+                lista.add(at);
             }
         }
-        return (ArchivoTorrent[])lista.toArray();
+        return Arrays.copyOf(lista.toArray(), lista.toArray().length, ArchivoTorrent[].class);
     }
 }

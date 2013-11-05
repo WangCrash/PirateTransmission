@@ -3,7 +3,8 @@ import java.net.URL;
 
 public class ArchivoTorrent {
 	private String titulo;
-	private URL torrentUrl;
+	private String torrentUrl;
+	private String magneticLink;
 	private URL detailsURL;
 	private String categoria;
 	public String getTitulo() {
@@ -23,20 +24,31 @@ public class ArchivoTorrent {
 	}
 	public void setDetailsURL(URL detailsURL) {
 		this.detailsURL = detailsURL;
+	}	
+	public String getMagneticLink() {
+		return magneticLink;
 	}
-	public URL getTorrentUrl() {
+	public void setMagneticLink(String magneticLink) {
+		this.magneticLink = magneticLink;
+	}
+	public String getTorrentUrl() {
 		return torrentUrl;
 	}
-	public void setTorrentUrl(URL torrentUrl) {
+	public void setTorrentUrl(String torrentUrl) {
 		this.torrentUrl = torrentUrl;
-	}	
+	}
+	
 	@Override
 	public String toString(){
 		String respuesta = ""; 
 		respuesta = "Titulo: " + this.getTitulo() + "\n";
 		respuesta += "Categoría: " + this.getCategoria() + "\n";
-		respuesta += "Details URL: " + this.getDetailsURL().toString() + "\n";
-		respuesta += "Torrent URL: " + this.getTorrentUrl().toString() + "\n";
+		if(this.detailsURL != null)
+			respuesta += "Details URL: " + this.getDetailsURL().toString() + "\n";
+		if(this.getTorrentUrl() != null)
+			respuesta += "Torrent URL: " + this.getTorrentUrl().toString() + "\n";
+		if(this.getMagneticLink() != null)
+			respuesta += "Magnet Link: " + this.getMagneticLink() + "\n"; 
 		return respuesta;
 	}
 }

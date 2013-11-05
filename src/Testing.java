@@ -14,7 +14,11 @@ public class Testing {
         while ((inputLine = in.readLine()) != null) 
             System.out.println(inputLine);
         in.close();*/
-		PirateBayBot.searchTorrent("los amos de brooklyn");
+		ArchivoTorrent[] resultados = PirateBayBot.searchTorrent("los amos de brooklyn");
+		
+        for (int i = 0; i < resultados.length; i++) {
+			System.out.println(resultados[i].toString());
+		}
 	}
 	
 	private static void sendPost() throws Exception {
