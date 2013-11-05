@@ -1,6 +1,5 @@
 import java.net.URI;
 import java.net.URL;
-import java.util.Locale.Category;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,7 +30,7 @@ public class PirateBayBot {
         String resultados;
         if(m.find()) {
             resultados = m.group(1);
-            System.out.println(m.group(1));
+            System.out.println("BASE: " + m.group(1));
             String rowRegex = "\\<tr\\>(.*?)\\</tr\\>";
             p = Pattern.compile(rowRegex);
             m = p.matcher(resultados);
@@ -40,7 +39,7 @@ public class PirateBayBot {
             	count++;
                 System.out.println("------------ " + count + " ------------");
                 String fieldRegex = "\\<td.*?\\>(.*?)\\</td\\>";
-                fieldRegex = "\\<a href=\"(.*?)\".*?title=\"(.*?)\".*?\\>(.*?)\\</a\\>";
+                fieldRegex = "<a href=\"(.*?)\".*?title=\"(.*?)\">(.*?)</a>";//"\\<a href=\"(.*?)\".*?title=\"(.*?)\".*?\\>(.*?)\\</a\\>";
                 Pattern subP = Pattern.compile(fieldRegex);
                 //System.out.println(m.group());
                 Matcher subM = subP.matcher(m.group());
@@ -49,7 +48,7 @@ public class PirateBayBot {
                 String text = "";
                 while (subM.find()) {
                 	//System.out.println("Num. grupos: " + subM.groupCount());
-                    for (int i = 0; i < subM.groupCount(); i++) {
+                    for (int i = 0; i <= subM.groupCount(); i++) {
 						System.out.println(subM.group(i));
 						if(i == 1){
 							link = subM.group(i);
@@ -59,6 +58,7 @@ public class PirateBayBot {
 							text = subM.group(i);
 						}
 					}
+                    System.out.println("------fin-------");
                 }
             }
         }

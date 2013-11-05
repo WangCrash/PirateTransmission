@@ -10,7 +10,7 @@ public class ConnectionManager {
 	
 	public static String responseByGetRequest(URL obj, boolean testing) throws Exception{
 		if(testing){
-			return getHTMLStreamForTesting("http://localhost:8080");
+			return getHTMLStreamForTesting("http://localhost:8081");
 		}
 		
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
