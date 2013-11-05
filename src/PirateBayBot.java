@@ -38,7 +38,7 @@ public class PirateBayBot {
             	count++;
             	System.out.println("------------ " + count + " ------------");
             	//String fieldRegex = "<td.*?>(.*?)</td>";
-            	String fieldRegex = "<td.*?>.*?<div.*?class=\"detName\".*?<a\\s*?href=\"(.*?)\".*?class=\"detLink\".*?>(.*?)</a>.*?</td>";
+            	String fieldRegex = "<td><div\\s*?class=\"detName\".*?<a\\s*?href=\"(.*?)\".*?class=\"detLink\".*?>(.*?)</a>.*?</td>";
             	Pattern subP = Pattern.compile(fieldRegex);
             	//System.out.println(m.group());
             	Matcher subM = subP.matcher(m.group());
@@ -46,8 +46,8 @@ public class PirateBayBot {
             	while (subM.find()) {
             		count2++;
             		System.out.println(subM.groupCount() + " grupos");
-            		for (int i = 0; i < subM.groupCount(); i++) {
-            			if(i == 0){
+            		for (int i = 1; i < subM.groupCount(); i++) {
+            			if(i == 1){
             				System.out.print("Enlace: ");
             			}else{
             				System.out.print("Titulo: ");
