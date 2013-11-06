@@ -35,7 +35,7 @@ public class PirateBayBot {
         int count = 0;
         if(m.find()) {
             resultados = m.group(1);
-            System.out.println("BASE: " + m.group(1));
+            //System.out.println("BASE: " + m.group(1));
             String rowRegex = "<tr>(.*?)</tr>";
             p = Pattern.compile(rowRegex);
             m = p.matcher(resultados);
@@ -43,7 +43,7 @@ public class PirateBayBot {
             while(m.find()){
             	count++;
             	ArchivoTorrent at = new ArchivoTorrent();
-                System.out.println("------------ " + count + " ------------");
+                //System.out.println("------------ " + count + " ------------");
                 //String fieldRegex = "\\<td.*?\\>(.*?)\\</td\\>";
                 String fieldRegex = "<a href=\"(.*?)\".*?title=\"(.*?)\">(.*?)</a>";
                 Pattern subP = Pattern.compile(fieldRegex);
@@ -55,7 +55,7 @@ public class PirateBayBot {
                 while (subM.find()) {
                 	//System.out.println("Num. grupos: " + subM.groupCount());
                     for (int i = 0; i <= subM.groupCount(); i++) {
-						System.out.println(subM.group(i));
+						//System.out.println(subM.group(i));
 						switch(i){
 						case 1:
 							link = subM.group(i);

@@ -65,7 +65,7 @@ public class ConnectionManager {
         return new String(result.getBytes(), "UTF-8");//result;
 	}
 	
-	public static String responseByPostRequest(URL obj, String urlParameters, String requireId) throws Exception {
+	public static String[] responseByPostRequest(URL obj, String urlParameters, String requireId) throws Exception {
 		 		
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
  
@@ -113,11 +113,11 @@ public class ConnectionManager {
 		in.close();
  
 		//print result
-		return response.toString();
+		return new String[]{String.valueOf(responseCode), response.toString()};
 
 	}
 	
-	public static String getAuthorization(URL obj) throws Exception{
+	public static String[] getAuthorization(URL obj) throws Exception{
 		
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
  
@@ -155,7 +155,7 @@ public class ConnectionManager {
 		in.close();
  
 		//print result
-		return new String(response.toString().getBytes(), "UTF-8");
+		return new String[]{String.valueOf(responseCode), new String(response.toString().getBytes(), "UTF-8")};
 	}
 
 }
