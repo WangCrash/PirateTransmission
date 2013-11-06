@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Testing {
 
 	public static void main(String[] args) throws Exception {
@@ -15,8 +17,25 @@ public class Testing {
         for (int i = 0; i < resultados.length; i++) {
 			System.out.println((i+1) + "- " + resultados[i].getTitulo());
 		}
+        System.out.print("Torrent: ");
+        int opcion;
+        do {
+        	String respuesta = leerTeclado();
+        	try{
+        		opcion = Integer.parseInt(respuesta);
+        		break;
+        	}catch(Exception e){
+        		System.out.println("ERROR: se esperaba nœmero de torrent");
+        	}
+		} while (true);
+        	
         if(TransmissionManager.loginOnTranssmission()){
-        	TransmissionManager.addTorrent(resultados[10]);
+        	TransmissionManager.addTorrent(resultados[opcion-1]);
         }
+	}
+	
+	private static String leerTeclado(){
+		Scanner sc = new Scanner(System.in);
+		return sc.nextLine();
 	}
 }
