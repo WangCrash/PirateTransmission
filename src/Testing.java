@@ -53,7 +53,9 @@ public class Testing {
 		}
 		
         for (int i = 0; i < resultados.length; i++) {
-			System.out.println((i+1) + "- " + resultados[i].getTitulo());
+			System.out.println((i+1) + ".-");
+			System.out.println("   Titulo: " + resultados[i].getTitulo());
+			System.out.println("   Detalles(web):" + resultados[i].getDetailsURL().toString());
 		}
         
         int opcion;

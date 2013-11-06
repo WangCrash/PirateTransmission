@@ -113,7 +113,7 @@ public class TransmissionManager {
 		
 		if(m.find()){
 			urlBase = m.group(1);
-			if(m.group(1).contains("transmission/rpc")){
+			if(!m.group(1).contains("transmission/rpc")){
 				System.out.println("transmission rpc host probably not well set");
 			}
 		}else{
