@@ -27,8 +27,15 @@ public class ConnectionManager {
 		System.out.println("\nSending 'GET' request to URL : " + obj.toString());
 		System.out.println("Response Code : " + responseCode);
  
-		BufferedReader in = new BufferedReader(
-		        new InputStreamReader(con.getInputStream()));
+		BufferedReader in;
+		if(responseCode > 200){
+			in = new BufferedReader(
+			        new InputStreamReader(con.getErrorStream()));
+			
+		}else{
+			in = new BufferedReader(
+			        new InputStreamReader(con.getInputStream()));
+		}
 		String inputLine;
 		StringBuffer response = new StringBuffer();
  
@@ -87,7 +94,16 @@ public class ConnectionManager {
 		System.out.println("Post parameters : " + urlParameters);
 		System.out.println("Response Code : " + responseCode);
  
-		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+		BufferedReader in;
+		
+		if(responseCode > 200){
+			in = new BufferedReader(
+			        new InputStreamReader(con.getErrorStream()));
+			
+		}else{
+			in = new BufferedReader(
+			        new InputStreamReader(con.getInputStream()));
+		}
 		String inputLine;
 		StringBuffer response = new StringBuffer();
  
@@ -120,6 +136,7 @@ public class ConnectionManager {
 		System.out.println("Response Code : " + responseCode);
 		
 		BufferedReader in;		
+		
 		if(responseCode > 200){
 			in = new BufferedReader(
 			        new InputStreamReader(con.getErrorStream()));
