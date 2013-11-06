@@ -1,8 +1,4 @@
-import java.io.*;
-import java.net.*;
-
 public class Testing {
-	private static String USER_AGENT = "orphean_navigator_2.0";
 
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
@@ -14,12 +10,13 @@ public class Testing {
         while ((inputLine = in.readLine()) != null) 
             System.out.println(inputLine);
         in.close();*/
-		ArchivoTorrent[] resultados = PirateBayBot.searchTorrent("127 horas");
+		ArchivoTorrent[] resultados = PirateBayBot.searchTorrent("leolo");
 		
         for (int i = 0; i < resultados.length; i++) {
-			System.out.println(resultados[i].toString());
+			System.out.println((i+1) + "- " + resultados[i].getTitulo());
 		}
-        TransmissionManager.loginOnTranssmission();
-        TransmissionManager.addTorrent(resultados[10]);
+        if(TransmissionManager.loginOnTranssmission()){
+        	TransmissionManager.addTorrent(resultados[10]);
+        }
 	}
 }

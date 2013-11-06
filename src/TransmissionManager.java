@@ -17,19 +17,22 @@ public class TransmissionManager {
 	private static String transmissionId = "5L38jNKUmN8ZiYP4Htx66kK0yXSn0QubVV2DuKVfuZly6P";
 	private static boolean logged = false;
 	
-	public static void loginOnTranssmission() throws URISyntaxException, MalformedURLException{
+	public static boolean loginOnTranssmission() throws URISyntaxException, MalformedURLException{
 		URI loginUri = new URI("http", urlBase, null);
         URL loginUrl = loginUri.toURL();
 		try {
 			String response = ConnectionManager.getAuthorization(loginUrl);
-			System.out.println("Server Response: " + response);
-			logged = true;
+			System.out.println("Server Response: " + response);			
 			TransmissionManager.captureTransmissionId(response);
+			logged = true;
+			return logged;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			System.out.println("Message: " + e.getMessage());
 			System.out.println("Cause: " + e.getCause());
 			System.out.println("Localized: " + e.getLocalizedMessage());
+			logged = false;
+			return logged;
 		}
 	}
 	

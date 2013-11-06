@@ -15,9 +15,9 @@ public class PirateBayBot {
         
         URI uri = new URI("http", urlBase, query, null);
         URL url = uri.toURL();
-        
+
         String response = ConnectionManager.responseByGetRequest(url, false);
-        System.out.println(response);
+        //System.out.println(response);
         
         return listResults(response);
 	}
@@ -74,7 +74,7 @@ public class PirateBayBot {
                     	}else{
                     		at.setCategoria(text);
                     	}
-                    }else if(title.contains("Detalles")){
+                    }else if(title.contains("Details") || (title.contains("Detalles"))){
                     	at.setDetailsURL(new URI("http", urlBase, link, null).toURL());
 						at.setTitulo(text);
                     }else if(title.contains("magnet")){
