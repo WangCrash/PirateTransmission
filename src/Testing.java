@@ -20,6 +20,6 @@ public class Testing {
 			System.out.println(resultados[i].toString());
 		}
         TransmissionManager.loginOnTranssmission();
-        TransmissionManager.addTorrent(resultados[0]);
+        TransmissionManager.addTorrent(resultados[10]);
 	}
 }

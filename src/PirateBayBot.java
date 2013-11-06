@@ -81,7 +81,8 @@ public class PirateBayBot {
                     	
                     	at.setMagneticLink(link);
                     }else if(title.contains("torrent")){
-                    	at.setTorrentUrl(link);
+                    	String torrent = "http:" + link;
+                    	at.setTorrentUrl(torrent);
                     }
                     //System.out.println("------fin-------");
                 }
