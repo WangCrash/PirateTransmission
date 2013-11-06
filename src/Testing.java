@@ -14,12 +14,12 @@ public class Testing {
         while ((inputLine = in.readLine()) != null) 
             System.out.println(inputLine);
         in.close();*/
-		ArchivoTorrent[] resultados = PirateBayBot.searchTorrent("los amos de brooklyn");
+		ArchivoTorrent[] resultados = PirateBayBot.searchTorrent("127 horas");
 		
         for (int i = 0; i < resultados.length; i++) {
 			System.out.println(resultados[i].toString());
 		}
-        
+        TransmissionManager.loginOnTranssmission();
         TransmissionManager.addTorrent(resultados[0]);
 	}
 }

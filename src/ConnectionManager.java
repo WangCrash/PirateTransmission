@@ -1,7 +1,10 @@
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.Authenticator;
 import java.net.HttpURLConnection;
+import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -63,13 +66,15 @@ public class ConnectionManager {
 		//add reuqest header
 		con.setRequestMethod("POST");
 		con.setRequestProperty("User-Agent", USER_AGENT);
-		con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+		con.setRequestProperty("Accept-Language", "es-ES,es;q=0.5");
 		if(requireId != null){
 			con.setRequestProperty("X-Transmission-Session-Id", requireId);
+
+	        String authString = TransmissionManager.user + ":" + TransmissionManager.password;
+	        String authStringEnc = Base64.encodeBytes(authString.getBytes());
+	        
+	        con.setRequestProperty("Authorization", "Basic " + authStringEnc);
 		}
- 
-		//String urlParameters = "sn=C02G8416DRJM&cn=&locale=&caller=&num=12345";
-		//String urlParameters = "s='la prueba'";
  
 		// Send post request
 		con.setDoOutput(true);
@@ -77,14 +82,13 @@ public class ConnectionManager {
 		wr.writeBytes(urlParameters);
 		wr.flush();
 		wr.close();
- 
+
 		int responseCode = con.getResponseCode();
 		System.out.println("\nSending 'POST' request to URL : " + obj.toString());
 		System.out.println("Post parameters : " + urlParameters);
 		System.out.println("Response Code : " + responseCode);
  
-		BufferedReader in = new BufferedReader(
-		        new InputStreamReader(con.getInputStream()));
+		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 		String inputLine;
 		StringBuffer response = new StringBuffer();
  
@@ -95,7 +99,47 @@ public class ConnectionManager {
  
 		//print result
 		return response.toString();
+
+	}
+	
+	public static String getAuthorization(URL obj) throws Exception{
+		
+		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
  
+		// optional default is GET
+		con.setRequestMethod("GET");
+ 
+		//add request header
+		con.setRequestProperty("User-Agent", USER_AGENT);
+		String authString = TransmissionManager.user + ":" + TransmissionManager.password;
+        String authStringEnc = Base64.encodeBytes(authString.getBytes());
+        
+        con.setRequestProperty("Authorization", "Basic " + authStringEnc);
+ 
+		int responseCode = con.getResponseCode();
+		System.out.println("\nSending 'GET' request to URL : " + obj.toString());
+		System.out.println("Response Code : " + responseCode);
+		
+		BufferedReader in;		
+		if(responseCode > 200){
+			in = new BufferedReader(
+			        new InputStreamReader(con.getErrorStream()));
+			
+		}else{
+			in = new BufferedReader(
+			        new InputStreamReader(con.getInputStream()));
+		}
+		
+		String inputLine;
+		StringBuffer response = new StringBuffer();
+ 
+		while ((inputLine = in.readLine()) != null) {
+			response.append(inputLine + "\n");
+		}
+		in.close();
+ 
+		//print result
+		return new String(response.toString().getBytes(), "UTF-8");
 	}
 
 }

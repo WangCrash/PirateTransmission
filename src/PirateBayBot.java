@@ -16,7 +16,8 @@ public class PirateBayBot {
         URI uri = new URI("http", urlBase, query, null);
         URL url = uri.toURL();
         
-        String response = ConnectionManager.responseByGetRequest(url, true);
+        String response = ConnectionManager.responseByGetRequest(url, false);
+        System.out.println(response);
         
         return listResults(response);
 	}
@@ -26,18 +27,19 @@ public class PirateBayBot {
     }
     
     private static ArchivoTorrent[] listResults(String httpResponse) throws Exception{
-    	String tableRowsRegex = ".*?\\<table id=\"searchResult\".*?\\<thead.*?\\</thead\\>(.*?)\\</table\\>.*?";
+    	String tableRowsRegex = "<table id=\"searchResult\".*?\\<thead.*?</thead>(.*?)</table>";
         Pattern p = Pattern.compile(tableRowsRegex);
         Matcher m = p.matcher(httpResponse);
         ArrayList<ArchivoTorrent> lista = new ArrayList<ArchivoTorrent>();
         String resultados;
+        int count = 0;
         if(m.find()) {
             resultados = m.group(1);
             System.out.println("BASE: " + m.group(1));
-            String rowRegex = "\\<tr\\>(.*?)\\</tr\\>";
+            String rowRegex = "<tr>(.*?)</tr>";
             p = Pattern.compile(rowRegex);
             m = p.matcher(resultados);
-            int count = 0;
+            
             while(m.find()){
             	count++;
             	ArchivoTorrent at = new ArchivoTorrent();
@@ -53,7 +55,7 @@ public class PirateBayBot {
                 while (subM.find()) {
                 	//System.out.println("Num. grupos: " + subM.groupCount());
                     for (int i = 0; i <= subM.groupCount(); i++) {
-						//System.out.println(subM.group(i));
+						System.out.println(subM.group(i));
 						switch(i){
 						case 1:
 							link = subM.group(i);
@@ -86,6 +88,7 @@ public class PirateBayBot {
                 lista.add(at);
             }
         }
+        System.out.println("Resultados: " + count);
         return Arrays.copyOf(lista.toArray(), lista.toArray().length, ArchivoTorrent[].class);
     }
 }
