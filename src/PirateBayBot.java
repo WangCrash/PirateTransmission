@@ -8,10 +8,24 @@ import java.util.regex.Pattern;
 
 
 public class PirateBayBot {
+	public static final int ORDERBY_DATE = 0;
+	public static final int ORDERBY_SEEDERS = 1;
 	private static String urlBase = "thepiratebay.sx";
 	
-	public static ArchivoTorrent[] searchTorrent(String search) throws Exception{
-        String query = "/search/" + search + "/0/99/0";
+	public static ArchivoTorrent[] searchTorrent(String search, int orderBy) throws Exception{
+        String query = "/search/" + search;
+        
+        switch (orderBy) {
+		case ORDERBY_DATE:	
+			query += "/0/99/0";
+			break;
+		case ORDERBY_SEEDERS:
+			query += "/0/7/0";
+			break;
+		default:
+			query += "/0/99/0";
+			break;
+		}
         
         URI uri = new URI("http", urlBase, query, null);
         URL url = uri.toURL();

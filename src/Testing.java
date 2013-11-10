@@ -51,7 +51,7 @@ public class Testing {
 	
 	private static void runApp() throws Exception{
 		String busqueda = showBusqueda();
-		ArchivoTorrent[] resultados = PirateBayBot.searchTorrent(busqueda);
+		ArchivoTorrent[] resultados = PirateBayBot.searchTorrent(busqueda, PirateBayBot.ORDERBY_SEEDERS);
 		
 		if(resultados.length == 0){
 			return;
