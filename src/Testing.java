@@ -8,6 +8,7 @@ public class Testing {
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		if(TransmissionManager.initManager()){
+			TransmissionManager.listTorrents();
 			runShell();
 		}else{
 			System.out.println("External error: couldn't authenticate on Transmission.");
@@ -24,8 +25,12 @@ public class Testing {
 	}
 	
 	private static String showBusqueda(){
-		System.out.print("Buscar torrent: ");
-		return leerTeclado();
+		String busqueda;
+		do{
+			System.out.print("Buscar torrent: ");
+			busqueda = leerTeclado();
+		}while(busqueda.isEmpty());
+		return busqueda;
 	}
 	
 	private static void runShell() throws Exception{
@@ -54,6 +59,7 @@ public class Testing {
 		
         for (int i = 0; i < resultados.length; i++) {
 			System.out.println((i+1) + ".-");
+			System.out.println("   " + resultados[i].getCategoria());
 			System.out.println("   Titulo: " + resultados[i].getTitulo());
 			System.out.println("   Detalles(web):" + resultados[i].getDetailsURL().toString());
 		}

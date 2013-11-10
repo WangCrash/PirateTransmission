@@ -64,18 +64,58 @@ public class TransmissionManager {
 		if(!logged){
 			System.out.println("Internal Error: Must log in!");
 			return false;
-		}else if(intento > 3){
-			System.out.println("External Error: Transmission doesn't responds");
-			return false;
 		}
+		
 		String torrentUrl = (torrent.getTorrentUrl() != null)?torrent.getTorrentUrl():torrent.getMagneticLink();
-		//JSONArray jsonTorrentUrls = new JSONArray();
-		//jsonTorrentUrls.put(torrentUrl);
-		//JSONObject jsonArguments = new JSONObject().put("trackerAdd", jsonTorrentUrls);
+		
 		JSONObject jsonArguments = new JSONObject().put("filename", torrentUrl);
 		JSONObject jsonRequest = new JSONObject();
 		jsonRequest.put("method", "torrent-add");
 		jsonRequest.put("arguments", jsonArguments);
+				
+		JSONObject jsonResponse = remoteTransmission(jsonRequest, 0);
+		
+		if(jsonResponse == null){
+			return false;
+		}
+		String result = (String) jsonResponse.get("result");
+			
+		return result.equalsIgnoreCase("success");
+	}
+	
+	public static void listTorrents() throws Exception{
+		listTorrents(0);
+	}
+	
+	private static void listTorrents(int intento) throws Exception{
+		if(!logged){
+			System.out.println("Internal Error: Must log in!");
+			return;
+		}
+		
+		String[] fields = new String[]{"id", "name", "creator", "comment", "peers", "percentDone", "status", "trackers", "webseeds", "torrentFile"};
+		
+		JSONArray jsonFields = new JSONArray();
+
+		for (int i = 0; i < fields.length; i++) {
+			jsonFields.put(fields[i]);
+		}
+		//JSONObject jsonArguments = new JSONObject().put("trackerAdd", jsonTorrentUrls);
+		JSONObject jsonArguments = new JSONObject().put("fields", jsonFields);
+		JSONObject jsonRequest = new JSONObject();
+		jsonRequest.put("method", "torrent-get");
+		jsonRequest.put("arguments", jsonArguments);
+		
+		JSONObject jsonResponse = remoteTransmission(jsonRequest, 0);
+			
+		System.out.println(jsonResponse.toString());
+	}
+	
+	private static JSONObject remoteTransmission(JSONObject jsonRequest, int intento) throws Exception{
+		if(intento > 3){
+			System.out.println("External Error: Transmission doesn't responds");
+			return null;
+		}
 		URI uri = new URI("http", urlBase, null);
         URL url = uri.toURL();
 
@@ -86,17 +126,11 @@ public class TransmissionManager {
 		if(!responseCode.equals("200")){
 			if(responseCode.equals("409")){	
 				captureTransmissionId(responseText);
-				return addTorrent(torrent, intento + 1);
+				remoteTransmission(jsonRequest, intento + 1);
 			}
-			System.out.println(responseText);
-			return false;
 		}
 		
-		JSONObject jsonResponse = new JSONObject(responseText);
-		
-		String result = (String) jsonResponse.get("result");
-			
-		return result.equalsIgnoreCase("success");
+		return new JSONObject(responseText);
 	}
 	
 	public static boolean initManager() throws IOException, URISyntaxException{
