@@ -83,6 +83,7 @@ public class TransmissionManager {
 		return result.equalsIgnoreCase("success");
 	}
 	
+	
 	public static void listTorrents() throws Exception{
 		listTorrents(0);
 	}
@@ -93,7 +94,7 @@ public class TransmissionManager {
 			return;
 		}
 		
-		String[] fields = new String[]{"id", "name", "creator", "comment", "peers", "percentDone", "status", "trackers", "webseeds", "torrentFile"};
+		String[] fields = new String[]{"id", "name", "creator", "comment", "percentDone", "status", "trackers", "webseeds", "torrentFile"};
 		
 		JSONArray jsonFields = new JSONArray();
 
