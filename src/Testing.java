@@ -114,6 +114,8 @@ public class Testing {
 		String[] opciones = Arrays.copyOf(optionsList.toArray(), optionsList.toArray().length, String[].class);
 		do{
 			System.out.println("");
+			System.out.println(torrent.getTitulo());
+			System.out.println("");
 			for (int i = 0; i < opciones.length; i++) {
 				System.out.println((i+1) + ".- " + opciones[i]);
 			}
