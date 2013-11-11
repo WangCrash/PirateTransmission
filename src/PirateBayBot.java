@@ -1,5 +1,6 @@
 import java.net.URI;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -18,7 +19,7 @@ public class PirateBayBot {
 			return new ArchivoTorrent[0];
 		}
 		
-        String query = "/search/" + search;
+        String query = "/search/" + URLEncoder.encode(search, "UTF-8");;
         
         switch (orderBy) {
 		case ORDERBY_DATE:	
@@ -32,7 +33,7 @@ public class PirateBayBot {
 			break;
 		}
         
-        URI uri = new URI("http", urlBase, query, null);
+        URI uri = new URI("http", urlBase,  query, null);
         URL url = uri.toURL();
 
         String response = ConnectionManager.responseByGetRequest(url, false);
