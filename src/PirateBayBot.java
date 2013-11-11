@@ -13,6 +13,11 @@ public class PirateBayBot {
 	private static String urlBase = "thepiratebay.sx";
 	
 	public static ArchivoTorrent[] searchTorrent(String search, int orderBy) throws Exception{
+		
+		if(search.isEmpty()){
+			return new ArchivoTorrent[0];
+		}
+		
         String query = "/search/" + search;
         
         switch (orderBy) {
