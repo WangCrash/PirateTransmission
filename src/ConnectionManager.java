@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -8,10 +9,11 @@ import java.net.URLConnection;
 
 public class ConnectionManager {
 	private static String USER_AGENT = "orphean_navigator_2.0";
+	private static final int NO_INTERNET_REACHABILITY = 0;
 	
-	public static String responseByGetRequest(URL obj, boolean testing) throws Exception{
+	public static String[] responseByGetRequest(URL obj, boolean testing) throws Exception{
 		if(testing){
-			return getHTMLStreamForTesting("http://localhost:8081");
+			return new String[]{String.valueOf(200), getHTMLStreamForTesting("http://localhost:8081")};
 		}
 		
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -23,12 +25,22 @@ public class ConnectionManager {
 		con.setRequestProperty("User-Agent", USER_AGENT);
 		con.setRequestProperty("Accept-encode", "UTF-8");
  
-		int responseCode = con.getResponseCode();
+		int responseCode;
+		try{
+			responseCode = con.getResponseCode();
+		}catch(IOException e){
+			System.out.println(e.getMessage());
+			responseCode = NO_INTERNET_REACHABILITY;
+		}
+		
 		System.out.println("\nSending 'GET' request to URL : " + obj.toString());
 		System.out.println("Response Code : " + responseCode);
  
 		BufferedReader in;
-		if(responseCode > 200){
+		
+		if(responseCode == NO_INTERNET_REACHABILITY){
+			return new String[]{String.valueOf(NO_INTERNET_REACHABILITY), ""};			
+		}else if(responseCode > 200){
 			in = new BufferedReader(
 			        new InputStreamReader(con.getErrorStream()));
 			
@@ -46,7 +58,7 @@ public class ConnectionManager {
 		in.close();
  
 		//print result
-		return new String(response.toString().getBytes(), "UTF-8");
+		return new String[]{String.valueOf(responseCode), new String(response.toString().getBytes(), "UTF-8")};
 	}
 	
 	private static String getHTMLStreamForTesting(String testUrl) throws Exception{
@@ -89,14 +101,22 @@ public class ConnectionManager {
 		wr.flush();
 		wr.close();
 
-		int responseCode = con.getResponseCode();
+		int responseCode;
+		try{
+			responseCode = con.getResponseCode();
+		}catch(IOException e){
+			System.out.println(e.getMessage());
+			responseCode = NO_INTERNET_REACHABILITY;
+		}
 		System.out.println("\nSending 'POST' request to URL : " + obj.toString());
 		System.out.println("Post parameters : " + urlParameters);
 		System.out.println("Response Code : " + responseCode);
  
 		BufferedReader in;
 		
-		if(responseCode > 200){
+		if(responseCode == NO_INTERNET_REACHABILITY){
+			return new String[]{String.valueOf(NO_INTERNET_REACHABILITY), ""};			
+		}else if(responseCode > 200){
 			in = new BufferedReader(
 			        new InputStreamReader(con.getErrorStream()));
 			
@@ -137,7 +157,9 @@ public class ConnectionManager {
 		
 		BufferedReader in;		
 		
-		if(responseCode > 200){
+		if(responseCode == NO_INTERNET_REACHABILITY){
+			return new String[]{String.valueOf(NO_INTERNET_REACHABILITY), ""};			
+		}else if(responseCode > 200){
 			in = new BufferedReader(
 			        new InputStreamReader(con.getErrorStream()));
 			

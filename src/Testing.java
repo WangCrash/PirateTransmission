@@ -16,13 +16,13 @@ public class Testing {
 	
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
-		//runShell();
-		if(TransmissionManager.initManager()){
+		runShell();
+		/*if(TransmissionManager.initManager()){
 			TransmissionManager.listTorrents();
 			runShell();
 		}else{
 			System.out.println("External error: couldn't authenticate on Transmission.");
-		}
+		}*/
 	}
 	
 	private static void showTitle() throws IOException{
@@ -68,7 +68,7 @@ public class Testing {
 	private static void runApp(ArchivoTorrent[] resultados) throws Exception{
 		
 		
-		if(resultados.length == 0){
+		if((resultados == null) || (resultados.length == 0)){
 			return;
 		}
 		

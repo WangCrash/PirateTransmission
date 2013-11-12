@@ -36,10 +36,16 @@ public class PirateBayBot {
         URI uri = new URI("http", urlBase,  query, null);
         URL url = uri.toURL();
 
-        String response = ConnectionManager.responseByGetRequest(url, false);
+        String[] response = ConnectionManager.responseByGetRequest(url, false);
+        String responseCode = response[0];
+        String htmlResponse = response[1];
         //System.out.println(response);
-        
-        return listResults(response);
+        if(responseCode.equals("200")){
+        	return listResults(htmlResponse);
+        }else{
+        	System.out.println("ERROR: it seems there is a network problem");
+        	return null;
+        }
 	}
         
     public static void getTorrent(){
