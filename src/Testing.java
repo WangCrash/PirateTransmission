@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class Testing {
 
-	private static final String ADD_TORRENT = "A–adir Torrent";
+	private static final String ADD_TORRENT = "Añadir Torrent";
 	private static final String SHOW_DETAILS = "Ver Detalles";
 	private static final String RETURN_TO_MAIN_MENU = "Volver";
 	
