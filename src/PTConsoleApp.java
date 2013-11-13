@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class Testing {
+public class PTConsoleApp {
 
 	private static final String ADD_TORRENT = "Añadir Torrent";
 	private static final String SHOW_DETAILS = "Ver Detalles";
@@ -104,7 +104,7 @@ public class Testing {
 		if(torrent.getTorrentUrl() != null){
 			optionsList.add(ADD_TORRENT);
 		}else if(torrent.getMagneticLink() != null){
-				optionsList.add(ADD_TORRENT);
+			optionsList.add(ADD_TORRENT);
 		}
 		if(torrent.getDetailsURL() != null){
 			optionsList.add(SHOW_DETAILS);

@@ -10,6 +10,7 @@ import java.net.URLConnection;
 public class ConnectionManager {
 	private static String USER_AGENT = "orphean_navigator_2.0";
 	private static final int NO_INTERNET_REACHABILITY = 0;
+	private static final int TIMEOUT_MILLI = 10000;
 	
 	public static String[] responseByGetRequest(URL obj, boolean testing) throws Exception{
 		if(testing){
@@ -17,7 +18,9 @@ public class ConnectionManager {
 		}
 		
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
- 
+		
+		con.setConnectTimeout(TIMEOUT_MILLI);
+		
 		// optional default is GET
 		con.setRequestMethod("GET");
  
@@ -81,6 +84,7 @@ public class ConnectionManager {
 		 		
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
  
+		con.setConnectTimeout(TIMEOUT_MILLI);
 		//add reuqest header
 		con.setRequestMethod("POST");
 		con.setRequestProperty("User-Agent", USER_AGENT);
@@ -140,6 +144,8 @@ public class ConnectionManager {
 	public static String[] getAuthorization(URL obj) throws Exception{
 		
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+		
+		con.setConnectTimeout(TIMEOUT_MILLI);
  
 		// optional default is GET
 		con.setRequestMethod("GET");
