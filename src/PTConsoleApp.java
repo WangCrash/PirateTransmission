@@ -45,7 +45,7 @@ public class PTConsoleApp {
 	
 	private static ArchivoTorrent[] getSearchResults(String busqueda) throws Exception {
 		
-		return PirateBayBot.searchTorrent(busqueda, PirateBayBot.ORDERBY_SEEDERS);
+		return PirateBayBot.searchTorrent(busqueda, PirateBayBot.CATEGORY_ALL, PirateBayBot.ORDERBY_SEEDERS);
 	}
 	
 	private static void runShell() throws Exception{

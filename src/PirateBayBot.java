@@ -9,11 +9,16 @@ import java.util.regex.Pattern;
 
 
 public class PirateBayBot {
-	public static final int ORDERBY_DATE = 0;
-	public static final int ORDERBY_SEEDERS = 1;
+	public static final int ORDERBY_DATE = 99;
+	public static final int ORDERBY_SEEDERS = 7;
+	public static final int CATEGORY_ALL = 0;
+	public static final int CATEGORY_VIDEO = 200;
+	public static final int CATEGORY_MUSIC = 101;
+	//public static final int CATEGORY_APPLICATIONS = 300;
+	
 	private static String urlBase = "thepiratebay.sx";
 	
-	public static ArchivoTorrent[] searchTorrent(String search, int orderBy) throws Exception{
+	public static ArchivoTorrent[] searchTorrent(String search, int category, int orderBy) throws Exception{
 		
 		if(search.isEmpty()){
 			return new ArchivoTorrent[0];
@@ -21,17 +26,7 @@ public class PirateBayBot {
 		
         String query = "/search/" + URLEncoder.encode(search, "UTF-8");;
         
-        switch (orderBy) {
-		case ORDERBY_DATE:	
-			query += "/0/99/0";
-			break;
-		case ORDERBY_SEEDERS:
-			query += "/0/7/0";
-			break;
-		default:
-			query += "/0/99/0";
-			break;
-		}
+		query += "/0/" + orderBy + "/" + category;
         
         URI uri = new URI("http", urlBase,  query, null);
         URL url = uri.toURL();
