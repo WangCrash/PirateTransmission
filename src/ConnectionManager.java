@@ -5,10 +5,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
 
 
 public class ConnectionManager {
-	private static String USER_AGENT = "orphean_navigator_2.0";
+	private static String USER_AGENT = "chrome";//"orphean_navigator_2.0";
 	private static final int NO_INTERNET_REACHABILITY = 0;
 	private static final int TIMEOUT_MILLI = 10000;
 	
@@ -80,7 +81,7 @@ public class ConnectionManager {
         return new String(result.getBytes(), "UTF-8");//result;
 	}
 	
-	public static String[] responseByPostRequest(URL obj, String urlParameters, String requireId) throws Exception {
+	public static String[] sendByPostRequest(URL obj, String urlParameters, String requireId) throws Exception {
 		 		
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
  
@@ -89,6 +90,8 @@ public class ConnectionManager {
 		con.setRequestMethod("POST");
 		con.setRequestProperty("User-Agent", USER_AGENT);
 		con.setRequestProperty("Accept-Language", "es-ES,es;q=0.5");
+		con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        con.setRequestProperty("Content-Length", ""+ urlParameters.length());
 		if(requireId != null){
 			con.setRequestProperty("X-Transmission-Session-Id", requireId);
 

@@ -119,7 +119,7 @@ public class TransmissionManager {
 		URI uri = new URI("http", urlBase, null);
         URL url = uri.toURL();
 
-		String[] response = ConnectionManager.responseByPostRequest(url, jsonRequest.toString(), transmissionId);
+		String[] response = ConnectionManager.sendByPostRequest(url, jsonRequest.toString(), transmissionId);
 		String responseCode = response[0];
 		String responseText = response[1];
 		

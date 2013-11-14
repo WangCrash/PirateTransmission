@@ -19,4 +19,13 @@ public class FilmAffinityBot {
         String[] response = ConnectionManager.responseByGetRequest(url, false);
         System.out.println(response[1]);
 	}
+	
+	public static boolean login() throws Exception{
+		
+		URI uri = new URI("http", urlBase,  "/es/login.php", null);
+        URL url = uri.toURL();
+		String[] response = ConnectionManager.sendByPostRequest(url, "user=wang_fan&password=theclash1970&ok=Enviar&rp=&postback=1", null);
+		System.out.println(response[1]);
+		return true;
+	}
 }
