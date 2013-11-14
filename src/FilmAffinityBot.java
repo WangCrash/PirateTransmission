@@ -24,7 +24,7 @@ public class FilmAffinityBot {
 		
 		URI uri = new URI("http", urlBase,  "/es/login.php", null);
         URL url = uri.toURL();
-		String[] response = ConnectionManager.sendByPostRequest(url, "user=wang_fan&password=theclash1970&ok=Enviar&rp=&postback=1", null);
+		String[] response = ConnectionManager.sendByPostRequest(url, "user=wang_fan&password=&ok=Enviar&rp=&postback=1", null);
 		System.out.println(response[1]);
 		return true;
 	}
