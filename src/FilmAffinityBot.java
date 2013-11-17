@@ -1,6 +1,8 @@
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class FilmAffinityBot {
@@ -24,8 +26,15 @@ public class FilmAffinityBot {
 		
 		URI uri = new URI("http", urlBase,  "/es/login.php", null);
         URL url = uri.toURL();
-		String[] response = ConnectionManager.sendByPostRequest(url, "user=wang_fan&password=&ok=Enviar&rp=&postback=1", null);
-		System.out.println(response[1]);
+        Map<String, String> data = new HashMap<String, String>();
+        data.put("rp", "");
+        data.put("user","wang_fan");
+        data.put("password", "123wangfan123");
+        data.put("postback", "1");
+        data.put("ok", "Enviar");
+        String[] response = ConnectionManager.FilmAffinityLoginProcess(url, data);
+        if(response != null)
+        	System.out.println(response[1]);
 		return true;
 	}
 }
