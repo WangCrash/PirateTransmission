@@ -11,6 +11,9 @@ import java.util.Set;
 
 
 public class FilmAffinityBot {
+	public static String user = "";
+	public static String password = "";
+	
 	private static String urlBase = "www.filmaffinity.com";
 	private static boolean logged = false;
 	public static final String LOGGED_TEXT = "Logged";
@@ -25,8 +28,10 @@ public class FilmAffinityBot {
         URI uri = new URI("http", urlBase,  query, null);
         URL url = uri.toURL();
 
-        String[] response = ConnectionManager.sendGetRequest(url);
-        System.out.println(response[1]);
+        Map<String, String> response = ConnectionManager.sendRequest(url, null, null, ConnectionManager.METHOD_GET, true, false, false);
+        String responseCode = response.get("ResponseCode");
+		String responseText = response.get("ResponseBody");
+        System.out.println(responseText);
 	}
 	
 	public static boolean logout() throws URISyntaxException, MalformedURLException{
@@ -52,8 +57,8 @@ public class FilmAffinityBot {
         URL url = uri.toURL();
         Map<String, String> data = new HashMap<String, String>();
         data.put("rp", "");
-        data.put("user","wang_fan");
-        data.put("password", "123wangfan123");
+        data.put("user", user);
+        data.put("password", password);
         data.put("postback", "1");
         data.put("ok", "Enviar");
         Map<String, String> response = doLoginProcess(url, data);
