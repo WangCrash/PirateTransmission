@@ -16,13 +16,13 @@ public class PTConsoleApp {
 	
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
-		runShell();
-		/*if(TransmissionManager.initManager()){
+		//runShell();
+		if(TransmissionManager.initManager()){
 			TransmissionManager.listTorrents();
 			runShell();
 		}else{
 			System.out.println("External error: couldn't authenticate on Transmission.");
-		}*/
+		}
 	}
 	
 	private static void showTitle() throws IOException{

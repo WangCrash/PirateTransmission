@@ -5,6 +5,8 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,9 +25,13 @@ public class TransmissionManager {
 		URI loginUri = new URI("http", urlBase, null);
         URL loginUrl = loginUri.toURL();
 		try {
-			String[] response = ConnectionManager.getAuthorization(loginUrl);
-			String responseCode = response[0];
-			String responseText = response[1];
+			//String[] response = ConnectionManager.getAuthorization(loginUrl);
+			Map<String, String> httpAuth = new HashMap<String, String>();
+			httpAuth.put("USER", user);
+			httpAuth.put("PASSWORD", password);
+			Map<String, String> response = ConnectionManager.sendRequest(loginUrl, null, httpAuth, ConnectionManager.METHOD_GET, true, false, false);
+			String responseCode = response.get("ResponseCode");
+			String responseText = response.get("ResponseBody");
 			if(!responseCode.equals("200")){
 				if(responseCode.equals("409")){	
 					captureTransmissionId(responseText);
@@ -119,9 +125,17 @@ public class TransmissionManager {
 		URI uri = new URI("http", urlBase, null);
         URL url = uri.toURL();
 
-		String[] response = ConnectionManager.sendPostRequest(url, jsonRequest.toString(), transmissionId);
-		String responseCode = response[0];
-		String responseText = response[1];
+		//String[] response = ConnectionManager.sendPostRequest(url, jsonRequest.toString(), transmissionId);
+        Map<String, String> httpAuth = new HashMap<String, String>();
+        //TOKEN_NAME"), httpAuth.get("TOKEN_ID"));
+        httpAuth.put("TOKEN_NAME", "X-Transmission-Session-Id");
+        httpAuth.put("TOKEN_ID", transmissionId);
+        httpAuth.put("USER", user);
+		httpAuth.put("PASSWORD", password);
+        
+		Map<String, String> response = ConnectionManager.sendRequest(url, jsonRequest.toString(), httpAuth, ConnectionManager.METHOD_POST, true, false, false);
+		String responseCode = response.get("ResponseCode");
+		String responseText = response.get("ResponseBody");
 		
 		if(!responseCode.equals("200")){
 			if(responseCode.equals("409")){	

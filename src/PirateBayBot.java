@@ -3,6 +3,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,12 +32,13 @@ public class PirateBayBot {
         URI uri = new URI("http", urlBase,  query, null);
         URL url = uri.toURL();
 
-        String[] response = ConnectionManager.sendGetRequest(url);
-        String responseCode = response[0];
-        String htmlResponse = response[1];
+        //String[] response = ConnectionManager.sendGetRequest(url);
+        Map<String, String> response = ConnectionManager.sendRequest(url, null, null, ConnectionManager.METHOD_GET, true, false, false);
+        String responseCode = response.get("ResponseCode");
+		String responseText = response.get("ResponseBody");
         //System.out.println(response);
         if(responseCode.equals("200")){
-        	return listResults(htmlResponse);
+        	return listResults(responseText);
         }else{
         	System.out.println("ERROR: it seems there is a network problem");
         	return null;
