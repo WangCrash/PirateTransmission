@@ -1,14 +1,8 @@
 import java.util.List;
-import java.beans.Encoder;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.CookieHandler;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
-import java.net.CookieStore;
-import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
@@ -16,7 +10,6 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -26,6 +19,7 @@ public class ConnectionManager {
 	private static String USER_AGENT = "orphean_navigator_2.0";
 	private static final int NO_INTERNET_REACHABILITY = 0;
 	private static final int TIMEOUT_MILLI = 10000;
+	private static List<String> cookiesList;
 	
 	public static String[] responseByGetRequest(URL obj, boolean testing) throws Exception{
 		if(testing){
@@ -210,17 +204,10 @@ public class ConnectionManager {
 		return new String[]{String.valueOf(responseCode), new String(response.toString().getBytes(), "UTF-8")};
 	}
 	
-	private static String[]  postFilmAffinityLogin(URL url, Map<String, String> parameters, String[] cookies) throws IOException{
-		//String encodedUrlParameters = URLEncoder.encode(urlParameters, "UTF-8");
-		String cookieChain = "";
-		if(cookies != null){
-			for (int i = cookies.length - 1;i >= 0; i--) {
-				cookieChain += cookies[i];
-				if(i != 0){
-					cookieChain += "; ";
-				}
-			}
-		}
+	private static String[]  postFilmAffinityLogin(URL url, Map<String, String> parameters) throws IOException{
+
+		HttpURLConnection.setFollowRedirects(false);
+		
 		
 		HttpURLConnection con;
 		try {
@@ -231,7 +218,6 @@ public class ConnectionManager {
 			return null;
 		}
 		
-		
 		con.setReadTimeout(10000);
 		try {
 			con.setRequestMethod("POST");
@@ -241,22 +227,7 @@ public class ConnectionManager {
 			return null;
 		}
 		
-		//con.setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
-		//con.setRequestProperty("Accept-Encoding", "gzip,deflate,sdch");
-		//con.setRequestProperty("Accept-Language", "es-ES,es;q=0.8,en;q=0.6");
-		//con.setRequestProperty("Cache-Control", "no-cache");
-		//con.setRequestProperty("Connection", "keep-alive");
-		//con.setRequestProperty("Content-Length", String.valueOf(urlParameters.length()));
-		//con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-		if(!cookieChain.isEmpty()){
-			con.setRequestProperty("Cookie", cookieChain);
-		}
-		//con.setRequestProperty("Host", "www.filmaffinity.com");
-		//con.addRequestProperty("Origin", "filmaffinity.com");
-		//con.setRequestProperty("Referer", "http://www.filmaffinity.com/es/login.php");
 		con.setRequestProperty("User-Agent", USER_AGENT);
-		
-		System.out.println("POST REQUEST COOKIES: " + cookieChain);
 		
 		con.setUseCaches (false);
 	    con.setDoInput(true);
@@ -270,9 +241,10 @@ public class ConnectionManager {
 			if(i!=0) {
 				content += "&";
 			}
-			content += key + "=" + URLEncoder.encode(parameters.get(key), "UTF-8");
+			content += key + "=" + parameters.get(key);//URLEncoder.encode(parameters.get(key), "UTF-8");
 		}
 		System.out.println(content);
+		//content = URLEncoder.encode(content, "UTF-8");
 	    
 		try {
 			con.getOutputStream().write(content.getBytes());
@@ -292,6 +264,8 @@ public class ConnectionManager {
 			e.printStackTrace();
 			return null;
 		}
+		
+		System.out.println("Connecting with " + url.toString());
 
 		int responseCode;
 		
@@ -305,45 +279,50 @@ public class ConnectionManager {
 		BufferedReader in;
 		
 		System.out.println("RESPONSE HEADERS TO POST REQUEST");
-		if(responseCode == 200){
-			System.out.println("I WANNA KILL AND DESTROY FILMAFFINITYYYYYYYY!!!!!!!!!");
-			in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-		}else if(responseCode == 302){
-			System.out.println("Redireccion!!!!!!");
-			in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-		}else{
-			System.out.println("ERROR");			
-			in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
-		}
-		for (Map.Entry<String, List<String>> responseHeader : con.getHeaderFields().entrySet()){
-			if(responseHeader.getKey() == null){
-				continue;
+		if(responseCode == HttpURLConnection.HTTP_MOVED_TEMP){
+			if(cookiesList == null){
+				cookiesList = new ArrayList<String>();
+			}else{
+				cookiesList.clear();
 			}
-			List<String> value = responseHeader.getValue();
-			System.out.print("\n" + responseHeader.getKey() + ": ");
-			for (String valueElement : value) {
-				System.out.print(valueElement);
+			String location = "";
+			for (Map.Entry<String, List<String>> responseHeader : con.getHeaderFields().entrySet()){
+				if(responseHeader.getKey() == null){
+					continue;
+				}
+				List<String> value = responseHeader.getValue();
+				System.out.print("\n" + responseHeader.getKey() + ": ");
+				for (String valueElement : value) {
+					System.out.print(valueElement);
+					if(responseHeader.getKey().equals("Set-Cookie")){
+						cookiesList.add(valueElement);
+					}else if(responseHeader.getKey().equals("Location")){
+						location = valueElement;
+					}
+				}
 			}
+			if(!location.isEmpty()){
+				String[] response = new String[]{String.valueOf(responseCode), location};
+				return response;
+			}
+			
 		}
-		
-		String inputLine;
-		StringBuffer response = new StringBuffer();
- 
-		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine + "\n");
-		}
-		in.close();
-		con.disconnect();
-		System.out.println("\nResponse:\n" + response.toString());
-		//print result
-		return null;//new String[]{String.valueOf(responseCode), response.toString()};
-
+		return new String[]{String.valueOf(responseCode)};		
 	}
 	
-	private static String[] getFilmAffinityLoginPage(URL urlLogin){
+	private static String[] getFilmAffinityLoginPage(URL url){
+		String cookieChain = "";
+		if(cookiesList != null){
+			for (int i = cookiesList.size() - 1;i >= 0; i--) {
+				cookieChain += cookiesList.get(i);
+				if(i != 0){
+					cookieChain += "; ";
+				}
+			}
+		}
 		HttpURLConnection con;
 		try {
-			con = (HttpURLConnection)urlLogin.openConnection();
+			con = (HttpURLConnection)url.openConnection();
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			System.out.println("Opening Connection");
@@ -361,15 +340,12 @@ public class ConnectionManager {
 		}
 		con.setReadTimeout(10000);
 		
-		con.setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
-		con.setRequestProperty("Accept-Encoding", "gzip,deflate,sdch");
-		con.setRequestProperty("Accept-Language", "es-ES,es;q=0.8,en;q=0.6");
-		con.setRequestProperty("Cache-Control", "max-age=0");
-		con.setRequestProperty("Connection", "keep-alive");
-		con.setRequestProperty("Host", "www.filmaffinity.com");
-		con.setRequestProperty("Referer", "http://www.filmaffinity.com/es/login.php");
+		if(cookieChain.isEmpty()){
+			con.setRequestProperty("Cookie", cookieChain);
+		}
 		con.setRequestProperty("User-Agent", USER_AGENT);
 		
+		System.out.println("Connecting to " + url.toString());
 		
 		try {
 			con.connect();
@@ -389,38 +365,28 @@ public class ConnectionManager {
 			e.printStackTrace();
 		}
 		con.disconnect();
-		if(responseCode == 200){
-			ArrayList<String> cookies = new ArrayList<String>();
-			for (Map.Entry<String, List<String>> responseHeader : con.getHeaderFields().entrySet()){
-				if(responseHeader.getKey() == null){
-					continue;
-				}
-				List<String> value = responseHeader.getValue();
-				System.out.print("\n" + responseHeader.getKey() + ": ");
-				for (String valueElement : value) {
-					System.out.print(valueElement);
-					if(responseHeader.getKey().equals("Set-Cookie")){
-						cookies.add(valueElement);
-					}
-				}
-			}
-			return Arrays.copyOf(cookies.toArray(), cookies.toArray().length, String[].class);
+		if(responseCode == HttpURLConnection.HTTP_OK){
+			return new String[]{String.valueOf(responseCode), "Logged"};
 		}
 		
 		return null;
 	}
 	
 	public static String[]FilmAffinityLoginProcess(URL url, Map<String, String> parameters) throws Exception{
-		String[] getCookies = null;//getFilmAffinityLoginPage(url);
-		/*System.out.println("\nCookies:");
-		for (int i = 0; i < getCookies.length; i++) {
-			if(getCookies[i].contains(";")){
-				getCookies[i] = getCookies[i].split(";")[0];
-			}
-			System.out.println("- " + getCookies[i]);
-		}*/
-		url = new URL("http://httpbin.org/post");
-		return postFilmAffinityLogin(url, parameters, getCookies);
+		//url = new URL("http://httpbin.org/post");
+		String[] postResponse = postFilmAffinityLogin(url, parameters);
+		int responseCode;
+		try{
+			responseCode = Integer.parseInt(postResponse[0]);
+			System.out.println("responseCode: " + responseCode);
+		}catch(NumberFormatException exception){
+			return null;
+		}
+		if((responseCode == HttpURLConnection.HTTP_MOVED_TEMP) && (postResponse.length > 1)){
+			url = new URL(url, postResponse[1]);
+			getFilmAffinityLoginPage(url);
+		}
+		return null;
 
 	}
 

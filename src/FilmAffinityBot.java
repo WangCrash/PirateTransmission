@@ -6,7 +6,7 @@ import java.util.Map;
 
 
 public class FilmAffinityBot {
-	private static String urlBase = "filmaffinity.com";
+	private static String urlBase = "www.filmaffinity.com";
 	
 	public static void searchFilm(String search) throws Exception{
 		if(search.isEmpty()){
