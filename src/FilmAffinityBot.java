@@ -7,6 +7,8 @@ import java.util.Map;
 
 public class FilmAffinityBot {
 	private static String urlBase = "www.filmaffinity.com";
+	private static boolean logged = false;
+	public static final String LOGGED_TEXT = "Logged";
 	
 	public static void searchFilm(String search) throws Exception{
 		if(search.isEmpty()){
@@ -18,12 +20,14 @@ public class FilmAffinityBot {
         URI uri = new URI("http", urlBase,  query, null);
         URL url = uri.toURL();
 
-        String[] response = ConnectionManager.responseByGetRequest(url, false);
+        String[] response = ConnectionManager.sendGetRequest(url);
         System.out.println(response[1]);
 	}
 	
 	public static boolean login() throws Exception{
-		
+		if(logged){
+			return true;
+		}
 		URI uri = new URI("http", urlBase,  "/es/login.php", null);
         URL url = uri.toURL();
         Map<String, String> data = new HashMap<String, String>();
@@ -33,8 +37,9 @@ public class FilmAffinityBot {
         data.put("postback", "1");
         data.put("ok", "Enviar");
         String[] response = ConnectionManager.FilmAffinityLoginProcess(url, data);
-        if(response != null)
-        	System.out.println(response[1]);
-		return true;
+        if((response != null) && (response[1].equals(LOGGED_TEXT))){
+        	logged = true;
+        }
+        return false;
 	}
 }

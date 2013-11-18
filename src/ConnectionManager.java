@@ -3,13 +3,11 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -17,16 +15,16 @@ import java.util.Set;
 
 public class ConnectionManager {
 	private static String USER_AGENT = "orphean_navigator_2.0";
-	private static final int NO_INTERNET_REACHABILITY = 0;
-	private static final int TIMEOUT_MILLI = 10000;
 	private static List<String> cookiesList;
 	
-	public static String[] responseByGetRequest(URL obj, boolean testing) throws Exception{
-		if(testing){
-			return new String[]{String.valueOf(200), getHTMLStreamForTesting("http://localhost:8081")};
-		}
+	private static final int NO_INTERNET_REACHABILITY = 0;
+	private static final int TIMEOUT_MILLI = 10000;
+	private static final String METHOD_GET = "GET";
+	private static final String METHOD_POST = "POST";
+	
+	public static String[] sendGetRequest(URL url) throws Exception{
 		
-		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+		HttpURLConnection con = (HttpURLConnection) url.openConnection();
 		
 		con.setConnectTimeout(TIMEOUT_MILLI);
 		
@@ -45,41 +43,21 @@ public class ConnectionManager {
 			responseCode = NO_INTERNET_REACHABILITY;
 		}
 		
-		System.out.println("\nSending 'GET' request to URL : " + obj.toString());
+		System.out.println("\nSending 'GET' request to URL : " + url.toString());
 		System.out.println("Response Code : " + responseCode);
-
-		Map<String, List<String>> map = con.getHeaderFields();
-		for (Map.Entry<String, List<String>> entry : map.entrySet()) {
-			System.out.println("Key : " + entry.getKey() + 
-	                 " ,Value : " + entry.getValue());
-		}
-		
-		BufferedReader in;
 		
 		if(responseCode == NO_INTERNET_REACHABILITY){
 			return new String[]{String.valueOf(NO_INTERNET_REACHABILITY), ""};			
-		}else if(responseCode > 200){
-			in = new BufferedReader(
-			        new InputStreamReader(con.getErrorStream()));
-			
 		}else{
-			in = new BufferedReader(
-			        new InputStreamReader(con.getInputStream()));
+			String content = retrieveResponseStreaming(con, responseCode);
+			if(content == null){
+				content = "";
+			}
+			return new String[]{String.valueOf(responseCode), content};
 		}
-		String inputLine;
-		StringBuffer response = new StringBuffer();
- 
-		while ((inputLine = in.readLine()) != null) {
-			//response.append(inputLine + "\n");
-			response.append(inputLine);
-		}
-		in.close();
-		
-		//print result
-		return new String[]{String.valueOf(responseCode), new String(response.toString().getBytes(), "UTF-8"), map.get("Set-Cookie").toString()};
 	}
 	
-	private static String getHTMLStreamForTesting(String testUrl) throws Exception{
+	/*private static String getHTMLStreamForTesting(String testUrl) throws Exception{
 		URL oracle = new URL(testUrl);
         URLConnection yc = oracle.openConnection();
         BufferedReader in = new BufferedReader(new InputStreamReader(
@@ -93,11 +71,109 @@ public class ConnectionManager {
         }
         in.close();
         return new String(result.getBytes(), "UTF-8");//result;
+	}*/
+	
+	private static String[] sendRequest(URL url, String parameters, Map<String, String> httpAuth, String method, boolean getBodyResponse, boolean watchCookies, boolean sendCookies){
+		String cookieChain = "";
+		if(sendCookies){
+			if(cookiesList != null){
+				for (int i = cookiesList.size() - 1;i >= 0; i--) {
+					cookieChain += cookiesList.get(i);
+					if(i != 0){
+						cookieChain += "; ";
+					}
+				}
+			}
+		}
+		HttpURLConnection.setFollowRedirects(false);
+		
+		HttpURLConnection con;
+		try {
+			con = (HttpURLConnection)url.openConnection();
+		} catch (IOException e) {
+			return null;
+		}
+		con.setReadTimeout(TIMEOUT_MILLI);
+		con.setRequestProperty("User-Agent", USER_AGENT);
+		if(!cookieChain.isEmpty()){
+			con.setRequestProperty("Cookie", cookieChain);
+		}
+		try {
+			con.setRequestMethod(method);
+		} catch (ProtocolException e) {
+			return null;
+		}
+		
+		if(httpAuth != null){
+			if(httpAuth.containsKey("TOKEN_NAME")){
+				con.setRequestProperty(httpAuth.get("TOKEN_NAME"), httpAuth.get("TOKEN_ID"));
+			}
+
+	        String authString = httpAuth.get("USER") + ":" + httpAuth.get("PASSWORD");
+	        String authStringEnc = Base64.encodeBytes(authString.getBytes());
+	        
+	        con.setRequestProperty("Authorization", "Basic " + authStringEnc);
+		}
+		
+		con.setUseCaches (false);
+	    con.setDoInput(true);
+		
+		if(parameters != null){
+			con.setDoOutput(true);
+
+			try {
+				con.getOutputStream().write(parameters.getBytes());
+				con.getOutputStream().flush();
+				con.getOutputStream().close();
+			} catch (IOException e) {
+				return null;
+			}			
+		}
+		
+		int responseCode;
+		try {
+			responseCode = con.getResponseCode();
+		} catch (IOException e) {
+			responseCode = NO_INTERNET_REACHABILITY;
+		}
+		
+		if((responseCode == HttpURLConnection.HTTP_OK) || (responseCode == HttpURLConnection.HTTP_MOVED_TEMP)){
+			String location = "";
+			if(responseCode == HttpURLConnection.HTTP_MOVED_TEMP){
+				location = con.getHeaderField("Location");
+				//HACER LA REDIRECCION
+			}else if(watchCookies){
+				if(cookiesList == null){
+					cookiesList = new ArrayList<String>();
+				}else{
+					cookiesList.clear();
+				}
+				for (Map.Entry<String, List<String>> responseHeader : con.getHeaderFields().entrySet()){
+					if(responseHeader.getKey() == null){
+						continue;
+					}
+					List<String> value = responseHeader.getValue();
+					System.out.print("\n" + responseHeader.getKey() + ": ");
+					for (String valueElement : value) {
+						System.out.print(valueElement);
+						if(responseHeader.getKey().equals("Set-Cookie")){
+							cookiesList.add(valueElement);
+						}
+					}
+				}
+				if(!location.isEmpty()){
+					String[] response = new String[]{String.valueOf(responseCode), location};
+					return response;
+				}
+			}
+		}else{
+			return new String[]{String.valueOf(responseCode)};
+		}
 	}
 	
-	public static String[] sendByPostRequest(URL obj, String urlParameters, String requireId) throws Exception {
+	public static String[] sendPostRequest(URL url, String parameters, String requireId) throws Exception {
 		 		
-		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+		HttpURLConnection con = (HttpURLConnection) url.openConnection();
  
 		con.setConnectTimeout(TIMEOUT_MILLI);
 		//add reuqest header
@@ -105,8 +181,8 @@ public class ConnectionManager {
 		con.setRequestProperty("User-Agent", USER_AGENT);
 		con.setRequestProperty("Accept-Language", "es-ES,es;q=0.8");
 		con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-        con.setRequestProperty("Content-Length", ""+ urlParameters.length());
-        System.out.println(urlParameters.length());
+        con.setRequestProperty("Content-Length", ""+ parameters.length());
+        System.out.println(parameters.length());
 		if(requireId != null){
 			con.setRequestProperty("X-Transmission-Session-Id", requireId);
 
@@ -119,7 +195,7 @@ public class ConnectionManager {
 		// Send post request
 		con.setDoOutput(true);
 		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-		wr.writeBytes(urlParameters);
+		wr.writeBytes(parameters);
 		wr.flush();
 		wr.close();
 
@@ -130,32 +206,19 @@ public class ConnectionManager {
 			System.out.println(e.getMessage());
 			responseCode = NO_INTERNET_REACHABILITY;
 		}
-		System.out.println("\nSending 'POST' request to URL : " + obj.toString());
-		System.out.println("Post parameters : " + urlParameters);
+		System.out.println("\nSending 'POST' request to URL : " + url.toString());
+		System.out.println("Post parameters : " + parameters);
 		System.out.println("Response Code : " + responseCode);
- 
-		BufferedReader in;
 		
 		if(responseCode == NO_INTERNET_REACHABILITY){
 			return new String[]{String.valueOf(NO_INTERNET_REACHABILITY), ""};			
-		}else if(responseCode > 200){
-			in = new BufferedReader(
-			        new InputStreamReader(con.getErrorStream()));
-			
 		}else{
-			in = new BufferedReader(
-			        new InputStreamReader(con.getInputStream()));
+			String content = retrieveResponseStreaming(con, responseCode);
+			if(content == null){
+				content = "";
+			}
+			return new String[]{String.valueOf(responseCode), content};
 		}
-		String inputLine;
-		StringBuffer response = new StringBuffer();
- 
-		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine + "\n");
-		}
-		in.close();
- 
-		//print result
-		return new String[]{String.valueOf(responseCode), response.toString()};
 
 	}
 	
@@ -179,29 +242,47 @@ public class ConnectionManager {
 		System.out.println("\nSending 'GET' request to URL : " + obj.toString());
 		System.out.println("Response Code : " + responseCode);
 		
-		BufferedReader in;		
-		
 		if(responseCode == NO_INTERNET_REACHABILITY){
 			return new String[]{String.valueOf(NO_INTERNET_REACHABILITY), ""};			
-		}else if(responseCode > 200){
-			in = new BufferedReader(
-			        new InputStreamReader(con.getErrorStream()));
-			
 		}else{
-			in = new BufferedReader(
-			        new InputStreamReader(con.getInputStream()));
+			String content = retrieveResponseStreaming(con, responseCode);
+			if(content == null){
+				content = "";
+			}
+			return new String[]{String.valueOf(responseCode), content};
 		}
-		
+	}
+	
+	private static String retrieveResponseStreaming(HttpURLConnection con, int responseCode){
+		BufferedReader in;
+		try {
+			if(responseCode != HttpURLConnection.HTTP_OK){
+				in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+			}else{
+				in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			return null;
+		}
 		String inputLine;
 		StringBuffer response = new StringBuffer();
  
-		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine + "\n");
+		try {
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine + "\n");
+			}
+			in.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			return null;
 		}
-		in.close();
- 
-		//print result
-		return new String[]{String.valueOf(responseCode), new String(response.toString().getBytes(), "UTF-8")};
+		try {
+			return new String(response.toString().getBytes(), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			return null;
+		}		
 	}
 	
 	private static String[]  postFilmAffinityLogin(URL url, Map<String, String> parameters) throws IOException{
@@ -218,7 +299,7 @@ public class ConnectionManager {
 			return null;
 		}
 		
-		con.setReadTimeout(10000);
+		con.setReadTimeout(TIMEOUT_MILLI);
 		try {
 			con.setRequestMethod("POST");
 		} catch (ProtocolException e1) {
@@ -276,7 +357,6 @@ public class ConnectionManager {
 			e.printStackTrace();
 			return null;
 		}
-		BufferedReader in;
 		
 		System.out.println("RESPONSE HEADERS TO POST REQUEST");
 		if(responseCode == HttpURLConnection.HTTP_MOVED_TEMP){
@@ -338,7 +418,7 @@ public class ConnectionManager {
 			e.printStackTrace();
 			return null;
 		}
-		con.setReadTimeout(10000);
+		con.setReadTimeout(TIMEOUT_MILLI);
 		
 		if(cookieChain.isEmpty()){
 			con.setRequestProperty("Cookie", cookieChain);
@@ -366,7 +446,7 @@ public class ConnectionManager {
 		}
 		con.disconnect();
 		if(responseCode == HttpURLConnection.HTTP_OK){
-			return new String[]{String.valueOf(responseCode), "Logged"};
+			return new String[]{String.valueOf(responseCode), FilmAffinityBot.LOGGED_TEXT};
 		}
 		
 		return null;
@@ -384,7 +464,7 @@ public class ConnectionManager {
 		}
 		if((responseCode == HttpURLConnection.HTTP_MOVED_TEMP) && (postResponse.length > 1)){
 			url = new URL(url, postResponse[1]);
-			getFilmAffinityLoginPage(url);
+			return getFilmAffinityLoginPage(url);
 		}
 		return null;
 

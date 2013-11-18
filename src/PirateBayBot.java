@@ -31,7 +31,7 @@ public class PirateBayBot {
         URI uri = new URI("http", urlBase,  query, null);
         URL url = uri.toURL();
 
-        String[] response = ConnectionManager.responseByGetRequest(url, false);
+        String[] response = ConnectionManager.sendGetRequest(url);
         String responseCode = response[0];
         String htmlResponse = response[1];
         //System.out.println(response);
