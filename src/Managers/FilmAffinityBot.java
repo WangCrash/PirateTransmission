@@ -19,6 +19,8 @@ import Utils.UtilTools;
 import Codification.Base64;
 import Connection.ConnectionManager;
 
+import Model.FichaPelicula;
+
 
 public class FilmAffinityBot {
 	private static String user = "";
@@ -59,10 +61,38 @@ public class FilmAffinityBot {
         URI uri = new URI("http", urlBase,  query, null);
         URL url = uri.toURL();
 
-        Map<String, String> response = cm.sendRequest(url, null, null, ConnectionManager.METHOD_GET, true, false, false);
-        String responseCode = response.get("ResponseCode");
+        Map<String, String> response;
+        if(logged){
+        	response = cm.sendRequest(url, null, null, ConnectionManager.METHOD_GET, true, true, true);
+        }else{
+        	response = cm.sendRequest(url, null, null, ConnectionManager.METHOD_GET, true, false, false);
+        }
+        int responseCode;
 		String responseText = response.get("ResponseBody");
+		
+		try{
+			 responseCode = Integer.parseInt(response.get("ResponseCode"));
+		}catch(NumberFormatException e){
+			return;
+		}
+		if((responseCode == HttpURLConnection.HTTP_MOVED_TEMP) && (response.containsKey("Location"))){
+			url = new URL(url, response.get("Location"));
+			response = cm.sendRequest(url, null, null, ConnectionManager.METHOD_GET, true, false, true);
+			//extraer datos de pelicula
+		}else if(responseCode == HttpURLConnection.HTTP_OK){
+			//extraer lista de películas
+		}else{
+			//devolver array vacio
+		}
         System.out.println(responseText);
+	}
+	
+	private static FichaPelicula[] extractFilmsArray(String html){
+		return null;
+	}
+	
+	private static FichaPelicula extractFilmInfo(String html){
+		return null;
 	}
 	
 	private static boolean logout() throws URISyntaxException, MalformedURLException{
