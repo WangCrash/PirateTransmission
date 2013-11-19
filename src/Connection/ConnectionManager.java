@@ -16,15 +16,23 @@ import Codification.Base64;
 
 
 public class ConnectionManager {
-	private static String USER_AGENT = "orphean_navigator_2.0";
-	private static List<String> cookiesList;
-	
-	private static final int NO_INTERNET_REACHABILITY = 0;
-	private static final int TIMEOUT_MILLI = 10000;
+	private final int NO_INTERNET_REACHABILITY = 0;
 	public static final String METHOD_GET = "GET";
 	public static final String METHOD_POST = "POST";
+	private final String USER_AGENT = "orphean_navigator_2.0";
 	
-	public static Map<String, String> sendRequest(URL url, String parameters, Map<String, String> httpAuth, String method, boolean getBodyResponse, boolean watchCookies, boolean sendCookies){
+	private List<String> cookiesList;
+	private int TIMEOUT_MILLI = 10000;
+	
+	public ConnectionManager(){
+		this(10000);
+	}
+	
+	public ConnectionManager(int timeout){
+		this.TIMEOUT_MILLI = timeout;
+	}
+	
+	public Map<String, String> sendRequest(URL url, String parameters, Map<String, String> httpAuth, String method, boolean getBodyResponse, boolean watchCookies, boolean sendCookies){
 		String cookieChain = "";
 		if(sendCookies){
 			if(cookiesList != null){
@@ -123,7 +131,7 @@ public class ConnectionManager {
 		return result;
 	}
 	
-	private static String retrieveBodyResponse(HttpURLConnection con, int responseCode){
+	private String retrieveBodyResponse(HttpURLConnection con, int responseCode){
 		BufferedReader in;
 		try {
 			if(responseCode != HttpURLConnection.HTTP_OK){

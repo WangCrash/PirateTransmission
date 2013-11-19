@@ -1,6 +1,7 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
+package Managers;
+
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -13,6 +14,8 @@ import java.util.regex.Pattern;
 import Codification.Base64;
 import Connection.SimpleConnectionManager;
 import JSON.*;
+import Model.ArchivoTorrent;
+import Utils.UtilTools;
 
 public class TransmissionManager {
 
@@ -32,7 +35,7 @@ public class TransmissionManager {
 			httpAuth.put("USER", user);
 			httpAuth.put("PASSWORD", password);
 			//Map<String, String> response = ConnectionManager.sendRequest(loginUrl, null, httpAuth, ConnectionManager.METHOD_GET, true, false, false);
-			Map<String, String> response = SimpleConnectionManager.sendGetRequest(loginUrl, null, httpAuth);
+			Map<String, String> response = new SimpleConnectionManager().sendGetRequest(loginUrl, null, httpAuth);
 			String responseCode = response.get("ResponseCode");
 			String responseText = response.get("ResponseBody");
 			if(!responseCode.equals("200")){
@@ -137,7 +140,7 @@ public class TransmissionManager {
 		httpAuth.put("PASSWORD", password);
         
 		//Map<String, String> response = ConnectionManager.sendRequest(url, jsonRequest.toString(), httpAuth, ConnectionManager.METHOD_POST, true, false, false);
-		Map<String, String> response = SimpleConnectionManager.sendPostRequest(url, jsonRequest.toString(), null);
+		Map<String, String> response = new SimpleConnectionManager().sendPostRequest(url, jsonRequest.toString(), null);
 		String responseCode = response.get("ResponseCode");
 		String responseText = response.get("ResponseBody");
 		
@@ -152,12 +155,17 @@ public class TransmissionManager {
 	}
 	
 	public static boolean initManager() throws IOException, URISyntaxException{
-		setUpManager();	
+		setUpManager();
 		return loginOnTranssmission();
 	}
 	
-	private static void setUpManager() throws IOException{
-		String config = readConfigFile();
+	private static void setUpManager(){
+		String config = new UtilTools().readConfigFile();
+		if(config == null){
+			user = "";
+			password = "";
+			System.out.println("Couldn't read from config file");
+		}
 		
 		String urlBaselRegex = "transmission-rpc-host:(.*?);";
 		Pattern p = Pattern.compile(urlBaselRegex);
@@ -187,21 +195,17 @@ public class TransmissionManager {
 		m = p.matcher(config);
 		
 		if(m.find()){
-			password = new String(Base64.decode(m.group(1)), "UTF-8");
+			try {
+				password = new String(Base64.decode(m.group(1)), "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				password = "";
+				System.out.println("Couldn't decode FilmAffinity password");
+			} catch (IOException e) {
+				password = "";
+				System.out.println("Couldn't decode FilmAffinity password");
+			}
 		}else{
 			System.out.println("Transmmission password not set.");
 		}
-	}
-	
-	private static String readConfigFile() throws IOException{
-		BufferedReader bf = new BufferedReader(new FileReader("config"));
-		String config = "";
-		String sCadena;
-		while ((sCadena = bf.readLine())!=null) {
-		   config += sCadena;
-		}
-		bf.close();
-		
-		return config;
 	}
 }

@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import Managers.PirateBayBot;
+import Managers.TransmissionManager;
+import Model.ArchivoTorrent;
+
 public class PTConsoleApp {
 
 	private static final String ADD_TORRENT = "Añadir Torrent";

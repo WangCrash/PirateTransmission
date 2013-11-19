@@ -1,3 +1,5 @@
+package Managers;
+
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -7,7 +9,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import Connection.SimpleConnectionManager;;
+import Connection.SimpleConnectionManager;
+import Model.ArchivoTorrent;
 
 
 
@@ -36,7 +39,7 @@ public class PirateBayBot {
 
         //String[] response = ConnectionManager.sendGetRequest(url);
         //Map<String, String> response = ConnectionManager.sendRequest(url, null, null, ConnectionManager.METHOD_GET, true, false, false);
-        Map<String, String> response = SimpleConnectionManager.sendGetRequest(url, null, null);
+        Map<String, String> response = new SimpleConnectionManager().sendGetRequest(url, null, null);
         String responseCode = response.get("ResponseCode");
 		String responseText = response.get("ResponseBody");
         //System.out.println(response);

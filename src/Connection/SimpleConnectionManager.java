@@ -2,12 +2,37 @@ package Connection;
 import java.net.URL;
 import java.util.Map;
 
-public class SimpleConnectionManager{
+public class SimpleConnectionManager extends ConnectionManager{
 	
-	public static Map<String, String> sendPostRequest(URL url, String parameters, Map<String, String> httpAuth){
-		return ConnectionManager.sendRequest(url, parameters, httpAuth, ConnectionManager.METHOD_POST, true, false, false);
+	public SimpleConnectionManager(){
+		super();
 	}
-	public static Map<String, String> sendGetRequest(URL url, String parameters, Map<String, String> httpAuth){
-		return ConnectionManager.sendRequest(url, parameters, httpAuth, ConnectionManager.METHOD_GET, true, false, false);
+	
+	public SimpleConnectionManager(int timeout){
+		super(timeout);
+	}
+	
+	public Map<String, String> sendPostRequest(URL url){
+		return this.sendPostRequest(url, null, null);
+	}
+	
+	public Map<String , String> sendPostRequest(URL url, String parameters){
+		return this.sendPostRequest(url, parameters, null);
+	}
+	
+	public Map<String, String> sendPostRequest(URL url, String parameters, Map<String, String> httpAuth){
+		return this.sendRequest(url, parameters, httpAuth, METHOD_POST, true, false, false);
+	}
+	
+	public Map<String, String> sendGetRequest(URL url){
+		return this.sendGetRequest(url, null, null);
+	}
+	
+	public Map<String, String> sendGetRequest(URL url, String parameters){
+		return this.sendGetRequest(url, parameters, null);
+	}
+	
+	public Map<String, String> sendGetRequest(URL url, String parameters, Map<String, String> httpAuth){
+		return this.sendRequest(url, parameters, httpAuth, METHOD_GET, true, false, false);
 	}
 }
