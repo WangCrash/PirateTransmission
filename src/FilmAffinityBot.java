@@ -9,6 +9,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import Connection.ConnectionManager;
+
 
 public class FilmAffinityBot {
 	public static String user = "";
@@ -42,7 +44,7 @@ public class FilmAffinityBot {
 		URI uri = new URI("http", urlBase, "/es/logout.php", null);
 		URL url = uri.toURL();
 		
-		Map<String, String> response = ConnectionManager.sendRequest(url, null, null, ConnectionManager.METHOD_GET, false, false, true);
+		Map<String, String> response = ConnectionManager.sendRequest(url, null, null, ConnectionManager.METHOD_GET, false, true, true);
 		if(response != null){
         	return (response.get("ResponseCode").equals("302") && response.get("Location").equals("/es/main.html"));
         }

@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import Codification.Base64;
+import Connection.SimpleConnectionManager;
 import JSON.*;
 
 public class TransmissionManager {
@@ -29,7 +31,8 @@ public class TransmissionManager {
 			Map<String, String> httpAuth = new HashMap<String, String>();
 			httpAuth.put("USER", user);
 			httpAuth.put("PASSWORD", password);
-			Map<String, String> response = ConnectionManager.sendRequest(loginUrl, null, httpAuth, ConnectionManager.METHOD_GET, true, false, false);
+			//Map<String, String> response = ConnectionManager.sendRequest(loginUrl, null, httpAuth, ConnectionManager.METHOD_GET, true, false, false);
+			Map<String, String> response = SimpleConnectionManager.sendGetRequest(loginUrl, null, httpAuth);
 			String responseCode = response.get("ResponseCode");
 			String responseText = response.get("ResponseBody");
 			if(!responseCode.equals("200")){
@@ -133,7 +136,8 @@ public class TransmissionManager {
         httpAuth.put("USER", user);
 		httpAuth.put("PASSWORD", password);
         
-		Map<String, String> response = ConnectionManager.sendRequest(url, jsonRequest.toString(), httpAuth, ConnectionManager.METHOD_POST, true, false, false);
+		//Map<String, String> response = ConnectionManager.sendRequest(url, jsonRequest.toString(), httpAuth, ConnectionManager.METHOD_POST, true, false, false);
+		Map<String, String> response = SimpleConnectionManager.sendPostRequest(url, jsonRequest.toString(), null);
 		String responseCode = response.get("ResponseCode");
 		String responseText = response.get("ResponseBody");
 		

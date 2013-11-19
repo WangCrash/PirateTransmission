@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import Connection.SimpleConnectionManager;;
+
 
 
 public class PirateBayBot {
@@ -33,7 +35,8 @@ public class PirateBayBot {
         URL url = uri.toURL();
 
         //String[] response = ConnectionManager.sendGetRequest(url);
-        Map<String, String> response = ConnectionManager.sendRequest(url, null, null, ConnectionManager.METHOD_GET, true, false, false);
+        //Map<String, String> response = ConnectionManager.sendRequest(url, null, null, ConnectionManager.METHOD_GET, true, false, false);
+        Map<String, String> response = SimpleConnectionManager.sendGetRequest(url, null, null);
         String responseCode = response.get("ResponseCode");
 		String responseText = response.get("ResponseBody");
         //System.out.println(response);
