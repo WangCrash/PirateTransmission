@@ -8,12 +8,14 @@ public class FichaPelicula {
 	public static final String MAP_KEY_CRITICAS_TEXTO = "texto";
 	public static final String MAP_KEY_CRITICAS_AUTOR_REVISTA = "autor_revista";
 	
+	private String imageUrl;
+	private String filmDetailsUrl;
 	private String titulo;
 	private String tituloOriginal;
 	private String año;
 	private String duracion;
 	private String pais;
-	private String director;
+	private String[] director;
 	private String guion;
 	private String musica;
 	private String fotografia;
@@ -23,7 +25,22 @@ public class FichaPelicula {
 	private String sinopsis;
 	private Map<String, String> premios;
 	private Map<String, String> criticas;
+	private String valoracion;
 	private String notaUsuario;
+	private String notaAlmasGemelas;
+	
+	public String getImageUrl() {
+		return imageUrl;
+	}
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+	public String getFilmDetailsUrl() {
+		return filmDetailsUrl;
+	}
+	public void setFilmDetailsUrl(String filmDetailsUrl) {
+		this.filmDetailsUrl = filmDetailsUrl;
+	}
 	public String getTitulo() {
 		return titulo;
 	}
@@ -54,10 +71,10 @@ public class FichaPelicula {
 	public void setPais(String pais) {
 		this.pais = pais;
 	}
-	public String getDirector() {
+	public String[] getDirector() {
 		return director;
 	}
-	public void setDirector(String director) {
+	public void setDirector(String[] director) {
 		this.director = director;
 	}
 	public String getGuion() {
@@ -114,11 +131,22 @@ public class FichaPelicula {
 	public void setCriticas(Map<String, String> criticas) {
 		this.criticas = criticas;
 	}
+	public String getValoracion() {
+		return valoracion;
+	}
+	public void setValoracion(String valoracion) {
+		this.valoracion = valoracion;
+	}
 	public String getNotaUsuario() {
 		return notaUsuario;
 	}
 	public void setNotaUsuario(String notaUsuario) {
 		this.notaUsuario = notaUsuario;
 	}
-	
+	public String getNotaAlmasGemelas() {
+		return notaAlmasGemelas;
+	}
+	public void setNotaAlmasGemelas(String notaAlmasGemelas) {
+		this.notaAlmasGemelas = notaAlmasGemelas;
+	}	
 }

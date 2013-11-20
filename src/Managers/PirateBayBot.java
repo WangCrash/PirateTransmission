@@ -104,6 +104,7 @@ public class PirateBayBot {
                     		at.setCategoria(text);
                     	}
                     }else if(title.contains("Details") || (title.contains("Detalles"))){
+                    	//ESTA FORMA DE ALMACENAR LA URL HABRA QUE CAMBIARLA PARA QUE SOLO SE GUARDE LA DIRECCION RELATIVA
                     	at.setDetailsURL(new URI("http", urlBase, link, null).toURL());
 						at.setTitulo(text);
                     }else if(title.contains("magnet")){

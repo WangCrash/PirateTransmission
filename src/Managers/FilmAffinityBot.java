@@ -6,7 +6,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -18,6 +17,7 @@ import Utils.UtilTools;
 
 import Codification.Base64;
 import Connection.ConnectionManager;
+import FilmAffinity.FilmAffinitySearcherModule;
 
 import Model.FichaPelicula;
 
@@ -51,48 +51,23 @@ public class FilmAffinityBot {
 		} 
 	}
 	
-	public static void searchFilm(String search) throws Exception{
-		if(search.isEmpty()){
-			return;
+	public static FichaPelicula[] searchFilm(String search) throws Exception{
+		return new FilmAffinitySearcherModule(urlBase, logged, cm).searchFilm(search);
+	}
+	
+	public static FichaPelicula getFilmDetails(FichaPelicula pelicula){
+		if(pelicula.getFilmDetailsUrl() == null){
+			return null;
 		}
-		
-        String query = "/es/search.php?stext=" + URLEncoder.encode(search, "UTF-8") + "&stype=title";
-      
-        URI uri = new URI("http", urlBase,  query, null);
-        URL url = uri.toURL();
-
-        Map<String, String> response;
-        if(logged){
-        	response = cm.sendRequest(url, null, null, ConnectionManager.METHOD_GET, true, true, true);
-        }else{
-        	response = cm.sendRequest(url, null, null, ConnectionManager.METHOD_GET, true, false, false);
-        }
-        int responseCode;
-		String responseText = response.get("ResponseBody");
-		
+		URL detailsUrl;
 		try{
-			 responseCode = Integer.parseInt(response.get("ResponseCode"));
-		}catch(NumberFormatException e){
-			return;
+			detailsUrl = new URI("http", urlBase, pelicula.getFilmDetailsUrl(), null).toURL();
+		}catch(MalformedURLException e){
+			return null;
+		}catch(URISyntaxException e1){
+			return null;
 		}
-		if((responseCode == HttpURLConnection.HTTP_MOVED_TEMP) && (response.containsKey("Location"))){
-			url = new URL(url, response.get("Location"));
-			response = cm.sendRequest(url, null, null, ConnectionManager.METHOD_GET, true, false, true);
-			//extraer datos de pelicula
-		}else if(responseCode == HttpURLConnection.HTTP_OK){
-			//extraer lista de películas
-		}else{
-			//devolver array vacio
-		}
-        System.out.println(responseText);
-	}
-	
-	private static FichaPelicula[] extractFilmsArray(String html){
-		return null;
-	}
-	
-	private static FichaPelicula extractFilmInfo(String html){
-		return null;
+		return new FilmAffinitySearcherModule(urlBase, logged, cm).getFilmDetails(detailsUrl);
 	}
 	
 	private static boolean logout() throws URISyntaxException, MalformedURLException{
