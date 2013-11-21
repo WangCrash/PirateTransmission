@@ -31,10 +31,14 @@ public class FilmAffinityBot {
 	private static boolean logged = false;
 	public static final String LOGGED_TEXT = "Logged";
 	
-	public static boolean initializeManager(){
-		setUpManager();
+	public static boolean initializeManager(boolean testing){
 		cm = new ConnectionManager();
-		return logged = login();
+		if(!testing){
+			setUpManager();
+			logged = login();
+			return logged;
+		}
+		return true;
 	}
 	
 	public static boolean terminateManager(){
@@ -80,7 +84,7 @@ public class FilmAffinityBot {
 		
 		Map<String, String> response = cm.sendRequest(url, null, null, ConnectionManager.METHOD_GET, false, true, true);
 		if(response != null){
-        	return (response.get("ResponseCode").equals("302") && response.get("Location").equals("/es/logout.php"));
+        	return (response.get("ResponseCode").equals("302") && (response.get("Location").equals("/es/logout.php") || response.get("Location").equals("/es/main.html")));
         }
         return false;
 	}

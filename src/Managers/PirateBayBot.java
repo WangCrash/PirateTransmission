@@ -30,7 +30,7 @@ public class PirateBayBot {
 			return new ArchivoTorrent[0];
 		}
 		
-        String query = "/search/" + URLEncoder.encode(search, "UTF-8");;
+        String query = "/search/" + URLEncoder.encode(search, "UTF-8");
         
 		query += "/0/" + orderBy + "/" + category;
         

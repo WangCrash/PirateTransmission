@@ -24,7 +24,7 @@ public class FichaPelicula {
 	private String genero;
 	private String sinopsis;
 	private Map<String, String> premios;
-	private Map<String, String> criticas;
+	private Map<String, String[]> criticas;
 	private String valoracion;
 	private String notaUsuario;
 	private String notaAlmasGemelas;
@@ -125,10 +125,10 @@ public class FichaPelicula {
 	public void setPremios(Map<String, String> premios) {
 		this.premios = premios;
 	}
-	public Map<String, String> getCriticas() {
+	public Map<String, String[]> getCriticas() {
 		return criticas;
 	}
-	public void setCriticas(Map<String, String> criticas) {
+	public void setCriticas(Map<String, String[]> criticas) {
 		this.criticas = criticas;
 	}
 	public String getValoracion() {

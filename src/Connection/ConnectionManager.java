@@ -52,6 +52,7 @@ public class ConnectionManager {
 		}
 		con.setReadTimeout(TIMEOUT_MILLI);
 		con.setRequestProperty("User-Agent", USER_AGENT);
+		con.setRequestProperty("Accept-Language", "es-ES,es;q=0.8,en;q=0.6");
 		if(!cookieChain.isEmpty()){
 			con.setRequestProperty("Cookie", cookieChain);
 		}
@@ -134,7 +135,7 @@ public class ConnectionManager {
 	private String retrieveBodyResponse(HttpURLConnection con, int responseCode){
 		BufferedReader in;
 		try {
-			if(responseCode != HttpURLConnection.HTTP_OK){
+			if(responseCode > 400){
 				in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
 			}else{
 				in = new BufferedReader(new InputStreamReader(con.getInputStream()));
