@@ -148,5 +148,10 @@ public class FichaPelicula {
 	}
 	public void setNotaAlmasGemelas(String notaAlmasGemelas) {
 		this.notaAlmasGemelas = notaAlmasGemelas;
-	}	
+	}
+	
+	@Override
+	public String toString(){
+		return this.getTitulo();
+	}
 }

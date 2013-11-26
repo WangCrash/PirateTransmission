@@ -3,14 +3,12 @@ package FilmAffinity;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -72,7 +70,7 @@ public class FilmAffinitySearcherModule {
 				result = new FichaPelicula[]{pelicula};
 			}
 		}else if(responseCode == HttpURLConnection.HTTP_OK){
-			result = extractFilmsArray(responseText);
+			result = extractMovies(search, responseText);
 		}
         return result;
 	}
@@ -91,52 +89,102 @@ public class FilmAffinitySearcherModule {
 		return null;
 	}
 	
-	private FichaPelicula[] extractFilmsArray(String html){
-		FichaPelicula[] result = null;
-		
-		String filmsListFrameRegex = "<table id=\"main-content-table\">.*?<tbody>.*?<td>.*?<h1 id=\"main-title\">(.*?)</h1></td>.*?</tbody></table>";
-		Pattern p = Pattern.compile(filmsListFrameRegex);
+	private FichaPelicula[] extractMovies(String search, String html){
+		String numeroResultadosRegex = "<div style=\"text-align:right;\">\\s*?<strong>(\\d*?)</strong>.*?resultados";
+		Pattern p = Pattern.compile(numeroResultadosRegex);
 		Matcher m = p.matcher(html);
+		int numResultados = 0;
 		if(m.find()){
-			String filmsListFrame = m.group(1);
-			
-			String filmsListRegex = "<div class=\"movie-card movie-card-\\d*?\">(.*?)</div>";
-			p = Pattern.compile(filmsListRegex);
-			m = p.matcher(filmsListFrame);
-			ArrayList<FichaPelicula> lista = new ArrayList<FichaPelicula>();
-			while(m.find()){
-				String filmCard = m.group(1);
-				
-				String filmPosterRegex = "<div class=\"mc-poster\">.*?<img src=\"(.*?)\".*?</a></div>";
-				Pattern subP = Pattern.compile(filmPosterRegex);
-				Matcher subM = subP.matcher(filmCard);
-				String imagen = null;
-				if(subM.find()){
-					imagen = subM.group(1);
-				}
-				
-				String titleRegex = "<div class=\"mc-info-container\"><div class=\"mc-title\"><a href=\"(.*?)\">(.*?)</a></div></div>";
-				subP = Pattern.compile(titleRegex);
-				subM = subP.matcher(filmCard);
-				String title = null;
-				String detailsLink = null;
-				if(subM.find()){
-					detailsLink = subM.group(1);
-					title = subM.group(2);
-				}else{
-					continue;
-				}
-				FichaPelicula pelicula = new FichaPelicula();
-				pelicula.setTitulo(title);
-				pelicula.setFilmDetailsUrl(detailsLink);
-				pelicula.setImageUrl(imagen);
-				
-				lista.add(pelicula);
+			try{
+				numResultados = Integer.parseInt(m.group(1));
+			}catch(NumberFormatException e){
+				return null;//no hay resultados en teoría
 			}
-			result = Arrays.copyOf(lista.toArray(), lista.toArray().length, FichaPelicula[].class);
+		}
+		ArrayList<FichaPelicula> lista = new ArrayList<FichaPelicula>();
+		int paginas = numResultados / 50;
+		if(numResultados % 50 == 0){
+			paginas--;
+		}
+		lista = extractAllPages(search, html, paginas, 0, lista);
+		return Arrays.copyOf(lista.toArray(), lista.toArray().length, FichaPelicula[].class);
+	}
+	
+	private ArrayList<FichaPelicula> extractAllPages(String search, String html, int numPaginas, int pagina, ArrayList<FichaPelicula> lista){
+		lista = extractFilmsArray(html, lista);
+		if(pagina == numPaginas){
+			return lista;
+		}else{
+			String query;
+			try {
+				query = "/es/search.php?stext=" + URLEncoder.encode(search, "UTF-8") + "&stype=title&from=" + (50 * (pagina + 1));
+			} catch (UnsupportedEncodingException e1) {
+				return lista;
+			}
+		    URL url;
+			try {
+				url = new URL(new URL("http://" + urlBase), query);
+			} catch (MalformedURLException e1) {
+				return lista;
+			}
+		    Map<String, String> response;
+		    if(logged){
+	        	response = cm.sendRequest(url, null, null, ConnectionManager.METHOD_GET, true, true, true);
+	        }else{
+	        	response = cm.sendRequest(url, null, null, ConnectionManager.METHOD_GET, true, false, false);
+	        }
+		    int responseCode;
+			String responseText = response.get("ResponseBody");
+			
+			try{
+				responseCode = Integer.parseInt(response.get("ResponseCode"));
+			}catch(NumberFormatException e){
+				return null;
+			}
+			if(responseCode == HttpURLConnection.HTTP_OK){
+				return extractAllPages(search, responseText, numPaginas, pagina + 1, lista);
+			}else{
+				return lista;
+			}
+		}
+	}
+	
+	private ArrayList<FichaPelicula> extractFilmsArray(String html, ArrayList<FichaPelicula> lista){
+		
+		String filmsListRegex = "<div class=\"movie-card movie-card-\\d*?\">(.*?<div class=\"mc-poster\">.*?<div class=\"mc-info-container\">.*?)</div>\\s*?</div>";
+		Pattern p = Pattern.compile(filmsListRegex);
+		Matcher m = p.matcher(html);
+		while(m.find()){
+			String filmCard = m.group(1);
+			System.out.println(filmCard);
+			String filmPosterRegex = "<div class=\"mc-poster\">.*?<img src=\"(.*?)\".*?</a>";
+			Pattern subP = Pattern.compile(filmPosterRegex);
+			Matcher subM = subP.matcher(filmCard);
+			String imagen = null;
+			if(subM.find()){
+				imagen = subM.group(1);
+			}
+			
+			String titleRegex = "<div class=\"mc-info-container\">\\s*?<div class=\"mc-title\"><a href=\"(.*?)\">(.*?)</a>";
+			subP = Pattern.compile(titleRegex);
+			subM = subP.matcher(filmCard);
+			String title = null;
+			String detailsLink = null;
+			if(subM.find()){
+				detailsLink = subM.group(1);
+				title = subM.group(2);
+			}else{
+				continue;
+			}
+			FichaPelicula pelicula = new FichaPelicula();
+			pelicula.setTitulo(new UtilTools().escapeHtmlSpecialChars(title));
+			pelicula.setFilmDetailsUrl(detailsLink);
+			pelicula.setImageUrl(imagen);
+			
+			lista.add(pelicula);
 		}
 		
-		return result;
+		return lista;
 	}
 	
 	private FichaPelicula extractFilmInfo(String html){
@@ -265,7 +313,7 @@ public class FilmAffinitySearcherModule {
 				reviewAndCalibration[0] = review;
 				if(subM.find()){
 					author = subM.group(1);
-					reviewAndCalibration[1] = new UtilTools().escapeSpecial(subM.group(2));
+					reviewAndCalibration[1] = new UtilTools().escapeHtmlSpecialChars(subM.group(2));
 				}
 				criticas.put(author, reviewAndCalibration);
 			}
@@ -284,7 +332,7 @@ public class FilmAffinitySearcherModule {
 	}
 	
 	private FichaPelicula fillFichaPelicula(String field, String data, FichaPelicula ficha){
-		String value = new UtilTools().escapeSpecial(data);
+		String value = new UtilTools().escapeHtmlSpecialChars(data);
 		if(field.equals("T&iacute;tulo original")){//Título original
 			ficha.setTituloOriginal(value);
 		}else if(field.equals("A&ntilde;o")){//Año
@@ -333,13 +381,17 @@ public class FilmAffinitySearcherModule {
 	
 	public static void main(String[] args){
 		FilmAffinitySearcherModule f = new FilmAffinitySearcherModule("http://localhost:8080", false, new ConnectionManager());
+		//"http://www.filmaffinity.com/es/search.php?stype=title&stext=batman"
 		URL url;
 		try {
 			url = new URL(f.urlBase);
 		} catch (MalformedURLException e) {
 			return;
 		};
-		f.logged = true;
-		f.getFilmDetails(url);
+		Map<String, String> response = f.cm.sendRequest(url, null, null, ConnectionManager.METHOD_GET, true, false, false);
+		FichaPelicula[] result = f.extractMovies("batman", response.get("ResponseBody"));
+		for (int i = 0; i < result.length; i++) {
+			System.out.println(result[i]);
+		}
 	}
 }

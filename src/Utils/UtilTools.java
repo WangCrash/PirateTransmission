@@ -29,7 +29,7 @@ public class UtilTools {
 		return config;
 	}
 	   
-	public String escapeSpecial(String original){
+	public String escapeHtmlSpecialChars(String original){
 		return StringEscapeUtils.unescapeHtml4(original);
 	}
 	

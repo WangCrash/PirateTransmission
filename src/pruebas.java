@@ -1,4 +1,5 @@
 import Managers.FilmAffinityBot;
+import Model.FichaPelicula;
 
 
 public class pruebas {
@@ -11,6 +12,12 @@ public class pruebas {
 				System.out.println("\nPROCESS CORRECTLY COMPLETED");
 		}*/
 		FilmAffinityBot.initializeManager(true);
-		FilmAffinityBot.searchFilm("amor a quemarropa");
+		FichaPelicula[]resultado = FilmAffinityBot.searchFilm("batman");
+		if(resultado != null){
+			System.out.println("Encontrados " + resultado.length + " resultados");
+			for (int i = 0; i < resultado.length; i++) {
+				System.out.println(resultado[i]);
+			}
+		}
 	}
 }
