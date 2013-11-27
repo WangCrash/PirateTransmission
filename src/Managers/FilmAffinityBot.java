@@ -55,7 +55,14 @@ public class FilmAffinityBot {
 		} 
 	}
 	
+	public static FichaPelicula[] getListRecommendations(){
+		return new FilmAffinitySearcherModule(urlBase, logged, cm).lookForRecommendations();
+	}
+	
 	public static FichaPelicula[] searchFilm(String search) throws Exception{
+		if(!logged){
+			return null;
+		}
 		return new FilmAffinitySearcherModule(urlBase, logged, cm).searchFilm(search);
 	}
 	
@@ -128,6 +135,9 @@ public class FilmAffinityBot {
 			parametersChain += key + "=" + parameters.get(key);
 		}
 		Map<String, String> postResponse = cm.sendRequest(url, parametersChain, null, ConnectionManager.METHOD_POST, false, true, false);
+		if(postResponse == null){
+			return null;
+		}
 		int responseCode;
 		try{
 			responseCode = Integer.parseInt(postResponse.get("ResponseCode"));

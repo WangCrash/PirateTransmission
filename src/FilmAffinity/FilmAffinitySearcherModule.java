@@ -8,6 +8,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,16 +39,76 @@ public class FilmAffinitySearcherModule {
 		stringsValoraciones.put("Muy buena", "9");
 		stringsValoraciones.put("Excelente", "10");
 	}
+	
+	public FichaPelicula[] lookForRecommendations(){
+		return lookForRecommendations(null);
+	}
+	
+	public FichaPelicula[] lookForRecommendations(Map<String, String> filters){
+		FichaPelicula[] result = null;
 		
-	public FichaPelicula[] searchFilm(String search) throws Exception{
+		String query = "/es/smsrec.php";
+		if(filters != null){
+			query += "?";
+			for (Map.Entry<String, String> entry : filters.entrySet())
+			{
+			    query += entry.getKey() + "=" + entry.getValue() + "&";
+			}
+			query = query.substring(0, query.length() - 1);
+		}
+        URL url;
+		try {
+			url = new URL(new URL(urlBase), query);
+		} catch (MalformedURLException e1) {
+			return null;
+		}
+
+        Map<String, String> response;
+        response = cm.sendRequest(url, null, null, ConnectionManager.METHOD_GET, true, true, true);
+        
+        int responseCode;
+		try{
+			responseCode = Integer.parseInt(response.get("ResponseCode"));
+		}catch(NumberFormatException e){
+			return null;
+		}
+		if(responseCode == 0){
+			System.out.println("Error: no connection");
+			return null;
+		}
+		String responseText = response.get("ResponseBody");
+		if(responseText == null){
+			return null;
+		}
+		if(responseCode == HttpURLConnection.HTTP_OK){
+			ArrayList<FichaPelicula> lista = new ArrayList<FichaPelicula>();
+			lista = extractFilmsArray(responseText, lista);
+			result = Arrays.copyOf(lista.toArray(), lista.size(), FichaPelicula[].class);
+		}
+		
+		return result;
+	}
+		
+	public FichaPelicula[] searchFilm(String search){
 		if(search.isEmpty()){
 			return null;
 		}
 		
 		FichaPelicula[] result = null;
 		
-        String query = "/es/search.php?stext=" + URLEncoder.encode(search, "UTF-8") + "&stype=title";
-        URL url = new URL(new URL("http://" + urlBase), query);
+        String query;
+		try {
+			query = "/es/search.php?stext=" + URLEncoder.encode(search, "UTF-8") + "&stype=title";
+		} catch (UnsupportedEncodingException e2) {
+			return null;
+		}
+        URL url;
+		try {
+			//url = new URL(new URL("http://" + urlBase), query);
+			url = new URL(urlBase);
+		} catch (MalformedURLException e1) {
+			return null;
+		}
 
         Map<String, String> response;
         if(logged){
@@ -56,15 +117,27 @@ public class FilmAffinitySearcherModule {
         	response = cm.sendRequest(url, null, null, ConnectionManager.METHOD_GET, true, false, false);
         }
         int responseCode;
-		String responseText = response.get("ResponseBody");
-		
 		try{
 			responseCode = Integer.parseInt(response.get("ResponseCode"));
 		}catch(NumberFormatException e){
 			return null;
 		}
+		if(responseCode == 0){
+			System.out.println("Error: no connection");
+			return null;
+		}
+		
+		String responseText = response.get("ResponseBody");
+		if(responseText == null){
+			return null;
+		}
+		
 		if((responseCode == HttpURLConnection.HTTP_MOVED_TEMP) && (response.containsKey("Location"))){
-			url = new URL(url, response.get("Location"));
+			try {
+				url = new URL(url, response.get("Location"));
+			} catch (MalformedURLException e) {
+				return null;
+			}
 			FichaPelicula pelicula = getFilmDetails(url);
 			if(pelicula != null){
 				result = new FichaPelicula[]{pelicula};
@@ -151,7 +224,7 @@ public class FilmAffinitySearcherModule {
 	
 	private ArrayList<FichaPelicula> extractFilmsArray(String html, ArrayList<FichaPelicula> lista){
 		
-		String filmsListRegex = "<div class=\"movie-card movie-card-\\d*?\">(.*?<div class=\"mc-poster\">.*?<div class=\"mc-info-container\">.*?)</div>\\s*?</div>";
+		String filmsListRegex = "<div class=\"movie-card movie-card-\\d*?\">(.*?<div class=\"mc-poster\">.*?<div class=\"mc-info-container\">.*?<img.*?countries.*?)</div>\\s*?</div>";
 		Pattern p = Pattern.compile(filmsListRegex);
 		Matcher m = p.matcher(html);
 		while(m.find()){
@@ -165,14 +238,19 @@ public class FilmAffinitySearcherModule {
 				imagen = subM.group(1);
 			}
 			
-			String titleRegex = "<div class=\"mc-info-container\">\\s*?<div class=\"mc-title\"><a href=\"(.*?)\">(.*?)</a>";
+			//String titleRegex = "<div class=\"mc-info-container\">.*?<div class=\"mc-title\">\\s*?<a href=\"(.*?)\">(.*?)</a>";
+			String titleRegex = "<div class=\"mc-info-container\">.*?<div class=\"mc-title\">\\s*?<a href=\"(.*?)\">(.*?)</a>\\s*?\\((.*?)\\)\\s*?<img.*?countries.*?title=\"(.*?)\".*?>";
 			subP = Pattern.compile(titleRegex);
 			subM = subP.matcher(filmCard);
 			String title = null;
 			String detailsLink = null;
+			String year = null;
+			String country = null;
 			if(subM.find()){
 				detailsLink = subM.group(1);
 				title = subM.group(2);
+				year = subM.group(3);
+				country = subM.group(4);
 			}else{
 				continue;
 			}
@@ -180,6 +258,8 @@ public class FilmAffinitySearcherModule {
 			pelicula.setTitulo(new UtilTools().escapeHtmlSpecialChars(title));
 			pelicula.setFilmDetailsUrl(detailsLink);
 			pelicula.setImageUrl(imagen);
+			pelicula.setAño(year);
+			pelicula.setPais(country);
 			
 			lista.add(pelicula);
 		}
@@ -382,14 +462,16 @@ public class FilmAffinitySearcherModule {
 	public static void main(String[] args){
 		FilmAffinitySearcherModule f = new FilmAffinitySearcherModule("http://localhost:8080", false, new ConnectionManager());
 		//"http://www.filmaffinity.com/es/search.php?stype=title&stext=batman"
-		URL url;
-		try {
-			url = new URL(f.urlBase);
-		} catch (MalformedURLException e) {
+		Map<String, String> filters = new HashMap<String, String>();
+		filters.put("genre", "BE");
+		filters.put("limit", "50");
+		filters.put("fromyear", "1980");
+		filters.put("toyear", "2020");
+		FichaPelicula[] result = f.lookForRecommendations(filters);
+		//FichaPelicula[] result = f.searchFilm("batman");
+		if(result == null){
 			return;
-		};
-		Map<String, String> response = f.cm.sendRequest(url, null, null, ConnectionManager.METHOD_GET, true, false, false);
-		FichaPelicula[] result = f.extractMovies("batman", response.get("ResponseBody"));
+		}
 		for (int i = 0; i < result.length; i++) {
 			System.out.println(result[i]);
 		}

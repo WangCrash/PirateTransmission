@@ -48,6 +48,7 @@ public class ConnectionManager {
 		try {
 			con = (HttpURLConnection)url.openConnection();
 		} catch (IOException e) {
+			e.printStackTrace();
 			return null;
 		}
 		con.setReadTimeout(TIMEOUT_MILLI);
@@ -141,7 +142,6 @@ public class ConnectionManager {
 				in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			return null;
 		}
 		String inputLine;
@@ -153,13 +153,11 @@ public class ConnectionManager {
 			}
 			in.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			return null;
 		}
 		try {
 			return new String(response.toString().getBytes(), "UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			return null;
 		}		
 	}

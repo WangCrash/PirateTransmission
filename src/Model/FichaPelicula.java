@@ -152,6 +152,11 @@ public class FichaPelicula {
 	
 	@Override
 	public String toString(){
-		return this.getTitulo();
+		String result = "";
+		result += "Título: " + this.getTitulo() + " (" + this.getAño() + ")\n";
+		result += "Imagen: " + this.getImageUrl() + "\n";
+		result += "País: " + this.getPais() + "\n";
+		result += "Detalles: " + this.getFilmDetailsUrl() + "\n";
+		return result;
 	}
 }
