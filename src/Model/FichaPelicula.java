@@ -8,6 +8,7 @@ public class FichaPelicula {
 	public static final String MAP_KEY_CRITICAS_TEXTO = "texto";
 	public static final String MAP_KEY_CRITICAS_AUTOR_REVISTA = "autor_revista";
 	
+	private String dataUcd;
 	private String imageUrl;
 	private String filmDetailsUrl;
 	private String titulo;
@@ -29,6 +30,12 @@ public class FichaPelicula {
 	private String notaUsuario;
 	private String notaAlmasGemelas;
 	
+	public String getDataUcd() {
+		return dataUcd;
+	}
+	public void setDataUcd(String dataUcd) {
+		this.dataUcd = dataUcd;
+	}
 	public String getImageUrl() {
 		return imageUrl;
 	}
