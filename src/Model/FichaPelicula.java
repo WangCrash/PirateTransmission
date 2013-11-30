@@ -153,10 +153,96 @@ public class FichaPelicula {
 	@Override
 	public String toString(){
 		String result = "";
-		result += "Título: " + this.getTitulo() + " (" + this.getAño() + ")\n";
-		result += "Imagen: " + this.getImageUrl() + "\n";
-		result += "País: " + this.getPais() + "\n";
-		result += "Detalles: " + this.getFilmDetailsUrl() + "\n";
+		if(this.titulo != null){
+			result += "Título: " + this.getTitulo() + "\n";
+		}
+		if(this.tituloOriginal != null){
+			result += "Título original: " + this.getTituloOriginal() + "\n";
+		}
+		if(this.imageUrl != null){
+			result += "Image: " + this.getImageUrl() + "\n";
+		}
+		if(this.año != null){
+			result += "Año: " + this.getAño() + "\n";
+		}
+		if(this.duracion != null){
+			result += "Duración: " + this.getDuracion() + "\n";
+		}
+		if(this.pais != null){
+			result += "País: " + this.getPais() + "\n";
+		}
+		if((this.director != null) && (this.director.length > 0)){
+			String directores = "";
+			for (int i = 0; i < this.getDirector().length; i++) {
+				directores += this.getDirector()[i] + ", ";
+			}
+			directores = directores.substring(0, directores.length() - 2);
+			result += "Director: " + directores + "\n";
+		}
+		if(this.guion != null){
+			result += "Guión: " + this.getGuion() + "\n";
+		}
+		if(this.musica != null){
+			result += "Música: " + this.getMusica() + "\n";
+		}
+		if(this.fotografia != null){
+			result += "Fotografía: " + this.getFotografia() + "\n";
+		}
+		if((this.reparto != null) && (this.reparto.length > 0)){
+			String actores = "";
+			for (int i = 0; i < this.getReparto().length; i++) {
+				actores += this.getReparto()[i] + ", ";
+			}
+			actores = actores.substring(0, actores.length() - 2);
+			result += "Reparto: " + actores + "\n";
+		}
+		if(this.productora != null){
+			result += "Productora: " + this.getProductora() + "\n";
+		}
+		if(this.genero != null){
+			result += "Género: " + this.getGenero() + "\n";
+		}
+		if(this.sinopsis != null){
+			result += "Sinopsis: " + this.getSinopsis() + "\n";
+		}
+		if(this.premios != null){
+			String listaPremios = "";
+			for (Map.Entry<String, String> entry : this.getPremios().entrySet())
+			{
+			    listaPremios += "\t" + entry.getKey() + ": " + entry.getValue() + "\n";
+			}
+			if(!listaPremios.isEmpty()){
+				result += "Premios: \n" + listaPremios + "\n";
+			}
+		}else{
+			System.out.println("Premios no encontrado");
+		}
+		if(this.criticas != null){
+			String listaCriticas = "";
+			for (Map.Entry<String, String[]> entry : this.getCriticas().entrySet())
+			{
+				String autor = entry.getKey();
+				String critica = entry.getValue()[0];
+				String valoracion = entry.getValue()[1];
+			    listaCriticas += "\t" + critica + "\n " + autor + "\n" + valoracion + "\n";
+			}
+			if(!listaCriticas.isEmpty()){
+				result += "Críticas: \n" + listaCriticas + "\n";
+			}
+		}else{
+			System.out.println("Criticas no encontrado");
+		}
+		if(this.valoracion != null){
+			result += "Nota: " + this.getValoracion() + "\n";
+		}
+		if(this.notaUsuario != null){
+			result += "Tu voto: " + this.getNotaUsuario() + "\n";
+		}
+		if(this.notaAlmasGemelas != null){
+			result += "Tus almas gemelas le ponen un " + this.getNotaAlmasGemelas() + " a esta película\n";
+		}else{
+			System.out.println("Nota Almas Gemelas no encontrado");
+		}
 		return result;
 	}
 }
