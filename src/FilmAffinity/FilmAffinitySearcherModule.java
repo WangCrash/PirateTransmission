@@ -8,7 +8,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -59,6 +58,7 @@ public class FilmAffinitySearcherModule {
         URL url;
 		try {
 			url = new URL(new URL(urlBase), query);
+			//url = new URL(urlBase);
 		} catch (MalformedURLException e1) {
 			return null;
 		}
@@ -104,8 +104,8 @@ public class FilmAffinitySearcherModule {
 		}
         URL url;
 		try {
-			//url = new URL(new URL("http://" + urlBase), query);
-			url = new URL(urlBase);
+			url = new URL(new URL("http://" + urlBase), query);
+			//url = new URL(urlBase);
 		} catch (MalformedURLException e1) {
 			return null;
 		}
@@ -157,7 +157,11 @@ public class FilmAffinitySearcherModule {
 			return null;
 		}
 		if(responseCode == HttpURLConnection.HTTP_OK){
-			return extractFilmInfo(response.get("ResponseBody"));
+			FichaPelicula pelicula = extractFilmInfo(response.get("ResponseBody"));
+			if(pelicula != null){
+				pelicula.setFilmDetailsUrl(filmDetailsUrl.toString());
+			}
+			return pelicula;
 		}
 		return null;
 	}
@@ -324,12 +328,14 @@ public class FilmAffinitySearcherModule {
 		}
 		
 		if(logged){
-			String userRatingRegex = "<div class=\"rate-movie-box\".*?data-user-rating=\"(.*?)\".*?>";
+			String userRatingRegex = "<div class=\"rate-movie-box\".*?data-user-rating=\"(.*?)\"\\s*?data-ucd=\"(.*?)\".*?>";
 			p = Pattern.compile(userRatingRegex);
 			m = p.matcher(content);
 			if(m.find()){
 				String userRating = m.group(1);
+				String dataUcd = m.group(2);
 				ficha.setNotaUsuario(userRating.trim());
+				ficha.setDataUcd(dataUcd);
 			}
 		}
 		return ficha;
@@ -369,6 +375,24 @@ public class FilmAffinitySearcherModule {
 			}
 		}
 		
+		String awardsFrameRegex = "<dt>\\s*?Premios\\s*?</dt>\\s*?<dd class=\"award\">(.*?)</dd>";
+		p = Pattern.compile(awardsFrameRegex);
+		m = p.matcher(content);
+		if(m.find()){
+			String awardsFrame = m.group(1);
+			
+			String awardsRegex = "<div.*?>\\s*?<a href.*?>(.*?)</a>(.*?)</div>";
+			p = Pattern.compile(awardsRegex);
+			m = p.matcher(awardsFrame);
+			ArrayList<String> list = new ArrayList<String>();
+			while(m.find()){
+				String year = m.group(1);
+				String award = m.group(2).trim();
+				list.add(year + award);
+			}
+			ficha.setPremios(Arrays.copyOf(list.toArray(), list.size(), String[].class));
+		}
+		
 		String reviewsFrameRegex = "<ul id=\"pro-reviews\">(.*?)\\s*?</ul>";
 		p = Pattern.compile(reviewsFrameRegex);
 		m = p.matcher(content);
@@ -376,7 +400,7 @@ public class FilmAffinitySearcherModule {
 			String reviewsFrame = m.group(1);
 			System.out.println(reviewsFrame);
 			
-			String reviewsRegex = "<li >\\s*?<div class=\"pro-review\">\\s*?<div>\\s*?(.*?)\\s*?</div>\\s*?<div class=\"pro-crit-med\">\\s*?(.*?)\\s*?</div>\\s*?</div>\\s*?</li>";
+			String reviewsRegex = "<li\\s*?>\\s*?<div class=\"pro-review\">.*?<div>\\s*?(.*?)\\s*?</div>.*?<div class=\"pro-crit-med\">\\s*?(.*?)\\s*?</div>\\s*?</div>\\s*?</li>";
 			p = Pattern.compile(reviewsRegex);
 			m = p.matcher(reviewsFrame);
 			Map<String, String[]> criticas = new HashMap<String, String[]>();
@@ -459,21 +483,22 @@ public class FilmAffinitySearcherModule {
 		return Arrays.copyOf(lista.toArray(), lista.size(), String[].class);
 	}
 	
-	public static void main(String[] args){
-		FilmAffinitySearcherModule f = new FilmAffinitySearcherModule("http://localhost:8080", false, new ConnectionManager());
+	public static void main(String[] args) throws MalformedURLException{
+		FilmAffinitySearcherModule f = new FilmAffinitySearcherModule("http://localhost:8080", true, new ConnectionManager());
 		//"http://www.filmaffinity.com/es/search.php?stype=title&stext=batman"
-		Map<String, String> filters = new HashMap<String, String>();
+		/*Map<String, String> filters = new HashMap<String, String>();
 		filters.put("genre", "BE");
 		filters.put("limit", "50");
 		filters.put("fromyear", "1980");
 		filters.put("toyear", "2020");
-		FichaPelicula[] result = f.lookForRecommendations(filters);
-		//FichaPelicula[] result = f.searchFilm("batman");
+		FichaPelicula[] result = f.lookForRecommendations(filters);*/
+		FichaPelicula result = f.getFilmDetails(new URL("http://localhost:8080"));
 		if(result == null){
 			return;
 		}
-		for (int i = 0; i < result.length; i++) {
+		System.out.println(result);
+		/*for (int i = 0; i < result.length; i++) {
 			System.out.println(result[i]);
-		}
+		}*/
 	}
 }

@@ -24,7 +24,7 @@ public class FichaPelicula {
 	private String productora;
 	private String genero;
 	private String sinopsis;
-	private Map<String, String> premios;
+	private String[] premios;
 	private Map<String, String[]> criticas;
 	private String valoracion;
 	private String notaUsuario;
@@ -126,10 +126,10 @@ public class FichaPelicula {
 	public void setSinopsis(String sinopsis) {
 		this.sinopsis = sinopsis;
 	}
-	public Map<String, String> getPremios() {
+	public String[] getPremios() {
 		return premios;
 	}
-	public void setPremios(Map<String, String> premios) {
+	public void setPremios(String[] premios) {
 		this.premios = premios;
 	}
 	public Map<String, String[]> getCriticas() {
@@ -212,15 +212,12 @@ public class FichaPelicula {
 		if(this.sinopsis != null){
 			result += "Sinopsis: " + this.getSinopsis() + "\n";
 		}
-		if(this.premios != null){
-			String listaPremios = "";
-			for (Map.Entry<String, String> entry : this.getPremios().entrySet())
-			{
-			    listaPremios += "\t" + entry.getKey() + ": " + entry.getValue() + "\n";
+		if((this.premios != null) && this.premios.length > 0){
+			String premios = "";
+			for (int i = 0; i < this.getPremios().length; i++) {
+				premios += "\t" +  this.getPremios()[i] + "\n";
 			}
-			if(!listaPremios.isEmpty()){
-				result += "Premios: \n" + listaPremios + "\n";
-			}
+			result += "Premios: \n" + premios + "\n";
 		}else{
 			System.out.println("Premios no encontrado");
 		}

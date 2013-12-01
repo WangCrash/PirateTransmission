@@ -18,6 +18,7 @@ import Utils.UtilTools;
 import Codification.Base64;
 import Connection.ConnectionManager;
 import FilmAffinity.FilmAffinitySearcherModule;
+import FilmAffinity.FilmAffinityVotingModule;
 
 import Model.FichaPelicula;
 
@@ -79,6 +80,13 @@ public class FilmAffinityBot {
 			return null;
 		}
 		return new FilmAffinitySearcherModule(urlBase, logged, cm).getFilmDetails(detailsUrl);
+	}
+	
+	public static boolean voteForFilm(FichaPelicula film, String rating){
+		if(logged){
+			return new FilmAffinityVotingModule(urlBase, cm).voteForFilm(film, rating);
+		}
+		return false;
 	}
 	
 	private static boolean logout() throws URISyntaxException, MalformedURLException{
