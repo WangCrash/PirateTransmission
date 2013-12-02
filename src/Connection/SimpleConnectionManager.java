@@ -21,7 +21,7 @@ public class SimpleConnectionManager extends ConnectionManager{
 	}
 	
 	public Map<String, String> sendPostRequest(URL url, String parameters, Map<String, String> httpAuth){
-		return this.sendRequest(url, parameters, httpAuth, METHOD_POST, true, false, false);
+		return this.sendRequest(url, parameters, false, httpAuth, METHOD_POST, true, false, false);
 	}
 	
 	public Map<String, String> sendGetRequest(URL url){
@@ -33,6 +33,6 @@ public class SimpleConnectionManager extends ConnectionManager{
 	}
 	
 	public Map<String, String> sendGetRequest(URL url, String parameters, Map<String, String> httpAuth){
-		return this.sendRequest(url, parameters, httpAuth, METHOD_GET, true, false, false);
+		return this.sendRequest(url, parameters, false, httpAuth, METHOD_GET, true, false, false);
 	}
 }

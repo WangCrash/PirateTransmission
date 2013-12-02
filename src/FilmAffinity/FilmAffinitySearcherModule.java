@@ -64,7 +64,7 @@ public class FilmAffinitySearcherModule {
 		}
 
         Map<String, String> response;
-        response = cm.sendRequest(url, null, null, ConnectionManager.METHOD_GET, true, true, true);
+        response = cm.sendRequest(url, ConnectionManager.METHOD_GET, true, true, true);
         
         int responseCode;
 		try{
@@ -112,9 +112,9 @@ public class FilmAffinitySearcherModule {
 
         Map<String, String> response;
         if(logged){
-        	response = cm.sendRequest(url, null, null, ConnectionManager.METHOD_GET, true, true, true);
+        	response = cm.sendRequest(url, ConnectionManager.METHOD_GET, true, true, true);
         }else{
-        	response = cm.sendRequest(url, null, null, ConnectionManager.METHOD_GET, true, false, false);
+        	response = cm.sendRequest(url, ConnectionManager.METHOD_GET, true, false, false);
         }
         int responseCode;
 		try{
@@ -149,7 +149,7 @@ public class FilmAffinitySearcherModule {
 	}
 	
 	public FichaPelicula getFilmDetails(URL filmDetailsUrl){
-		Map<String, String> response = cm.sendRequest(filmDetailsUrl, null, null, ConnectionManager.METHOD_GET, true, false, true);
+		Map<String, String> response = cm.sendRequest(filmDetailsUrl, ConnectionManager.METHOD_GET, true, false, true);
 		int responseCode;
 		try{
 			responseCode = Integer.parseInt(response.get("ResponseCode"));
@@ -206,9 +206,9 @@ public class FilmAffinitySearcherModule {
 			}
 		    Map<String, String> response;
 		    if(logged){
-	        	response = cm.sendRequest(url, null, null, ConnectionManager.METHOD_GET, true, true, true);
+	        	response = cm.sendRequest(url, ConnectionManager.METHOD_GET, true, true, true);
 	        }else{
-	        	response = cm.sendRequest(url, null, null, ConnectionManager.METHOD_GET, true, false, false);
+	        	response = cm.sendRequest(url, ConnectionManager.METHOD_GET, true, false, false);
 	        }
 		    int responseCode;
 			String responseText = response.get("ResponseBody");

@@ -97,7 +97,7 @@ public class FilmAffinityBot {
 		URI uri = new URI("http", urlBase, "/es/logout.php", null);
 		URL url = uri.toURL();
 		
-		Map<String, String> response = cm.sendRequest(url, null, null, ConnectionManager.METHOD_GET, false, true, true);
+		Map<String, String> response = cm.sendRequest(url, ConnectionManager.METHOD_GET, false, true, true);
 		if(response != null){
         	return (response.get("ResponseCode").equals("302") && (response.get("Location").equals("/es/logout.php") || response.get("Location").equals("/es/main.html")));
         }
@@ -142,7 +142,7 @@ public class FilmAffinityBot {
 			}
 			parametersChain += key + "=" + parameters.get(key);
 		}
-		Map<String, String> postResponse = cm.sendRequest(url, parametersChain, null, ConnectionManager.METHOD_POST, false, true, false);
+		Map<String, String> postResponse = cm.sendRequest(url, parametersChain, false, null, ConnectionManager.METHOD_POST, false, true, false);
 		if(postResponse == null){
 			return null;
 		}
@@ -159,7 +159,7 @@ public class FilmAffinityBot {
 			} catch (MalformedURLException e) {
 				return null;
 			}
-			return cm.sendRequest(url, null, null, ConnectionManager.METHOD_GET, false, false, true);
+			return cm.sendRequest(url, ConnectionManager.METHOD_GET, false, false, true);
 		}
 		return null;
 	}

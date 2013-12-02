@@ -31,7 +31,7 @@ public class FilmAffinityVotingModule {
 			}
 			String parameters = "id=" + idFilm + "&rating=" + rating + "&ucd=" + film.getDataUcd();
 			
-			Map<String, String> response = cm.sendRequest(url, parameters, null, ConnectionManager.METHOD_POST, true, true, true);
+			Map<String, String> response = cm.sendRequest(url, parameters, true, null, ConnectionManager.METHOD_POST, true, true, true);
 			
 			if(response != null){
 				int responseCode;
@@ -41,8 +41,11 @@ public class FilmAffinityVotingModule {
 					return false;
 				}
 				if(responseCode == 200){
-					JSONObject jsonResponse = new JSONObject(response.get("ResponseText"));
-					return true;
+					JSONObject jsonResponse = new JSONObject(response.get("ResponseBody"));
+					System.out.println(jsonResponse.getInt("result"));
+					if(jsonResponse.getInt("result") == 0){
+						return true;
+					}
 				}
 			}
 		}

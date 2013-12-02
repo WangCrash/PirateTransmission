@@ -8,6 +8,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +33,11 @@ public class ConnectionManager {
 		this.TIMEOUT_MILLI = timeout;
 	}
 	
-	public Map<String, String> sendRequest(URL url, String parameters, Map<String, String> httpAuth, String method, boolean getBodyResponse, boolean watchCookies, boolean sendCookies){
+	public Map<String, String> sendRequest(URL url, String method, boolean getBodyResponse, boolean watchCookies, boolean sendCookies){
+		return sendRequest(url, null, false, null, method, getBodyResponse, watchCookies, sendCookies);
+	}
+	
+	public Map<String, String> sendRequest(URL url, String parameters, boolean encodeParams, Map<String, String> httpAuth, String method, boolean getBodyResponse, boolean watchCookies, boolean sendCookies){
 		String cookieChain = "";
 		if(sendCookies){
 			if(cookiesList != null){
@@ -42,6 +47,10 @@ public class ConnectionManager {
 				}
 			}
 		}
+		
+		/*if(encodeParams){
+			//encodeparams pero Fa no hace esas cosas
+		}*/
 		HttpURLConnection.setFollowRedirects(false);
 		
 		HttpURLConnection con;
@@ -51,9 +60,13 @@ public class ConnectionManager {
 			e.printStackTrace();
 			return null;
 		}
+		
 		con.setReadTimeout(TIMEOUT_MILLI);
 		con.setRequestProperty("User-Agent", USER_AGENT);
 		con.setRequestProperty("Accept-Language", "es-ES,es;q=0.8,en;q=0.6");
+		if(encodeParams){
+			con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		}
 		if(!cookieChain.isEmpty()){
 			con.setRequestProperty("Cookie", cookieChain);
 		}
@@ -104,11 +117,9 @@ public class ConnectionManager {
 				result.put("Location", con.getHeaderField("Location"));
 				
 			}
-			if(watchCookies){
+			if((watchCookies) && con.getHeaderField("Set-Cookie") != null){
 				if(cookiesList == null){
 					cookiesList = new ArrayList<String>();
-				}else{
-					cookiesList.clear();
 				}
 				for (Map.Entry<String, List<String>> responseHeader : con.getHeaderFields().entrySet()){
 					if(responseHeader.getKey() == null){

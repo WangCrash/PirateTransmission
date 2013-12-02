@@ -16,7 +16,7 @@ public class pruebas {
 				return;
 			for (int i = 0; i < result.length; i++) {
 				System.out.println(result[i]);
-				if(FilmAffinityBot.voteForFilm(result[0], "6")){
+				if(FilmAffinityBot.voteForFilm(result[0], "7")){
 					System.out.println("Voted!");
 				}
 			}
