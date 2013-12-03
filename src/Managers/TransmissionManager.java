@@ -40,15 +40,17 @@ public class TransmissionManager {
 			String responseText = response.get("ResponseBody");
 			if(!responseCode.equals("200")){
 				if(responseCode.equals("409")){	
-					captureTransmissionId(responseText);
-					logged = true;
-					return true;
+					transmissionId = captureTransmissionId(responseText);
+					if(transmissionId != null){
+						logged = true;
+						return true;
+					}
+					return false;
 				}
 			}
 			logged = false;
 			return logged;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			System.out.println("Message: " + e.getMessage());
 			System.out.println("Cause: " + e.getCause());
 			System.out.println("Localized: " + e.getLocalizedMessage());
@@ -57,14 +59,16 @@ public class TransmissionManager {
 		}
 	}
 	
-	private static void captureTransmissionId(String response){
+	private static String captureTransmissionId(String response){
 		String transmissionIdRegex = "<code>X-Transmission-Session-Id:(.*?)</code>";
 		Pattern p = Pattern.compile(transmissionIdRegex);
 		Matcher m = p.matcher(response);
 		//<code>X-Transmission-Session-Id: jSlV7sWsU81qptl1OU8UnniTM6HfIWIL1YOektP7CxeLeFwF</code>
+		String transmissionId = null;
 		if(m.find()){
-			transmissionId = m.group(1).trim();
+			 transmissionId = m.group(1).trim();
 		}
+		return transmissionId;
 	}
 	
 	public static boolean addTorrent(ArchivoTorrent torrent) throws Exception{
@@ -119,8 +123,9 @@ public class TransmissionManager {
 		jsonRequest.put("arguments", jsonArguments);
 		
 		JSONObject jsonResponse = remoteTransmission(jsonRequest, 0);
-			
-		System.out.println(jsonResponse.toString());
+		if(jsonResponse != null){	
+			System.out.println(jsonResponse.toString());
+		}
 	}
 	
 	private static JSONObject remoteTransmission(JSONObject jsonRequest, int intento) throws Exception{
@@ -140,18 +145,27 @@ public class TransmissionManager {
 		httpAuth.put("PASSWORD", password);
         
 		//Map<String, String> response = ConnectionManager.sendRequest(url, jsonRequest.toString(), httpAuth, ConnectionManager.METHOD_POST, true, false, false);
-		Map<String, String> response = new SimpleConnectionManager().sendPostRequest(url, jsonRequest.toString(), null);
+		Map<String, String> response = new SimpleConnectionManager().sendPostRequest(url, jsonRequest.toString(), httpAuth);
 		String responseCode = response.get("ResponseCode");
 		String responseText = response.get("ResponseBody");
 		
 		if(!responseCode.equals("200")){
 			if(responseCode.equals("409")){	
-				captureTransmissionId(responseText);
-				remoteTransmission(jsonRequest, intento + 1);
+				transmissionId = captureTransmissionId(responseText);
+				if(transmissionId != null){
+					remoteTransmission(jsonRequest, intento + 1);
+				}else{
+					return null;
+				}
 			}
 		}
 		
-		return new JSONObject(responseText);
+		try{
+			return new JSONObject(responseText);
+		}catch(JSONException e){
+			System.out.println(responseText);
+			return null;
+		}
 	}
 	
 	public static boolean initManager() throws IOException, URISyntaxException{
