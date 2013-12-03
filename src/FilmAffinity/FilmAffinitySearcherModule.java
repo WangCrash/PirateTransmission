@@ -17,10 +17,16 @@ import Model.FichaPelicula;
 import Utils.UtilTools;
 
 public class FilmAffinitySearcherModule {
+	public static final String FAMS_FILTERS_GENRE_KEY = "genre";
+	public static final String FAMS_FILTERS_LIMIT_KEY = "limit";
+	public static final String FAMS_FILTERS_FROM_YEAR_KEY = "fromyear";
+	public static final String FAMS_FILTERS_TO_YEAR_KEY = "toyear";
+	
 	private boolean logged;
 	private ConnectionManager cm;
 	private String urlBase;
 	private Map<String, String> stringsValoraciones;
+	private String[] genresKeys;
 	
 	public FilmAffinitySearcherModule(String urlBase, boolean logged, ConnectionManager cm){
 		this.urlBase = urlBase;
@@ -37,10 +43,21 @@ public class FilmAffinitySearcherModule {
 		stringsValoraciones.put("Notable", "8");
 		stringsValoraciones.put("Muy buena", "9");
 		stringsValoraciones.put("Excelente", "10");
+		
+		genresKeys = new String[]{"AC", "AN", "AV", "BE", "C-F", "F-N", "CO", "DESC", "DO", "DR", "FAN", "INF", "INT", "MU", "RO", "TV_SE", "TE", "TH", "WE"};
 	}
 	
 	public FichaPelicula[] lookForRecommendations(){
 		return lookForRecommendations(null);
+	}
+	
+	public String getGenreKey(int genre){
+		if((genre >= 0) && (genre < this.genresKeys.length)){
+			return genresKeys[genre];
+		}else if(genre == -1){
+			return "";
+		}
+		return null;
 	}
 	
 	public FichaPelicula[] lookForRecommendations(Map<String, String> filters){
@@ -57,7 +74,7 @@ public class FilmAffinitySearcherModule {
 		}
         URL url;
 		try {
-			url = new URL(new URL(urlBase), query);
+			url = new URL(new URL("http://" + urlBase), query);
 			//url = new URL(urlBase);
 		} catch (MalformedURLException e1) {
 			return null;

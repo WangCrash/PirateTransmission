@@ -163,6 +163,9 @@ public class FichaPelicula {
 		if(this.titulo != null){
 			result += "Título: " + this.getTitulo() + "\n";
 		}
+		if(this.getFilmDetailsUrl() != null){
+			result += "Enlace: " + this.getFilmDetailsUrl() + "\n";
+		}
 		if(this.tituloOriginal != null){
 			result += "Título original: " + this.getTituloOriginal() + "\n";
 		}
@@ -218,8 +221,6 @@ public class FichaPelicula {
 				premios += "\t" +  this.getPremios()[i] + "\n";
 			}
 			result += "Premios: \n" + premios + "\n";
-		}else{
-			System.out.println("Premios no encontrado");
 		}
 		if(this.criticas != null){
 			String listaCriticas = "";
@@ -233,8 +234,6 @@ public class FichaPelicula {
 			if(!listaCriticas.isEmpty()){
 				result += "Críticas: \n" + listaCriticas + "\n";
 			}
-		}else{
-			System.out.println("Criticas no encontrado");
 		}
 		if(this.valoracion != null){
 			result += "Nota: " + this.getValoracion() + "\n";
@@ -244,8 +243,6 @@ public class FichaPelicula {
 		}
 		if(this.notaAlmasGemelas != null){
 			result += "Tus almas gemelas le ponen un " + this.getNotaAlmasGemelas() + " a esta película\n";
-		}else{
-			System.out.println("Nota Almas Gemelas no encontrado");
 		}
 		return result;
 	}

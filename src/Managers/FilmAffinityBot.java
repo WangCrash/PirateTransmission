@@ -24,6 +24,27 @@ import Model.FichaPelicula;
 
 
 public class FilmAffinityBot {
+	public static final int FAMS_GENRE_KEY_ALL = -1;
+	public static final int FAMS_GENRE_KEY_ACTION = 0;
+	public static final int FAMS_GENRE_KEY_ANIMATION = 1;
+	public static final int FAMS_GENRE_KEY_ADVENTURE = 2;
+	public static final int FAMS_GENRE_KEY_WAR = 3;
+	public static final int FAMS_GENRE_KEY_SCIENCE_FICTION = 4;
+	public static final int FAMS_GENRE_KEY_NOIR = 5;
+	public static final int FAMS_GENRE_KEY_COMEDY = 6;
+	public static final int FAMS_GENRE_KEY_UNKNOWN = 7;
+	public static final int FAMS_GENRE_KEY_DOCUMENTARY = 8;
+	public static final int FAMS_GENRE_KEY_DRAMA = 9;
+	public static final int FAMS_GENRE_KEY_FANTASTIC = 10;
+	public static final int FAMS_GENRE_KEY_INFANTILE = 11;
+	public static final int FAMS_GENRE_KEY_INTRIGUE = 12;
+	public static final int FAMS_GENRE_KEY_MUSICAL = 13;
+	public static final int FAMS_GENRE_KEY_ROMANCE = 14;
+	public static final int FAMS_GENRE_KEY_TV_SERIE = 15;
+	public static final int FAMS_GENRE_KEY_TERROR = 16;
+	public static final int FAMS_GENRE_KEY_THRILLER = 17;
+	public static final int FAMS_GENRE_KEY_WESTERN = 18;
+	
 	private static String user = "";
 	private static String password = "";
 	private static ConnectionManager cm;	
@@ -57,7 +78,51 @@ public class FilmAffinityBot {
 	}
 	
 	public static FichaPelicula[] getListRecommendations(){
+		if(!logged){
+			return null;
+		}
 		return new FilmAffinitySearcherModule(urlBase, logged, cm).lookForRecommendations();
+	}
+	
+	public static FichaPelicula[] getListRecommendations(int genre){
+		return getListRecommendations(genre, -1, -1, -1);
+	}
+	
+	public static FichaPelicula[] getListRecommendations(int genre, int fromYear, int toYear){
+		return getListRecommendations(genre, fromYear, toYear, -1);
+	}
+	
+	public static FichaPelicula[] getListRecommendations(int genre, int fromYear, int toYear, int limit){
+		if(!logged){
+			return null;
+		}
+		FilmAffinitySearcherModule fasm = new FilmAffinitySearcherModule(urlBase, logged, cm);
+		Map <String, String> filters = new HashMap<String, String>();
+		
+		String genreKey = fasm.getGenreKey(genre);
+		if(genreKey == null){
+			return null;
+		}
+		filters.put(FilmAffinitySearcherModule.FAMS_FILTERS_GENRE_KEY, genreKey);
+		
+		String limitString = "20";
+		if(limit != -1){
+			limitString = String.valueOf(limit);
+		}
+		filters.put(FilmAffinitySearcherModule.FAMS_FILTERS_LIMIT_KEY, limitString);
+		
+		String fromYearString = "";
+		if(fromYear != -1){
+			fromYearString = String.valueOf(fromYear);
+		}
+		filters.put(FilmAffinitySearcherModule.FAMS_FILTERS_FROM_YEAR_KEY, fromYearString);
+		
+		String toYearString = "";
+		if(toYear != -1){
+			toYearString = String.valueOf(toYear);
+		}
+		filters.put(FilmAffinitySearcherModule.FAMS_FILTERS_TO_YEAR_KEY, toYearString);
+		return fasm.lookForRecommendations(filters);
 	}
 	
 	public static FichaPelicula[] searchFilm(String search) throws Exception{

@@ -1,7 +1,3 @@
-import java.net.URL;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import Managers.FilmAffinityBot;
 import Model.FichaPelicula;
 
@@ -11,14 +7,14 @@ public class pruebas {
 		boolean initiated = FilmAffinityBot.initializeManager(false);
 		
 		if(initiated){
-			FichaPelicula[] result = FilmAffinityBot.searchFilm("miedo y asco en las vegas");//FilmAffinityBot.getListRecommendations();
+			FichaPelicula[] result = FilmAffinityBot.getListRecommendations(FilmAffinityBot.FAMS_GENRE_KEY_ANIMATION);
 			if(result == null)
 				return;
 			for (int i = 0; i < result.length; i++) {
 				System.out.println(result[i]);
-				if(FilmAffinityBot.voteForFilm(result[0], "7")){
+				/*if(FilmAffinityBot.voteForFilm(result[0], "7")){
 					System.out.println("Voted!");
-				}
+				}*/
 			}
 			boolean terminated = FilmAffinityBot.terminateManager();
 			if(terminated)
