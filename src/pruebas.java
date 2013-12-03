@@ -7,9 +7,12 @@ public class pruebas {
 		boolean initiated = FilmAffinityBot.initializeManager(false);
 		
 		if(initiated){
-			FichaPelicula[] result = FilmAffinityBot.getListRecommendations(FilmAffinityBot.FAMS_GENRE_KEY_ANIMATION);
-			if(result == null)
+			//FichaPelicula[] result = FilmAffinityBot.getListRecommendations(FilmAffinityBot.FAMS_GENRE_KEY_ANIMATION);
+			FichaPelicula[] result = FilmAffinityBot.searchFilm("La novia cadáver");
+			if(result == null){
+				System.out.println("no hay resultados");
 				return;
+			}
 			for (int i = 0; i < result.length; i++) {
 				System.out.println(result[i]);
 				/*if(FilmAffinityBot.voteForFilm(result[0], "7")){

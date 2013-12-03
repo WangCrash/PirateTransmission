@@ -115,7 +115,7 @@ public class FilmAffinitySearcherModule {
 		
         String query;
 		try {
-			query = "/es/search.php?stext=" + URLEncoder.encode(search, "UTF-8") + "&stype=title";
+			query = "/es/search.php?stext=" + URLEncoder.encode(search, "ISO-8859-1") + "&stype=title";
 		} catch (UnsupportedEncodingException e2) {
 			return null;
 		}
