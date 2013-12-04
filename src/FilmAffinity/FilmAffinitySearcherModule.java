@@ -60,6 +60,19 @@ public class FilmAffinitySearcherModule {
 		return null;
 	}
 	
+	public FichaPelicula completeFilmDetails(FichaPelicula film){
+		if((film.getFilmDetailsUrl() == null) || (film.getFilmDetailsUrl().isEmpty())){
+			return film;
+		}
+		URL urlFilm;
+		try {
+			urlFilm = new URL(new URL("http://" + this.urlBase), film.getFilmDetailsUrl());
+		} catch (MalformedURLException e) {
+			return film;
+		}
+		return getFilmDetails(urlFilm);
+	}
+	
 	public FichaPelicula[] lookForRecommendations(Map<String, String> filters){
 		FichaPelicula[] result = null;
 		

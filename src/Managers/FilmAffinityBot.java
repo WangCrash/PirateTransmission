@@ -126,10 +126,11 @@ public class FilmAffinityBot {
 	}
 	
 	public static FichaPelicula[] searchFilm(String search) throws Exception{
-		if(!logged){
-			return null;
-		}
 		return new FilmAffinitySearcherModule(urlBase, logged, cm).searchFilm(search);
+	}
+	
+	public static FichaPelicula fillFichaPelicula(FichaPelicula film){
+		return new FilmAffinitySearcherModule(urlBase, logged, cm).completeFilmDetails(film);
 	}
 	
 	public static FichaPelicula getFilmDetails(FichaPelicula pelicula){

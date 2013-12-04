@@ -7,18 +7,29 @@ public class pruebas {
 		boolean initiated = FilmAffinityBot.initializeManager(false);
 		
 		if(initiated){
-			//FichaPelicula[] result = FilmAffinityBot.getListRecommendations(FilmAffinityBot.FAMS_GENRE_KEY_ANIMATION);
-			FichaPelicula[] result = FilmAffinityBot.searchFilm("La novia cadáver");
+			//FichaPelicula[] result = FilmAffinityBot.getListRecommendations();
+			//FichaPelicula[] result = FilmAffinityBot.getListRecommendations(FilmAffinityBot.FAMS_GENRE_KEY_ACTION);
+			FichaPelicula[] result = FilmAffinityBot.searchFilm("x-men");
 			if(result == null){
 				System.out.println("no hay resultados");
 				return;
+			}else{
+				System.out.println("Resultados: " + result.length);
 			}
 			for (int i = 0; i < result.length; i++) {
+				System.out.println("------- " + i + " --------");
 				System.out.println(result[i]);
-				/*if(FilmAffinityBot.voteForFilm(result[0], "7")){
-					System.out.println("Voted!");
-				}*/
+				if(result[i].getTitulo().contains("Primera generaci")){
+					result[i] = FilmAffinityBot.fillFichaPelicula(result[i]);
+					System.out.println(result[i]);
+					/*if(FilmAffinityBot.voteForFilm(result[i], "7")){
+						System.out.println("Voted!");
+						System.out.println(result[i]);
+					}*/
+					break;
+				}
 			}
+			
 			boolean terminated = FilmAffinityBot.terminateManager();
 			if(terminated)
 				System.out.println("\nPROCESS CORRECTLY COMPLETED");
