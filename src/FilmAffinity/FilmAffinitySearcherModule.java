@@ -189,7 +189,7 @@ public class FilmAffinitySearcherModule {
 		if(responseCode == HttpURLConnection.HTTP_OK){
 			FichaPelicula pelicula = extractFilmInfo(response.get("ResponseBody"));
 			if(pelicula != null){
-				pelicula.setFilmDetailsUrl(filmDetailsUrl.toString());
+				pelicula.setFilmDetailsUrl(filmDetailsUrl.getPath());
 			}
 			return pelicula;
 		}

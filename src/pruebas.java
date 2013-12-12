@@ -9,7 +9,7 @@ public class pruebas {
 		if(initiated){
 			//FichaPelicula[] result = FilmAffinityBot.getListRecommendations();
 			//FichaPelicula[] result = FilmAffinityBot.getListRecommendations(FilmAffinityBot.FAMS_GENRE_KEY_ACTION);
-			FichaPelicula[] result = FilmAffinityBot.searchFilm("x-men");
+			FichaPelicula[] result = FilmAffinityBot.searchFilm("star trek");
 			if(result == null){
 				System.out.println("no hay resultados");
 				return;
@@ -19,7 +19,7 @@ public class pruebas {
 			for (int i = 0; i < result.length; i++) {
 				System.out.println("------- " + i + " --------");
 				System.out.println(result[i]);
-				if(result[i].getTitulo().contains("Primera generaci")){
+				if(i == 2){
 					result[i] = FilmAffinityBot.fillFichaPelicula(result[i]);
 					System.out.println(result[i]);
 					/*if(FilmAffinityBot.voteForFilm(result[i], "7")){
