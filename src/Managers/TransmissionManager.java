@@ -26,9 +26,19 @@ public class TransmissionManager {
 	private static String transmissionId = "5L38jNKUmN8ZiYP4Htx66kK0yXSn0QubVV2DuKVfuZly6P";
 	private static boolean logged = false;
 	
-	public static boolean loginOnTranssmission() throws URISyntaxException, MalformedURLException{
-		URI loginUri = new URI("http", urlBase, null);
-        URL loginUrl = loginUri.toURL();
+	public static boolean loginOnTranssmission(){
+		URI loginUri;
+		try {
+			loginUri = new URI("http", urlBase, null);
+		} catch (URISyntaxException e2) {
+			return false;
+		}
+        URL loginUrl;
+		try {
+			loginUrl = loginUri.toURL();
+		} catch (MalformedURLException e1) {
+			return false;
+		}
 		try {
 			//String[] response = ConnectionManager.getAuthorization(loginUrl);
 			Map<String, String> httpAuth = new HashMap<String, String>();
@@ -71,11 +81,11 @@ public class TransmissionManager {
 		return transmissionId;
 	}
 	
-	public static boolean addTorrent(ArchivoTorrent torrent) throws Exception{
+	public static boolean addTorrent(ArchivoTorrent torrent){
 		return addTorrent(torrent, 1);
 	}
 	
-	private static boolean addTorrent(ArchivoTorrent torrent, int intento) throws Exception{
+	private static boolean addTorrent(ArchivoTorrent torrent, int intento){
 		if(!logged){
 			System.out.println("Internal Error: Must log in!");
 			return false;
@@ -128,13 +138,21 @@ public class TransmissionManager {
 		}
 	}
 	
-	private static JSONObject remoteTransmission(JSONObject jsonRequest, int intento) throws Exception{
+	private static JSONObject remoteTransmission(JSONObject jsonRequest, int intento){
 		if(intento > 3){
 			System.out.println("External Error: Transmission doesn't responds");
 			return null;
 		}
-		URI uri = new URI("http", urlBase, null);
-        URL url = uri.toURL();
+		URI uri;
+		URL url;
+		try{
+			uri = new URI("http", urlBase, null);
+			url = uri.toURL();
+		}catch(URISyntaxException e1){
+			return null;
+		}catch(MalformedURLException e){
+			return null;
+		}
 
 		//String[] response = ConnectionManager.sendPostRequest(url, jsonRequest.toString(), transmissionId);
         Map<String, String> httpAuth = new HashMap<String, String>();
@@ -168,7 +186,7 @@ public class TransmissionManager {
 		}
 	}
 	
-	public static boolean initManager() throws IOException, URISyntaxException{
+	public static boolean initManager(){
 		setUpManager();
 		return loginOnTranssmission();
 	}

@@ -1,9 +1,13 @@
 package Utils;
 
+import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 
 public class UtilTools {	
@@ -41,6 +45,23 @@ public class UtilTools {
 			chain = chain.substring(0, chain.length());
 		}
 		return chain;
+	}
+	
+	public void openURLInNavigator(URL url){
+		if(Desktop.isDesktopSupported())
+		{
+		  try {
+			Desktop.getDesktop().browse(url.toURI());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				System.out.println("couldn't open that URL");
+			} catch (URISyntaxException e) {
+				// TODO Auto-generated catch block
+				System.out.println("couldn't open that URL");
+			}
+		}else{
+			System.out.println("Web browser not found");
+		}
 	}
 }
 	

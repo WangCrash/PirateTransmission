@@ -22,7 +22,7 @@ public class PirateBayBot {
 	public static final int CATEGORY_MUSIC = 101;
 	//public static final int CATEGORY_APPLICATIONS = 300;
 	
-	private static String urlBase = "thepiratebay.sx";
+	private static String urlBase = "thepiratebay.pe";
 	
 	public static ArchivoTorrent[] searchTorrent(String search, int category, int orderBy) throws Exception{
 		
