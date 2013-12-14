@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 
 public class UtilTools {	
@@ -62,6 +65,14 @@ public class UtilTools {
 		}else{
 			System.out.println("Web browser not found");
 		}
+	}
+	
+	public void showInfoOKDialog(JFrame frame, String title, String message){
+		JOptionPane.showMessageDialog(frame, message, title, JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	public void showWarningDialog(JFrame frame, String title, String message){
+		JOptionPane.showMessageDialog(frame, message, title, JOptionPane.WARNING_MESSAGE);
 	}
 }
 	
