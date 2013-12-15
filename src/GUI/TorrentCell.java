@@ -1,3 +1,4 @@
+package GUI;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -17,6 +18,7 @@ import java.awt.Color;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import java.awt.SystemColor;
 
 
 public class TorrentCell extends JPanel {
@@ -34,14 +36,15 @@ public class TorrentCell extends JPanel {
 	 * Create the panel.
 	 */
 	public TorrentCell(ArchivoTorrent torrent) {
-		System.out.println("creando celda");
 		this.archivoTorrent = torrent;
 		setBorder(new LineBorder(new Color(128, 128, 128), 2, true));
 		
 		categoryLabel = new JLabel("Categor\u00EDa");
+		categoryLabel.setBackground(SystemColor.text);
 		categoryLabel.setText(torrent.getCategoria());
 		
 		titleLabel = new JLabel("T\u00EDtulo");
+		titleLabel.setBackground(SystemColor.text);
 		titleLabel.setText(archivoTorrent.getTitulo());
 		
 		JButton showDetailsButton = new JButton("Ver Detalles");
@@ -69,33 +72,30 @@ public class TorrentCell extends JPanel {
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(titleLabel, GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(categoryLabel, GroupLayout.PREFERRED_SIZE, 243, GroupLayout.PREFERRED_SIZE)))
-					.addContainerGap())
+					.addGap(23)
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+						.addComponent(titleLabel, GroupLayout.PREFERRED_SIZE, 415, GroupLayout.PREFERRED_SIZE)
+						.addComponent(categoryLabel, GroupLayout.PREFERRED_SIZE, 415, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap(28, Short.MAX_VALUE))
 				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-					.addContainerGap(102, Short.MAX_VALUE)
+					.addContainerGap(122, Short.MAX_VALUE)
 					.addComponent(addTorrentButton)
-					.addGap(27)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(showDetailsButton)
-					.addGap(90))
+					.addGap(112))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(9)
+					.addContainerGap()
 					.addComponent(categoryLabel)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGap(5)
 					.addComponent(titleLabel)
-					.addPreferredGap(ComponentPlacement.RELATED)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(showDetailsButton)
-						.addComponent(addTorrentButton))
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+						.addComponent(addTorrentButton)
+						.addComponent(showDetailsButton))
+					.addGap(10))
 		);
 		setLayout(groupLayout);
 

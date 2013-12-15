@@ -1,3 +1,4 @@
+package GUI;
 import java.awt.Cursor;
 import java.awt.EventQueue;
 
@@ -22,14 +23,20 @@ import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
 
+import GUI.Configuration.ConfigView;
 import Managers.PirateBayBot;
 import Managers.TransmissionManager;
 import Model.ArchivoTorrent;
 import Utils.UtilTools;
 
 import java.awt.GridLayout;
-
 import java.awt.Toolkit;
+import java.awt.SystemColor;
+
+import javax.swing.border.MatteBorder;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 
 public class PirateTransmissionDemo extends JFrame {
@@ -72,13 +79,28 @@ public class PirateTransmissionDemo extends JFrame {
 		setResizable(false);
 		setTitle("PirateTransmissionDemo");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 540, 368);
+		setBounds(100, 100, 547, 368);
+		
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		JMenu mnOpciones = new JMenu("Opciones");
+		menuBar.add(mnOpciones);
+		
+		JMenuItem mntmConfiguracin = new JMenuItem("Configuraci\u00F3n");
+		mntmConfiguracin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				openConfigView();
+			}
+		});
+		mnOpciones.add(mntmConfiguracin);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
 		JPanel searchPanel = new JPanel();
-		searchPanel.setBackground(Color.LIGHT_GRAY);
+		searchPanel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, Color.DARK_GRAY, null, null, null));
+		searchPanel.setBackground(SystemColor.activeCaption);
 		searchPanel.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -120,8 +142,9 @@ public class PirateTransmissionDemo extends JFrame {
 		
 		resultsPanel = new JPanel();
 		resultsPanel.setBorder(new SoftBevelBorder(BevelBorder.RAISED, Color.DARK_GRAY, null, null, null));
-		resultsPanel.setBackground(new Color(128, 128, 128));
+		resultsPanel.setBackground(SystemColor.activeCaption);
 		scrollPane.setViewportView(resultsPanel);
+		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 		resultsPanel.setLayout(new GridLayout(0, 1, 0, 2));
 		contentPane.setLayout(gl_contentPane);
 	}
@@ -147,7 +170,7 @@ public class PirateTransmissionDemo extends JFrame {
 				TorrentCell cell = new TorrentCell(torrents[i]);
 				cell.setMainFrame(this);
 				if(i % 2 == 0){
-					cell.setBackground(new Color(47.0f/255.0f, 79.0f/255.0f, 160.0f/255.0f));
+					cell.setBackground(new Color(196.0f/255.0f, 196.0f/255.0f, 236.0f/255.0f));
 				}else{
 					cell.setBackground(new Color(176.0f/255.0f, 196.0f/255.0f, 222.0f/255.0f));//light steel blue
 				}
@@ -155,10 +178,16 @@ public class PirateTransmissionDemo extends JFrame {
 			}
 			resultsPanel.revalidate();
 		}
+
 		searchField.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
 		this.getContentPane().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 	
+	private void openConfigView() {
+		// TODO Auto-generated method stub
+		ConfigView configView = new ConfigView(this);
+		configView.setVisible(true);
+	}
 	protected JPanel getResultsPanel() {
 		return resultsPanel;
 	}
