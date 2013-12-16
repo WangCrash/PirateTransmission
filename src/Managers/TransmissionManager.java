@@ -192,7 +192,7 @@ public class TransmissionManager {
 	
 	public static boolean initManager(){
 		setUpManager();
-		return true;//loginOnTranssmission();
+		return loginOnTranssmission();
 	}
 	
 	private static void setUpManager(){
