@@ -5,8 +5,13 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -14,7 +19,7 @@ import javax.swing.JOptionPane;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 public class UtilTools {	
-	public String readConfigFile(){
+	private String readConfigFile(){
 		BufferedReader bf;
 		try {
 			bf = new BufferedReader(new FileReader("config"));
@@ -34,6 +39,46 @@ public class UtilTools {
 		}
 		
 		return config;
+	}
+	
+	private boolean writeConfigFile(String config){
+		PrintWriter writer;
+		try {
+			writer = new PrintWriter("config");
+		} catch (FileNotFoundException e) {
+			System.out.println("No se ha encontrado el fichero de configuración");
+			return false;
+		}
+		writer.println(config);
+		writer.close();
+		return true;
+	}
+	
+	public Map<String, String> getConfiguration(){
+		String config = this.readConfigFile();
+		if(config == null){
+			return null;
+		}	
+		Map<String, String> properties = new HashMap<String, String>();
+		String paramsRegex = "(.*?):(.*?);";
+		Pattern p = Pattern.compile(paramsRegex);
+		Matcher m = p.matcher(config);
+		while(m.find()){
+			String keyParam = m.group(1);
+			String valueParam = m.group(2);
+			properties.put(keyParam, valueParam);
+		}
+		return properties;
+	}
+	
+	public boolean setConfiguration(Map<String, String> properties){
+		String config = "";
+		for (Map.Entry<String, String> entry : properties.entrySet())
+		{
+			config += entry.getKey() + ":" + entry.getValue() + ";";
+		}
+		System.out.println("Configuración final: " + config);
+		return this.writeConfigFile(config);
 	}
 	   
 	public String escapeHtmlSpecialChars(String original){

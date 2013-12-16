@@ -18,11 +18,15 @@ import Model.ArchivoTorrent;
 import Utils.UtilTools;
 
 public class TransmissionManager {
+	
+	public static final String TRANSMISSION_RPC_SERVER_CONFIG_KEY = "transmission-rpc-host";
+	public static final String TRANSMISSION_USER_AUTH_CONFIG_KEY = "transmission-user";
+	public static final String TRANSMISSION_PASSWORD_AUTH_CONFIG_KEY = "transmission-password";
 
 	public static String user = "";
 	public static String password = "";
+	public static String urlBase = "//iriene.dlinkddns.com:9091/transmission/rpc";
 	
-	private static String urlBase = "//iriene.dlinkddns.com:9091/transmission/rpc";
 	private static String transmissionId = "5L38jNKUmN8ZiYP4Htx66kK0yXSn0QubVV2DuKVfuZly6P";
 	private static boolean logged = false;
 	
@@ -188,47 +192,39 @@ public class TransmissionManager {
 	
 	public static boolean initManager(){
 		setUpManager();
-		return loginOnTranssmission();
+		return true;//loginOnTranssmission();
 	}
 	
 	private static void setUpManager(){
-		String config = new UtilTools().readConfigFile();
-		if(config == null){
+		Map<String, String> configProperties = new UtilTools().getConfiguration();
+		if(configProperties == null){
+			urlBase = "";
 			user = "";
 			password = "";
 			System.out.println("Couldn't read from config file");
+			return;
 		}
-		
-		String urlBaselRegex = "transmission-rpc-host:(.*?);";
-		Pattern p = Pattern.compile(urlBaselRegex);
-		Matcher m = p.matcher(config);
-		
-		if(m.find()){
-			urlBase = m.group(1);
-			if(!m.group(1).contains("transmission/rpc")){
+		String server = configProperties.get(TRANSMISSION_RPC_SERVER_CONFIG_KEY);
+		if(server != null){
+			urlBase = server;
+			if(!server.contains("transmission/rpc")){
 				System.out.println("transmission rpc host probably not well set");
 			}
 		}else{
 			System.out.println("Transmmission host not set. Will take default.");
 		}
 		
-		String userRegex = "transmission-user:(.*?);";
-		p = Pattern.compile(userRegex);
-		m = p.matcher(config);
-		
-		if(m.find()){
-			user = m.group(1);
+		String transmissionUser = configProperties.get(TRANSMISSION_USER_AUTH_CONFIG_KEY);		
+		if(user != null){
+			user = transmissionUser;
 		}else{
 			System.out.println("Transmmission user not set.");
 		}
 		
-		String passRegex = "transmission-password:(.*?);";
-		p = Pattern.compile(passRegex);
-		m = p.matcher(config);
-		
-		if(m.find()){
+		String transmissionPassword = configProperties.get(TRANSMISSION_PASSWORD_AUTH_CONFIG_KEY);
+		if(transmissionPassword != null){
 			try {
-				password = new String(Base64.decode(m.group(1)), "UTF-8");
+				password = new String(Base64.decode(transmissionPassword), "UTF-8");
 			} catch (UnsupportedEncodingException e) {
 				password = "";
 				System.out.println("Couldn't decode FilmAffinity password");

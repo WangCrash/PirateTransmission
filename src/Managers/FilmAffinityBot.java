@@ -14,16 +14,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import Utils.UtilTools;
-
 import Codification.Base64;
 import Connection.ConnectionManager;
 import FilmAffinity.FilmAffinitySearcherModule;
 import FilmAffinity.FilmAffinityVotingModule;
-
 import Model.FichaPelicula;
 
 
 public class FilmAffinityBot {
+	public static final String FILMAFFINITY_USER_AUTH_CONFIG_KEY = "filmaffinity-user";
+	public static final String FILMAFFINITY_PASSWORD_AUTH_CONFIG_KEY = "filmaffinity-password";
+	
 	public static final int FAMS_GENRE_KEY_ALL = -1;
 	public static final int FAMS_GENRE_KEY_ACTION = 0;
 	public static final int FAMS_GENRE_KEY_ANIMATION = 1;
@@ -231,30 +232,24 @@ public class FilmAffinityBot {
 	}
 	
 	private static void setUpManager(){
-		String config = new UtilTools().readConfigFile();
-		if(config == null){
+		Map<String, String> configProperties = new UtilTools().getConfiguration();
+		if(configProperties == null){
 			user = "";
 			password = "";
 			System.out.println("Couldn't read from config file");
 		}
 			
-		String userRegex = "filmaffinity-user:(.*?);";
-		Pattern p = Pattern.compile(userRegex);
-		Matcher m = p.matcher(config);
-		
-		if(m.find()){
-			user = m.group(1);
+		String faUser = configProperties.get(FILMAFFINITY_USER_AUTH_CONFIG_KEY);		
+		if(faUser != null){
+			user = faUser;
 		}else{
 			System.out.println("FilmAffinity user not set.");
 		}
 		
-		String passRegex = "filmaffinity-password:(.*?);";
-		p = Pattern.compile(passRegex);
-		m = p.matcher(config);
-		
-		if(m.find()){
+		String faPassword = configProperties.get(FILMAFFINITY_PASSWORD_AUTH_CONFIG_KEY);
+		if(faPassword != null){
 			try {
-				password = new String(Base64.decode(m.group(1)), "UTF-8");
+				password = new String(Base64.decode(faPassword), "UTF-8");
 			} catch (UnsupportedEncodingException e) {
 				password = "";
 				System.out.println("Couldn't decode FilmAffinity password");

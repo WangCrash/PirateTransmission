@@ -23,7 +23,7 @@ public class ConnectionManager {
 	private final String USER_AGENT = "orphean_navigator_2.0";
 	
 	private List<String> cookiesList;
-	private int TIMEOUT_MILLI = 10000;
+	private int TIMEOUT_MILLI = 1000;
 	
 	public ConnectionManager(){
 		this(10000);
@@ -62,6 +62,7 @@ public class ConnectionManager {
 		}
 		
 		con.setReadTimeout(TIMEOUT_MILLI);
+		
 		con.setRequestProperty("User-Agent", USER_AGENT);
 		con.setRequestProperty("Accept-Language", "es-ES,es;q=0.8,en;q=0.6");
 		if(encodeParams){
