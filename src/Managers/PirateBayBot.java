@@ -1,6 +1,9 @@
 package Managers;
 
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Arrays;
@@ -11,10 +14,13 @@ import java.util.regex.Pattern;
 
 import Connection.SimpleConnectionManager;
 import Model.ArchivoTorrent;
+import Utils.UtilTools;
 
 
 
-public class PirateBayBot {
+public class PirateBayBot extends Manager{
+	private static PirateBayBot instance = null;
+	
 	public static final int ORDERBY_DATE = 99;
 	public static final int ORDERBY_SEEDERS = 7;
 	public static final int CATEGORY_ALL = 0;
@@ -22,20 +28,97 @@ public class PirateBayBot {
 	public static final int CATEGORY_MUSIC = 101;
 	//public static final int CATEGORY_APPLICATIONS = 300;
 	
-	private static String urlBase = "thepiratebay.pe";
+	public static final String PIRATEBAYBOT_URL_BASE_CONFIG_KEY = "piratebay-url";
 	
-	public static ArchivoTorrent[] searchTorrent(String search, int category, int orderBy) throws Exception{
+	public String urlBase;
+	
+	private boolean initialized;
+	
+	private PirateBayBot(){
+		initialized = false;
+		urlBase = "thepiratebay.org";
+	}
+	
+	public static PirateBayBot getInstance(){
+		synchronized (PirateBayBot.class) {
+			if(instance == null){
+				instance = new PirateBayBot();
+			}
+		}
+		return instance;
+	}
+	
+	@Override
+	public boolean initManager() {
+		setUpManager();
+		URL url;
+		try {
+			url =  new URL("http:" + urlBase);
+		} catch (MalformedURLException e) {
+			initialized = false;
+			return initialized;
+		}
+		Map<String, String> response = new SimpleConnectionManager().sendGetRequest(url, null, null);
+		String responseCode = response.get("ResponseCode");
+		if(responseCode.equals("200")){
+			initialized = true;
+		}else if(responseCode.equals("301")){
+			urlBase = response.get("Location");
+			if(urlBase.startsWith("http:")){
+				urlBase = urlBase.replace("http:", "");
+			}
+			if(urlBase.endsWith("/")){
+				urlBase = urlBase.substring(0, urlBase.length() - 1);
+			}
+			initialized = true;
+		}
+		return initialized;
+	}
+
+	@Override
+	public void setUpManager() {
+		Map<String, String> config = new UtilTools().getConfiguration();
+		if(config == null){
+			return;
+		}
+		
+		String newUrl = config.get(PIRATEBAYBOT_URL_BASE_CONFIG_KEY);
+		if(newUrl != null){
+			urlBase = newUrl;
+		}
+		initialized = false;
+	}
+	
+	public ArchivoTorrent[] searchTorrent(String search, int category, int orderBy){
+		if(!initialized){
+			return null;
+		}
 		
 		if(search.isEmpty()){
 			return new ArchivoTorrent[0];
 		}
 		
-        String query = "/search/" + URLEncoder.encode(search, "UTF-8");
+        String query;
+		try {
+			query = "/search/" + URLEncoder.encode(search, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			return null;
+		}
         
 		query += "/0/" + orderBy + "/" + category;
         
-        URI uri = new URI("http", urlBase,  query, null);
-        URL url = uri.toURL();
+        URI uri;
+		try {
+			uri = new URI("http", urlBase + query, null);
+		} catch (URISyntaxException e) {
+			return null;
+		}
+        URL url;
+		try {
+			url = uri.toURL();
+		} catch (MalformedURLException e) {
+			return null;
+		}
 
         //String[] response = ConnectionManager.sendGetRequest(url);
         //Map<String, String> response = ConnectionManager.sendRequest(url, null, null, ConnectionManager.METHOD_GET, true, false, false);
@@ -46,16 +129,12 @@ public class PirateBayBot {
         if(responseCode.equals("200")){
         	return listResults(responseText);
         }else{
-        	System.out.println("ERROR: it seems there is a network problem");
+        	System.out.println("ERROR: something wrong happened");
         	return null;
         }
 	}
-        
-    public static void getTorrent(){
-            
-    }
     
-    private static ArchivoTorrent[] listResults(String httpResponse) throws Exception{
+    private ArchivoTorrent[] listResults(String httpResponse){
     	String tableRowsRegex = "<table id=\"searchResult\".*?\\<thead.*?</thead>(.*?)</table>";
         Pattern p = Pattern.compile(tableRowsRegex);
         Matcher m = p.matcher(httpResponse);
@@ -105,10 +184,17 @@ public class PirateBayBot {
                     	}
                     }else if(title.contains("Details") || (title.contains("Detalles"))){
                     	//ESTA FORMA DE ALMACENAR LA URL HABRA QUE CAMBIARLA PARA QUE SOLO SE GUARDE LA DIRECCION RELATIVA
-                    	at.setDetailsURL(new URI("http", urlBase, link, null).toURL());
+                    	try {
+							at.setDetailsURL(new URI("http", urlBase, link, null).toURL());
+						} catch (MalformedURLException e) {
+							System.out.println(e.getMessage());
+							System.out.println("URL de detalles no se ha podido guardar");
+						} catch (URISyntaxException e) {
+							System.out.println(e.getMessage());
+							System.out.println("URL de detalles no se ha podido guardar");
+						}
 						at.setTitulo(text);
                     }else if(title.contains("magnet")){
-                    	
                     	at.setMagneticLink(link);
                     }else if(title.contains("torrent")){
                     	String torrent = "http:" + link;

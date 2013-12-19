@@ -4,12 +4,12 @@ import Model.FichaPelicula;
 
 public class pruebas {
 	public static void main(String[] args) throws Exception{
-		boolean initiated = FilmAffinityBot.initializeManager(false);
+		boolean initiated = FilmAffinityBot.getInstance().initManager();
 		
 		if(initiated){
 			//FichaPelicula[] result = FilmAffinityBot.getListRecommendations();
 			//FichaPelicula[] result = FilmAffinityBot.getListRecommendations(FilmAffinityBot.FAMS_GENRE_KEY_ACTION);
-			FichaPelicula[] result = FilmAffinityBot.searchFilm("star trek");
+			FichaPelicula[] result = FilmAffinityBot.getInstance().searchFilm("star trek");
 			if(result == null){
 				System.out.println("no hay resultados");
 				return;
@@ -20,7 +20,7 @@ public class pruebas {
 				System.out.println("------- " + i + " --------");
 				System.out.println(result[i]);
 				if(i == 2){
-					result[i] = FilmAffinityBot.fillFichaPelicula(result[i]);
+					//result[i] = FilmAffinityBot.fillFichaPelicula(result[i]);
 					System.out.println(result[i]);
 					/*if(FilmAffinityBot.voteForFilm(result[i], "7")){
 						System.out.println("Voted!");
@@ -30,7 +30,7 @@ public class pruebas {
 				}
 			}
 			
-			boolean terminated = FilmAffinityBot.terminateManager();
+			boolean terminated = FilmAffinityBot.getInstance().terminateManager();
 			if(terminated)
 				System.out.println("\nPROCESS CORRECTLY COMPLETED");
 		}

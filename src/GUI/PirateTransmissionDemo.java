@@ -24,8 +24,9 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
 
 import GUI.Configuration.ConfigView;
+import Managers.FilmAffinityBot;
 import Managers.PirateBayBot;
-import Managers.TransmissionManager;
+import Managers.TorrentClient.TransmissionManager;
 import Model.ArchivoTorrent;
 import Utils.UtilTools;
 
@@ -33,10 +34,11 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.SystemColor;
 
-import javax.swing.border.MatteBorder;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 
 public class PirateTransmissionDemo extends JFrame {
@@ -72,9 +74,19 @@ public class PirateTransmissionDemo extends JFrame {
 	 * Create the frame.
 	 */
 	public PirateTransmissionDemo() {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				FilmAffinityBot.getInstance().terminateManager();
+			}
+		});
 		setIconImage(Toolkit.getDefaultToolkit().getImage(PirateTransmissionDemo.class.getResource("/images/Transmission-icon.png")));
-		if(!TransmissionManager.initManager()){
+		if(!TransmissionManager.getInstance().initManager()){
 			new UtilTools().showWarningDialog(this, "Error", "No se ha podido conectar con Transmission");
+		}else if(!FilmAffinityBot.getInstance().initManager()){
+			new UtilTools().showWarningDialog(this, "Error", "No se ha podido conectar con FilmAffinity");
+		}else if(!PirateBayBot.getInstance().initManager()){
+			new UtilTools().showWarningDialog(this, "Error", "No se ha podido conectar con PirateBay. Es posible que haya cambiado la dirección de su servidor");
 		}
 		setResizable(false);
 		setTitle("PirateTransmissionDemo");
@@ -151,10 +163,11 @@ public class PirateTransmissionDemo extends JFrame {
 	
 	private void requestSearch(String search){
 		this.getContentPane().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		try {
-			torrents = PirateBayBot.searchTorrent(search, PirateBayBot.CATEGORY_ALL, PirateBayBot.ORDERBY_SEEDERS);
-		} catch (Exception exc) {
-			torrents = new ArchivoTorrent[0];
+		torrents = PirateBayBot.getInstance().searchTorrent(search, PirateBayBot.CATEGORY_ALL, PirateBayBot.ORDERBY_SEEDERS);
+		if(torrents == null){
+			new UtilTools().showWarningDialog(this, "Error", "Puede que no estés conectado");
+			setDefaultCursor();
+			return;
 		}
 		drawTorrentsList();
 	}
@@ -179,8 +192,7 @@ public class PirateTransmissionDemo extends JFrame {
 			resultsPanel.revalidate();
 		}
 
-		searchField.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
-		this.getContentPane().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		setDefaultCursor();
 	}
 	
 	private void openConfigView() {
@@ -190,5 +202,9 @@ public class PirateTransmissionDemo extends JFrame {
 	}
 	protected JPanel getResultsPanel() {
 		return resultsPanel;
+	}
+	private void setDefaultCursor(){
+		searchField.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
+		this.getContentPane().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 }

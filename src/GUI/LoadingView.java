@@ -1,14 +1,10 @@
 package GUI;
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 
-import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import java.awt.Dialog.ModalityType;
-import java.awt.Dialog.ModalExclusionType;
 import java.awt.Toolkit;
 
 import javax.swing.JFrame;
@@ -16,10 +12,6 @@ import javax.swing.JLabel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JProgressBar;
-import javax.swing.LayoutStyle.ComponentPlacement;
-
-import java.awt.Window.Type;
-
 
 public class LoadingView extends JDialog {
 

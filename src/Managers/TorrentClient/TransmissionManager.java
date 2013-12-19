@@ -1,4 +1,4 @@
-package Managers;
+package Managers.TorrentClient;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -8,8 +8,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import Codification.Base64;
 import Connection.SimpleConnectionManager;
@@ -17,20 +15,36 @@ import JSON.*;
 import Model.ArchivoTorrent;
 import Utils.UtilTools;
 
-public class TransmissionManager {
+public class TransmissionManager extends TorrentClient{
+	private static volatile TransmissionManager instance = null;
 	
 	public static final String TRANSMISSION_RPC_SERVER_CONFIG_KEY = "transmission-rpc-host";
 	public static final String TRANSMISSION_USER_AUTH_CONFIG_KEY = "transmission-user";
 	public static final String TRANSMISSION_PASSWORD_AUTH_CONFIG_KEY = "transmission-password";
 
-	public static String user = "";
-	public static String password = "";
-	public static String urlBase = "//iriene.dlinkddns.com:9091/transmission/rpc";
+	public String user;
+	public String password;
+	public String urlBase;
 	
-	private static String transmissionId = "5L38jNKUmN8ZiYP4Htx66kK0yXSn0QubVV2DuKVfuZly6P";
-	private static boolean logged = false;
+	private String transmissionId = "5L38jNKUmN8ZiYP4Htx66kK0yXSn0QubVV2DuKVfuZly6P";
+	private boolean logged = false;
 	
-	public static boolean loginOnTranssmission(){
+	private TransmissionManager() {
+		urlBase = "";
+		user = "";
+		password = "";
+	}
+	
+	public static TransmissionManager getInstance(){
+		synchronized (TransmissionManager.class) {
+			if(instance == null){
+				instance = new TransmissionManager();
+			}
+		}
+		return instance;
+	}
+	
+	private boolean loginOnTranssmission(){
 		URI loginUri;
 		try {
 			loginUri = new URI("http", urlBase, null);
@@ -46,8 +60,8 @@ public class TransmissionManager {
 		try {
 			//String[] response = ConnectionManager.getAuthorization(loginUrl);
 			Map<String, String> httpAuth = new HashMap<String, String>();
-			httpAuth.put("USER", user);
-			httpAuth.put("PASSWORD", password);
+			httpAuth.put(SimpleConnectionManager.USER_BASIC_AUTH_KEY, user);
+			httpAuth.put(SimpleConnectionManager.PASSWORD_BASIC_AUTH_KEY, password);
 			//Map<String, String> response = ConnectionManager.sendRequest(loginUrl, null, httpAuth, ConnectionManager.METHOD_GET, true, false, false);
 			Map<String, String> response = new SimpleConnectionManager().sendGetRequest(loginUrl, null, httpAuth);
 			String responseCode = response.get("ResponseCode");
@@ -73,23 +87,16 @@ public class TransmissionManager {
 		}
 	}
 	
-	private static String captureTransmissionId(String response){
+	private String captureTransmissionId(String response){
 		String transmissionIdRegex = "<code>X-Transmission-Session-Id:(.*?)</code>";
-		Pattern p = Pattern.compile(transmissionIdRegex);
-		Matcher m = p.matcher(response);
-		//<code>X-Transmission-Session-Id: jSlV7sWsU81qptl1OU8UnniTM6HfIWIL1YOektP7CxeLeFwF</code>
-		String transmissionId = null;
-		if(m.find()){
-			 transmissionId = m.group(1).trim();
-		}
-		return transmissionId;
+		return this.getTokenFromHTML(transmissionIdRegex, response);
 	}
 	
-	public static boolean addTorrent(ArchivoTorrent torrent){
+	public boolean addTorrent(ArchivoTorrent torrent){
 		return addTorrent(torrent, 1);
 	}
 	
-	private static boolean addTorrent(ArchivoTorrent torrent, int intento){
+	private boolean addTorrent(ArchivoTorrent torrent, int intento){
 		if(!logged){
 			System.out.println("Internal Error: Must log in!");
 			return false;
@@ -113,11 +120,11 @@ public class TransmissionManager {
 	}
 	
 	
-	public static void listTorrents() throws Exception{
+	public void listTorrents() throws Exception{
 		listTorrents(0);
 	}
 	
-	private static void listTorrents(int intento) throws Exception{
+	private void listTorrents(int intento) throws Exception{
 		if(!logged){
 			System.out.println("Internal Error: Must log in!");
 			return;
@@ -142,7 +149,7 @@ public class TransmissionManager {
 		}
 	}
 	
-	private static JSONObject remoteTransmission(JSONObject jsonRequest, int intento){
+	private JSONObject remoteTransmission(JSONObject jsonRequest, int intento){
 		if(intento > 3){
 			System.out.println("External Error: Transmission doesn't responds");
 			return null;
@@ -161,10 +168,10 @@ public class TransmissionManager {
 		//String[] response = ConnectionManager.sendPostRequest(url, jsonRequest.toString(), transmissionId);
         Map<String, String> httpAuth = new HashMap<String, String>();
         //TOKEN_NAME"), httpAuth.get("TOKEN_ID"));
-        httpAuth.put("TOKEN_NAME", "X-Transmission-Session-Id");
-        httpAuth.put("TOKEN_ID", transmissionId);
-        httpAuth.put("USER", user);
-		httpAuth.put("PASSWORD", password);
+        httpAuth.put(SimpleConnectionManager.TOKEN_NAME_BASIC_AUTH_KEY, "X-Transmission-Session-Id");
+        httpAuth.put(SimpleConnectionManager.TOKEN_ID_BASIC_AUTH_KEY, transmissionId);
+        httpAuth.put(SimpleConnectionManager.USER_BASIC_AUTH_KEY, user);
+		httpAuth.put(SimpleConnectionManager.PASSWORD_BASIC_AUTH_KEY, password);
         
 		//Map<String, String> response = ConnectionManager.sendRequest(url, jsonRequest.toString(), httpAuth, ConnectionManager.METHOD_POST, true, false, false);
 		Map<String, String> response = new SimpleConnectionManager().sendPostRequest(url, jsonRequest.toString(), httpAuth);
@@ -190,17 +197,15 @@ public class TransmissionManager {
 		}
 	}
 	
-	public static boolean initManager(){
+	public boolean initManager(){
 		setUpManager();
 		return loginOnTranssmission();
 	}
 	
-	private static void setUpManager(){
+	@Override
+	public void setUpManager(){
 		Map<String, String> configProperties = new UtilTools().getConfiguration();
 		if(configProperties == null){
-			urlBase = "";
-			user = "";
-			password = "";
 			System.out.println("Couldn't read from config file");
 			return;
 		}
@@ -208,10 +213,8 @@ public class TransmissionManager {
 		if(server != null){
 			urlBase = server;
 			if(!server.contains("transmission/rpc")){
-				System.out.println("transmission rpc host probably not well set");
+				urlBase += "/transmission/rpc";
 			}
-		}else{
-			System.out.println("Transmmission host not set. Will take default.");
 		}
 		
 		String transmissionUser = configProperties.get(TRANSMISSION_USER_AUTH_CONFIG_KEY);		
@@ -226,14 +229,13 @@ public class TransmissionManager {
 			try {
 				password = new String(Base64.decode(transmissionPassword), "UTF-8");
 			} catch (UnsupportedEncodingException e) {
-				password = "";
-				System.out.println("Couldn't decode FilmAffinity password");
+				System.out.println("Couldn't decode Transmission password");
 			} catch (IOException e) {
-				password = "";
-				System.out.println("Couldn't decode FilmAffinity password");
+				System.out.println("Couldn't decode Transmission password");
 			}
 		}else{
 			System.out.println("Transmmission password not set.");
 		}
+		logged = false;
 	}
 }

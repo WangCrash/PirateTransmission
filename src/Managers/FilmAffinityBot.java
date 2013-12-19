@@ -1,27 +1,25 @@
 package Managers;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import Utils.UtilTools;
 import Codification.Base64;
 import Connection.ConnectionManager;
+import FilmAffinity.FilmAffinityLoginModule;
 import FilmAffinity.FilmAffinitySearcherModule;
 import FilmAffinity.FilmAffinityVotingModule;
 import Model.FichaPelicula;
 
 
-public class FilmAffinityBot {
+public class FilmAffinityBot extends Manager{
+	private static volatile FilmAffinityBot instance = null;
+	
 	public static final String FILMAFFINITY_USER_AUTH_CONFIG_KEY = "filmaffinity-user";
 	public static final String FILMAFFINITY_PASSWORD_AUTH_CONFIG_KEY = "filmaffinity-password";
 	
@@ -46,15 +44,35 @@ public class FilmAffinityBot {
 	public static final int FAMS_GENRE_KEY_THRILLER = 17;
 	public static final int FAMS_GENRE_KEY_WESTERN = 18;
 	
-	private static String user = "";
-	private static String password = "";
-	private static ConnectionManager cm;	
+	public String user;
+	public String password;
 	
-	private static String urlBase = "www.filmaffinity.com";
-	private static boolean logged = false;
-	public static final String LOGGED_TEXT = "Logged";
+	private ConnectionManager cm;	
 	
-	public static boolean initializeManager(boolean testing){
+	private final String urlBase = "www.filmaffinity.com";
+	private boolean logged = false;
+	public final String LOGGED_TEXT = "Logged";
+	
+	private FilmAffinityBot(){
+		user = "";
+		password = "";
+	}
+	
+	public static FilmAffinityBot getInstance(){
+		synchronized (FilmAffinityBot.class) {
+			if(instance == null){
+				instance = new FilmAffinityBot();
+			}
+		}
+		return instance;
+	}
+	
+	@Override
+	public boolean initManager(){
+		return initManager(false);
+	}
+	
+	public boolean initManager(boolean testing){
 		cm = new ConnectionManager();
 		if(!testing){
 			setUpManager();
@@ -64,36 +82,78 @@ public class FilmAffinityBot {
 		return true;
 	}
 	
-	public static boolean terminateManager(){
+	private boolean login(){
+		if(logged){
+			return true;
+		}
+		return new FilmAffinityLoginModule(cm, urlBase).login(user, password);
+	}
+	
+	@Override
+	public void setUpManager(){
+		Map<String, String> configProperties = new UtilTools().getConfiguration();
+		if(configProperties == null){
+			System.out.println("Couldn't read from config file");
+			return;
+		}
+		
+		if(logged){
+			new FilmAffinityLoginModule(cm, urlBase).logout();
+		}
+			
+		String faUser = configProperties.get(FILMAFFINITY_USER_AUTH_CONFIG_KEY);		
+		if(faUser != null){
+			user = faUser;
+		}else{
+			System.out.println("FilmAffinity user not set.");
+		}
+		
+		String faPassword = configProperties.get(FILMAFFINITY_PASSWORD_AUTH_CONFIG_KEY);
+		if(faPassword != null){
+			try {
+				password = new String(Base64.decode(faPassword), "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				System.out.println("Couldn't decode FilmAffinity password");
+			} catch (IOException e) {
+				System.out.println("Couldn't decode FilmAffinity password");
+			}
+		}else{
+			System.out.println("FilmAffinity password not set.");
+		}
+		logged = false;
+	}
+	
+	public boolean terminateManager(){
 		if(!logged){
 			return true;
 		}
-		try {
-			logged = !logout();
-			return !logged;
-		} catch (MalformedURLException e) {
-			return false;
-		} catch (URISyntaxException e) {
-			return false;
-		} 
+		logged = !logout();
+		return !logged;
 	}
 	
-	public static FichaPelicula[] getListRecommendations(){
+	private boolean logout(){
+		if(!logged){
+			return true;
+		}
+		return new FilmAffinityLoginModule(cm, urlBase).logout();
+	}
+	
+	public FichaPelicula[] getListRecommendations(){
 		if(!logged){
 			return null;
 		}
 		return new FilmAffinitySearcherModule(urlBase, logged, cm).lookForRecommendations();
 	}
 	
-	public static FichaPelicula[] getListRecommendations(int genre){
+	public FichaPelicula[] getListRecommendations(int genre){
 		return getListRecommendations(genre, -1, -1, -1);
 	}
 	
-	public static FichaPelicula[] getListRecommendations(int genre, int fromYear, int toYear){
+	public FichaPelicula[] getListRecommendations(int genre, int fromYear, int toYear){
 		return getListRecommendations(genre, fromYear, toYear, -1);
 	}
 	
-	public static FichaPelicula[] getListRecommendations(int genre, int fromYear, int toYear, int limit){
+	public FichaPelicula[] getListRecommendations(int genre, int fromYear, int toYear, int limit){
 		if(!logged){
 			return null;
 		}
@@ -126,15 +186,15 @@ public class FilmAffinityBot {
 		return fasm.lookForRecommendations(filters);
 	}
 	
-	public static FichaPelicula[] searchFilm(String search) throws Exception{
+	public FichaPelicula[] searchFilm(String search) throws Exception{
 		return new FilmAffinitySearcherModule(urlBase, logged, cm).searchFilm(search);
 	}
 	
-	public static FichaPelicula fillFichaPelicula(FichaPelicula film){
+	public FichaPelicula fillFichaPelicula(FichaPelicula film){
 		return new FilmAffinitySearcherModule(urlBase, logged, cm).completeFilmDetails(film);
 	}
 	
-	public static FichaPelicula getFilmDetails(FichaPelicula pelicula){
+	public FichaPelicula getFilmDetails(FichaPelicula pelicula){
 		if(pelicula.getFilmDetailsUrl() == null){
 			return null;
 		}
@@ -149,116 +209,10 @@ public class FilmAffinityBot {
 		return new FilmAffinitySearcherModule(urlBase, logged, cm).getFilmDetails(detailsUrl);
 	}
 	
-	public static boolean voteForFilm(FichaPelicula film, String rating){
+	public boolean voteForFilm(FichaPelicula film, String rating){
 		if(logged){
 			return new FilmAffinityVotingModule(urlBase, cm).voteForFilm(film, rating);
 		}
 		return false;
-	}
-	
-	private static boolean logout() throws URISyntaxException, MalformedURLException{
-		if(!logged){
-			return true;
-		}
-		
-		URI uri = new URI("http", urlBase, "/es/logout.php", null);
-		URL url = uri.toURL();
-		
-		Map<String, String> response = cm.sendRequest(url, ConnectionManager.METHOD_GET, false, true, true);
-		if(response != null){
-        	return (response.get("ResponseCode").equals("302") && (response.get("Location").equals("/es/logout.php") || response.get("Location").equals("/es/main.html")));
-        }
-        return false;
-	}
-	
-	private static boolean login(){
-		if(logged){
-			return true;
-		}
-		URI uri;
-		URL url;
-		try {
-			uri = new URI("http", urlBase,  "/es/login.php", null);
-			url = uri.toURL();
-		} catch (URISyntaxException e) {
-			return false;
-		} catch (MalformedURLException e) {
-			return false;
-		}
-        Map<String, String> data = new HashMap<String, String>();
-        data.put("rp", "");
-        data.put("user", user);
-        data.put("password", password);
-        data.put("postback", "1");
-        data.put("ok", "Enviar");
-        Map<String, String> response = doLoginProcess(url, data);
-        if(response != null){
-        	return (response.get("ResponseCode").equals("302") && response.get("Location").equals("/es/main.html"));
-        }
-        return false;
-	}
-	
-	private static Map<String, String> doLoginProcess(URL url, Map<String, String> parameters){
-		Set<String> keys = parameters.keySet();
-		Iterator<String> keyIter = keys.iterator();
-		String parametersChain = "";
-		for(int i=0; keyIter.hasNext(); i++) {
-			String key = keyIter.next();
-			if(i!=0) {
-				parametersChain += "&";
-			}
-			parametersChain += key + "=" + parameters.get(key);
-		}
-		Map<String, String> postResponse = cm.sendRequest(url, parametersChain, false, null, ConnectionManager.METHOD_POST, false, true, false);
-		if(postResponse == null){
-			return null;
-		}
-		int responseCode;
-		try{
-			responseCode = Integer.parseInt(postResponse.get("ResponseCode"));
-			System.out.println("responseCode: " + responseCode);
-		}catch(NumberFormatException exception){
-			return null;
-		}
-		if((responseCode == HttpURLConnection.HTTP_MOVED_TEMP) && (postResponse.containsKey("Location"))){
-			try {
-				url = new URL(url, postResponse.get("Location"));
-			} catch (MalformedURLException e) {
-				return null;
-			}
-			return cm.sendRequest(url, ConnectionManager.METHOD_GET, false, false, true);
-		}
-		return null;
-	}
-	
-	private static void setUpManager(){
-		Map<String, String> configProperties = new UtilTools().getConfiguration();
-		if(configProperties == null){
-			user = "";
-			password = "";
-			System.out.println("Couldn't read from config file");
-		}
-			
-		String faUser = configProperties.get(FILMAFFINITY_USER_AUTH_CONFIG_KEY);		
-		if(faUser != null){
-			user = faUser;
-		}else{
-			System.out.println("FilmAffinity user not set.");
-		}
-		
-		String faPassword = configProperties.get(FILMAFFINITY_PASSWORD_AUTH_CONFIG_KEY);
-		if(faPassword != null){
-			try {
-				password = new String(Base64.decode(faPassword), "UTF-8");
-			} catch (UnsupportedEncodingException e) {
-				password = "";
-				System.out.println("Couldn't decode FilmAffinity password");
-			} catch (IOException e) {
-				password = "";
-				System.out.println("Couldn't decode FilmAffinity password");
-			}
-		}else{
-			System.out.println("FilmAffinity password not set.");
-		}
 	}
 }

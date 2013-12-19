@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 import Managers.PirateBayBot;
-import Managers.TransmissionManager;
+import Managers.TorrentClient.TransmissionManager;
 import Model.ArchivoTorrent;
 
 public class PTConsoleApp {
@@ -21,8 +21,8 @@ public class PTConsoleApp {
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		//runShell();
-		if(TransmissionManager.initManager()){
-			TransmissionManager.listTorrents();
+		if(TransmissionManager.getInstance().initManager()){
+			TransmissionManager.getInstance().listTorrents();
 			runShell();
 		}else{
 			System.out.println("External error: couldn't authenticate on Transmission.");
@@ -49,7 +49,7 @@ public class PTConsoleApp {
 	
 	private static ArchivoTorrent[] getSearchResults(String busqueda) throws Exception {
 		
-		return PirateBayBot.searchTorrent(busqueda, PirateBayBot.CATEGORY_ALL, PirateBayBot.ORDERBY_SEEDERS);
+		return PirateBayBot.getInstance().searchTorrent(busqueda, PirateBayBot.CATEGORY_ALL, PirateBayBot.ORDERBY_SEEDERS);
 	}
 	
 	private static void runShell() throws Exception{
@@ -133,7 +133,7 @@ public class PTConsoleApp {
         		
         		String accion = opciones[opcion - 1];
         		if(accion.equals(ADD_TORRENT)){
-        			System.out.println(TransmissionManager.addTorrent(torrent)?"Torrent añadido":"El torrent no se ha podido añadir");
+        			System.out.println(TransmissionManager.getInstance().addTorrent(torrent)?"Torrent añadido":"El torrent no se ha podido añadir");
         			break;
         		}else if(accion.equals(SHOW_DETAILS)){
         			System.out.println("opening web browser...");

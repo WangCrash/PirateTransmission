@@ -8,7 +8,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,9 +16,19 @@ import Codification.Base64;
 
 
 public class ConnectionManager {
-	private final int NO_INTERNET_REACHABILITY = 0;
+	
 	public static final String METHOD_GET = "GET";
 	public static final String METHOD_POST = "POST";
+	
+	public static final String TOKEN_NAME_BASIC_AUTH_KEY = "TOKEN_NAME";
+	public static final String TOKEN_ID_BASIC_AUTH_KEY = "TOKEN_ID";
+	public static final String USER_BASIC_AUTH_KEY = "USER";
+	public static final String PASSWORD_BASIC_AUTH_KEY = "PASSWORD";
+	
+	public static final String BODY_TEXT_RESPONSE_KEY = "ResponseBody";
+	public static final String STATUS_CODE_RESPONSE_KEY = "ResponseCode";
+	
+	private final int NO_INTERNET_REACHABILITY = 0;
 	private final String USER_AGENT = "orphean_navigator_2.0";
 	
 	private List<String> cookiesList;
@@ -45,6 +54,7 @@ public class ConnectionManager {
 					String[] cookieParts = cookiesList.get(i).split(";");
 					cookieChain += cookieParts[0] + ";";
 				}
+				cookieChain = cookieChain.substring(0, cookieChain.length() - 1);
 			}
 		}
 		
@@ -78,11 +88,11 @@ public class ConnectionManager {
 		}
 		
 		if(httpAuth != null){
-			if(httpAuth.containsKey("TOKEN_NAME")){
-				con.setRequestProperty(httpAuth.get("TOKEN_NAME"), httpAuth.get("TOKEN_ID"));
+			if(httpAuth.containsKey(TOKEN_NAME_BASIC_AUTH_KEY)){
+				con.setRequestProperty(httpAuth.get(TOKEN_NAME_BASIC_AUTH_KEY), httpAuth.get(TOKEN_ID_BASIC_AUTH_KEY));
 			}
 
-	        String authString = httpAuth.get("USER") + ":" + httpAuth.get("PASSWORD");
+	        String authString = httpAuth.get(USER_BASIC_AUTH_KEY) + ":" + httpAuth.get(PASSWORD_BASIC_AUTH_KEY);
 	        String authStringEnc = Base64.encodeBytes(authString.getBytes());
 	        
 	        con.setRequestProperty("Authorization", "Basic " + authStringEnc);
@@ -111,10 +121,10 @@ public class ConnectionManager {
 		}
 		
 		Map<String, String> result = new HashMap<String, String>();
-		result.put("ResponseCode", String.valueOf(responseCode));
+		result.put(STATUS_CODE_RESPONSE_KEY, String.valueOf(responseCode));
 		
-		if((responseCode == HttpURLConnection.HTTP_OK) || (responseCode == HttpURLConnection.HTTP_MOVED_TEMP)){
-			if(responseCode == HttpURLConnection.HTTP_MOVED_TEMP){
+		if((responseCode == HttpURLConnection.HTTP_OK) || (responseCode == HttpURLConnection.HTTP_MOVED_TEMP) || responseCode == HttpURLConnection.HTTP_MOVED_PERM){
+			if(responseCode == HttpURLConnection.HTTP_MOVED_TEMP || responseCode == HttpURLConnection.HTTP_MOVED_PERM){
 				result.put("Location", con.getHeaderField("Location"));
 				
 			}
@@ -139,7 +149,7 @@ public class ConnectionManager {
 			
 		}
 		if(getBodyResponse){
-			result.put("ResponseBody", (retrieveBodyResponse(con, responseCode)));
+			result.put(BODY_TEXT_RESPONSE_KEY, (retrieveBodyResponse(con, responseCode)));
 		}
 		con.disconnect();
 		return result;
@@ -148,8 +158,16 @@ public class ConnectionManager {
 	private String retrieveBodyResponse(HttpURLConnection con, int responseCode){
 		BufferedReader in;
 		try {
-			if(responseCode > 400){
-				in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+			if(responseCode >= 400){
+				try{
+					in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+				}catch(NullPointerException e){
+					try{
+						in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+					}catch(NullPointerException e2){
+						return null;
+					}
+				}
 			}else{
 				in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 			}

@@ -19,10 +19,14 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JTabbedPane;
 
+import Managers.FilmAffinityBot;
+import Managers.TorrentClient.TransmissionManager;
 import Utils.UtilTools;
 
 import java.util.Map;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 
 public class ConfigView extends JFrame {
@@ -35,6 +39,7 @@ public class ConfigView extends JFrame {
 	private JTabbedPane sectionsPane;
 	private ConfigurationSection[] sections;
 	private Map<String, String> configProperties;
+	private JFrame parentFrame;
 
 	/**
 	 * Launch the application.
@@ -56,6 +61,14 @@ public class ConfigView extends JFrame {
 	 * Create the frame.
 	 */
 	public ConfigView(JFrame mainFrame) {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				parentFrame.setEnabled(true);
+			}
+		});
+		parentFrame = mainFrame;
+		parentFrame.setEnabled(false);
 		setType(Type.UTILITY);
 		setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
 		setTitle("Configuraci\u00F3n");
@@ -68,29 +81,29 @@ public class ConfigView extends JFrame {
 		
 		sectionsPane = new JTabbedPane(JTabbedPane.TOP);
 		
-		TransmissionConfigView transmissionSection = new TransmissionConfigView();
+		TransmissionSectionConfig transmissionSection = new TransmissionSectionConfig();
+		transmissionSection.setManager(TransmissionManager.getInstance());
+		
+		SimpleSectionConfig filmAffinitySection = new SimpleSectionConfig(FilmAffinityBot.getInstance().user, FilmAffinityBot.getInstance().password);
+		filmAffinitySection.setManager(FilmAffinityBot.getInstance());
+		
+		SimpleSectionConfig lastFMSection = new SimpleSectionConfig("WaftFunk", "abcadfasdfasf");
+		//lastFMSection.setManager(LastFMManager.getInstance());
+		
 		sectionsPane.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, Color.DARK_GRAY, null, null, null));
 		sectionsPane.addTab("General",	new JPanel());
 		sectionsPane.addTab("Transmission", transmissionSection);
 		sectionsPane.addTab("microTorrent", new JPanel());
-		sectionsPane.addTab("FilmAffinity", new JPanel());
-		sectionsPane.addTab("LastFM", new JPanel());
+		sectionsPane.addTab("FilmAffinity", filmAffinitySection);
+		sectionsPane.addTab("LastFM", lastFMSection);
 		
-		sections = new ConfigurationSection[]{new TransmissionConfigView(), transmissionSection, new TransmissionConfigView(), new TransmissionConfigView()};
+		sections = new ConfigurationSection[]{new TransmissionSectionConfig(), transmissionSection, new TransmissionSectionConfig(), filmAffinitySection, lastFMSection};
 		sectionsPane.setSelectedIndex(0);
 		
 		JButton btnNewButton = new JButton("Aceptar");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				UtilTools tools = new UtilTools();
-				configProperties = tools.getConfiguration();
-				for (int i = 0; i < sectionsPane.getTabCount(); i++) {
-					if(sectionsPane.getTitleAt(i).equals("Transmission")){
-						saveChangedValues(sections[i].getChangedValues());
-					}
-				}
-				tools.setConfiguration(configProperties);
-				close();
+				checkConfigSectionsAndSave();
 			}
 		});
 		
@@ -145,15 +158,50 @@ public class ConfigView extends JFrame {
 	}
 	
 	private void close() {
+		parentFrame.setEnabled(true);
 		this.setVisible(false);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 	
-	private void saveChangedValues(Map<String, String> changedValues){
+	//si cambia para una sección alguna de las propertires avisa de ello
+	private boolean setChangedValues(Map<String, String> changedValues){
+		boolean result = false;
 		for (Map.Entry<String, String> entry : changedValues.entrySet())
 		{
 			configProperties.put(entry.getKey(), entry.getValue());
-		    System.out.println(entry.getKey() + ":" + entry.getValue());
+			if(!result){
+				result = true;
+			}
 		}
+		return result;
+	}
+	
+	private void checkConfigSectionsAndSave() {
+		UtilTools tools = new UtilTools();
+		configProperties = tools.getConfiguration();
+		boolean[] needsToReboot = new boolean[sectionsPane.getTabCount()];
+		for (int i = 0; i < sectionsPane.getTabCount(); i++) {
+			if(!sections[i].isValidPassLength()){
+				tools.showWarningDialog(this, "Error de configuración", "La contraseña de " + sectionsPane.getTitleAt(i) + " no tiene 4 caracteres o más");
+				sectionsPane.setSelectedIndex(i);
+				return;
+			}
+			if((i == 1) || (i == 3)){
+				System.out.println(sectionsPane.getTitleAt(i));
+				needsToReboot[i] = setChangedValues(sections[i].getChangedValues());
+			}else{
+				needsToReboot[i] = false;
+			}
+		}
+		tools.setConfiguration(configProperties);
+		//reiniciar managers cuya config haya cambiado
+		for (int j = 0; j < needsToReboot.length; j++) {
+			if(!needsToReboot[j])
+				continue;
+			if(!sections[j].getManager().initManager()){
+				tools.showWarningDialog(parentFrame, "Error", "No se pudo conectar con " + sectionsPane.getTitleAt(j));
+			}
+		}
+		close();
 	}
 }

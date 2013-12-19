@@ -9,14 +9,15 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JPasswordField;
 
 import Codification.Base64;
-import Managers.TransmissionManager;
+import Managers.Manager;
+import Managers.TorrentClient.TransmissionManager;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TransmissionConfigView extends ConfigurationSection {
+public class TransmissionSectionConfig extends ConfigurationSection {
 	/**
 	 * 
 	 */
@@ -36,7 +37,9 @@ public class TransmissionConfigView extends ConfigurationSection {
 	/**
 	 * Create the panel.
 	 */
-	public TransmissionConfigView() {
+	public TransmissionSectionConfig() {
+		setInitialVariables();
+		
 		JLabel lblNewLabel = new JLabel("RPC Server");
 		
 		userLabel = new JLabel("Usuario");
@@ -58,20 +61,20 @@ public class TransmissionConfigView extends ConfigurationSection {
 				passwordField.setEnabled(checkBox.isSelected());
 			}
 		});
-		if(TransmissionManager.user.isEmpty()){
+		if(TransmissionManager.getInstance().user.isEmpty()){
 			needsAuthCheckBox.setSelected(false);
-			needsAuthCheckBox.doClick();
+			needsAuthCheckBox.doClick();//porque inicialmente está marcado
 		}else{
 			needsAuthCheckBox.setSelected(true);
-			userField.setText(TransmissionManager.user);
-			passwordField.setText(TransmissionManager.password);
+			userField.setText(initialUser);
+			passwordField.setText(initialPassword);
 		}
 		
 		rpcServerField = new JTextField();
 		rpcServerField.setColumns(10);
-		setRPCFieldText(TransmissionManager.urlBase);
+		setRPCFieldText(initialRpcServer);
 		
-		setInitialVariables();
+		
 		
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
@@ -118,9 +121,9 @@ public class TransmissionConfigView extends ConfigurationSection {
 	}
 	
 	private void setInitialVariables() {
-		initialRpcServer = TransmissionManager.urlBase;
-		initialUser = TransmissionManager.user;
-		initialPassword = TransmissionManager.password;
+		initialRpcServer = TransmissionManager.getInstance().urlBase;
+		initialUser = TransmissionManager.getInstance().user;
+		initialPassword = TransmissionManager.getInstance().password;
 	}
 
 	private String getRPCFieldText(){
@@ -145,7 +148,7 @@ public class TransmissionConfigView extends ConfigurationSection {
 			result.put(TransmissionManager.TRANSMISSION_RPC_SERVER_CONFIG_KEY, getRPCFieldText());
 		}
 		if(this.needsAuthCheckBox.isSelected()){
-			if(!initialUser.equals(TransmissionManager.TRANSMISSION_USER_AUTH_CONFIG_KEY)){
+			if(!initialUser.equals(userField.getText().trim())){
 				result.put(TransmissionManager.TRANSMISSION_USER_AUTH_CONFIG_KEY, userField.getText().trim());
 			}
 			String password = new String(passwordField.getPassword());
@@ -155,5 +158,21 @@ public class TransmissionConfigView extends ConfigurationSection {
 		}
 		System.out.println(result);
 		return result;
+	}
+
+	@Override
+	public Manager getManager() {
+		return manager;
+	}
+
+	@Override
+	public void setManager(Manager manager) {
+		this.manager = manager;
+	}
+
+	@Override
+	public boolean isValidPassLength() {
+		String password = new String(passwordField.getPassword());
+		return super.isValidPassLength(password);
 	}
 }

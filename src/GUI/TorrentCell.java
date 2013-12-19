@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.border.LineBorder;
 
-import Managers.TransmissionManager;
+import Managers.TorrentClient.TransmissionManager;
 import Model.ArchivoTorrent;
 import Utils.UtilTools;
 
@@ -60,7 +60,7 @@ public class TorrentCell extends JPanel {
 		addTorrentButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(archivoTorrent != null){
-					if(TransmissionManager.addTorrent(archivoTorrent)){
+					if(TransmissionManager.getInstance().addTorrent(archivoTorrent)){
 						new UtilTools().showInfoOKDialog(mainFrame, "", "Torrent añadido");
 					}else{
 						new UtilTools().showWarningDialog(mainFrame, "", "No se ha podido añadir el torrent");
