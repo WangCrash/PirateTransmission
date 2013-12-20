@@ -37,9 +37,9 @@ public class microTorrentManager extends TorrentClient{
 	private ConnectionManager cm;
 	
 	private microTorrentManager(){
-		urlBase = "//localhost:8080/gui/";
-		user = "wang";
-		password = "theclash1970";
+		urlBase = "";
+		user = "";
+		password = "";
 		cm = new ConnectionManager();
 	}
 	
@@ -205,6 +205,21 @@ public class microTorrentManager extends TorrentClient{
 	
 	private String initializeQuery(){
 		return "?token=" + token + "&";
+	}
+
+	@Override
+	public String getServerConfigKey() {
+		return MICROTORRENT_RPC_SERVER_CONFIG_KEY;
+	}
+
+	@Override
+	public String getUserConfigKey() {
+		return MICROTORRENT_USER_AUTH_CONFIG_KEY;
+	}
+
+	@Override
+	public String getPasswordConfigKey() {
+		return MICROTORRENT_PASSWORD_AUTH_CONFIG_KEY;
 	}
 }
 

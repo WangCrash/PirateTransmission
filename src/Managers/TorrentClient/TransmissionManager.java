@@ -238,4 +238,19 @@ public class TransmissionManager extends TorrentClient{
 		}
 		logged = false;
 	}
+
+	@Override
+	public String getServerConfigKey() {
+		return TRANSMISSION_RPC_SERVER_CONFIG_KEY;
+	}
+
+	@Override
+	public String getUserConfigKey() {
+		return TRANSMISSION_USER_AUTH_CONFIG_KEY;
+	}
+
+	@Override
+	public String getPasswordConfigKey() {
+		return TRANSMISSION_PASSWORD_AUTH_CONFIG_KEY;
+	}
 }

@@ -10,14 +10,15 @@ import javax.swing.JPasswordField;
 
 import Codification.Base64;
 import Managers.Manager;
-import Managers.TorrentClient.TransmissionManager;
+import Managers.TorrentClient.TorrentClient;
+import Utils.UtilTools;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TransmissionSectionConfig extends ConfigurationSection {
+public class TorrentClientSectionConfig extends ConfigurationSection {
 	/**
 	 * 
 	 */
@@ -37,7 +38,8 @@ public class TransmissionSectionConfig extends ConfigurationSection {
 	/**
 	 * Create the panel.
 	 */
-	public TransmissionSectionConfig() {
+	public TorrentClientSectionConfig(Manager manager) {
+		setManager(manager);
 		setInitialVariables();
 		
 		JLabel lblNewLabel = new JLabel("RPC Server");
@@ -55,19 +57,18 @@ public class TransmissionSectionConfig extends ConfigurationSection {
 		needsAuthCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				JCheckBox checkBox = (JCheckBox)arg0.getSource();
-				userLabel.setEnabled(checkBox.isSelected());
-				userField.setEnabled(checkBox.isSelected());
-				passwordLabel.setEnabled(checkBox.isSelected());
-				passwordField.setEnabled(checkBox.isSelected());
+				enableAuthFields(checkBox.isSelected());
 			}
 		});
-		if(TransmissionManager.getInstance().user.isEmpty()){
+		if(initialUser.isEmpty()){
 			needsAuthCheckBox.setSelected(false);
-			needsAuthCheckBox.doClick();//porque inicialmente está marcado
+			enableAuthFields(false);
 		}else{
 			needsAuthCheckBox.setSelected(true);
+			needsAuthCheckBox.doClick();//para que pase por el listener
 			userField.setText(initialUser);
 			passwordField.setText(initialPassword);
+			enableAuthFields(true);
 		}
 		
 		rpcServerField = new JTextField();
@@ -121,9 +122,20 @@ public class TransmissionSectionConfig extends ConfigurationSection {
 	}
 	
 	private void setInitialVariables() {
-		initialRpcServer = TransmissionManager.getInstance().urlBase;
-		initialUser = TransmissionManager.getInstance().user;
-		initialPassword = TransmissionManager.getInstance().password;
+		Map<String, String> config = new UtilTools().getConfiguration();
+		TorrentClient torrentClient = (TorrentClient)manager;
+		initialRpcServer = config.get(torrentClient.getServerConfigKey());
+		if(initialRpcServer == null){
+			initialRpcServer = "";
+		}
+		initialUser = config.get(torrentClient.getUserConfigKey());
+		if(initialUser == null){
+			initialUser = "";
+		}
+		initialPassword = config.get(torrentClient.getPasswordConfigKey());
+		if(initialPassword == null){
+			initialPassword = "";
+		}
 	}
 
 	private String getRPCFieldText(){
@@ -143,17 +155,18 @@ public class TransmissionSectionConfig extends ConfigurationSection {
 
 	@Override
 	public Map<String, String> getChangedValues(){
+		TorrentClient torrentClient = (TorrentClient)this.manager;
 		Map<String, String> result = new HashMap<String, String>();
 		if(!initialRpcServer.equals(getRPCFieldText())){
-			result.put(TransmissionManager.TRANSMISSION_RPC_SERVER_CONFIG_KEY, getRPCFieldText());
+			result.put(torrentClient.getServerConfigKey(), getRPCFieldText());
 		}
 		if(this.needsAuthCheckBox.isSelected()){
 			if(!initialUser.equals(userField.getText().trim())){
-				result.put(TransmissionManager.TRANSMISSION_USER_AUTH_CONFIG_KEY, userField.getText().trim());
+				result.put(torrentClient.getUserConfigKey(), userField.getText().trim());
 			}
 			String password = new String(passwordField.getPassword());
 			if(!initialPassword.equals(password)){
-				result.put(TransmissionManager.TRANSMISSION_PASSWORD_AUTH_CONFIG_KEY, Base64.encodeBytes(password.getBytes()));
+				result.put(torrentClient.getPasswordConfigKey(), Base64.encodeBytes(password.getBytes()));
 			}
 		}
 		System.out.println(result);
@@ -174,5 +187,12 @@ public class TransmissionSectionConfig extends ConfigurationSection {
 	public boolean isValidPassLength() {
 		String password = new String(passwordField.getPassword());
 		return super.isValidPassLength(password);
+	}
+	
+	private void enableAuthFields(boolean selected) {
+		userLabel.setEnabled(selected);
+		userField.setEnabled(selected);
+		passwordLabel.setEnabled(selected);
+		passwordField.setEnabled(selected);
 	}
 }

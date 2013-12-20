@@ -7,8 +7,15 @@ import Managers.Manager;
 import Model.ArchivoTorrent;
 
 public abstract class TorrentClient extends Manager{
+	public static String TORRENT_CLIENT_SERVER_KEY = "";
+	public static String TORRENT_CLIENT_USER_KEY = "";
+	public static String TORRENT_CLIENT_PASSWORD = "";
 	
 	public abstract boolean addTorrent(ArchivoTorrent torrent);
+	
+	public abstract String getServerConfigKey();
+	public abstract String getUserConfigKey();
+	public abstract String getPasswordConfigKey();
 	
 	//public abstract ArchivoTorrent[] listTorrents();
 	

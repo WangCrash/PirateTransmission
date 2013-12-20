@@ -21,10 +21,14 @@ import javax.swing.JTabbedPane;
 
 import Managers.FilmAffinityBot;
 import Managers.TorrentClient.TransmissionManager;
+import Managers.TorrentClient.microTorrentManager;
 import Utils.UtilTools;
 
+import java.util.ArrayList;
 import java.util.Map;
+
 import javax.swing.LayoutStyle.ComponentPlacement;
+
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -81,8 +85,11 @@ public class ConfigView extends JFrame {
 		
 		sectionsPane = new JTabbedPane(JTabbedPane.TOP);
 		
-		TransmissionSectionConfig transmissionSection = new TransmissionSectionConfig();
-		transmissionSection.setManager(TransmissionManager.getInstance());
+		SimpleSectionConfig generalSection = new SimpleSectionConfig("jandale", "morrito");
+		
+		TorrentClientSectionConfig transmissionSection = new TorrentClientSectionConfig(TransmissionManager.getInstance());
+		
+		TorrentClientSectionConfig microTorrentSection = new TorrentClientSectionConfig(microTorrentManager.getInstance());
 		
 		SimpleSectionConfig filmAffinitySection = new SimpleSectionConfig(FilmAffinityBot.getInstance().user, FilmAffinityBot.getInstance().password);
 		filmAffinitySection.setManager(FilmAffinityBot.getInstance());
@@ -91,13 +98,13 @@ public class ConfigView extends JFrame {
 		//lastFMSection.setManager(LastFMManager.getInstance());
 		
 		sectionsPane.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, Color.DARK_GRAY, null, null, null));
-		sectionsPane.addTab("General",	new JPanel());
+		sectionsPane.addTab("General",	generalSection);
 		sectionsPane.addTab("Transmission", transmissionSection);
-		sectionsPane.addTab("microTorrent", new JPanel());
+		sectionsPane.addTab("microTorrent", microTorrentSection);
 		sectionsPane.addTab("FilmAffinity", filmAffinitySection);
 		sectionsPane.addTab("LastFM", lastFMSection);
 		
-		sections = new ConfigurationSection[]{new TransmissionSectionConfig(), transmissionSection, new TransmissionSectionConfig(), filmAffinitySection, lastFMSection};
+		sections = new ConfigurationSection[]{generalSection, transmissionSection, microTorrentSection, filmAffinitySection, lastFMSection};
 		sectionsPane.setSelectedIndex(0);
 		
 		JButton btnNewButton = new JButton("Aceptar");
@@ -177,6 +184,10 @@ public class ConfigView extends JFrame {
 	}
 	
 	private void checkConfigSectionsAndSave() {
+		ArrayList<Integer> indPruebas = new ArrayList<Integer>();
+		indPruebas.add(1);
+		indPruebas.add(2);
+		indPruebas.add(3);
 		UtilTools tools = new UtilTools();
 		configProperties = tools.getConfiguration();
 		boolean[] needsToReboot = new boolean[sectionsPane.getTabCount()];
@@ -186,7 +197,7 @@ public class ConfigView extends JFrame {
 				sectionsPane.setSelectedIndex(i);
 				return;
 			}
-			if((i == 1) || (i == 3)){
+			if(indPruebas.contains(new Integer(i))){
 				System.out.println(sectionsPane.getTitleAt(i));
 				needsToReboot[i] = setChangedValues(sections[i].getChangedValues());
 			}else{
