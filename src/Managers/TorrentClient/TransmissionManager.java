@@ -18,6 +18,7 @@ import Utils.UtilTools;
 public class TransmissionManager extends TorrentClient{
 	private static volatile TransmissionManager instance = null;
 	
+	public static final String TRANSMISSION_NAME_CONFIG_VALUE = "transmission";
 	public static final String TRANSMISSION_RPC_SERVER_CONFIG_KEY = "transmission-rpc-host";
 	public static final String TRANSMISSION_USER_AUTH_CONFIG_KEY = "transmission-user";
 	public static final String TRANSMISSION_PASSWORD_AUTH_CONFIG_KEY = "transmission-password";
@@ -237,6 +238,11 @@ public class TransmissionManager extends TorrentClient{
 			System.out.println("Transmmission password not set.");
 		}
 		logged = false;
+	}
+	
+	@Override
+	public String getTorrentClientName() {
+		return TRANSMISSION_NAME_CONFIG_VALUE;
 	}
 
 	@Override

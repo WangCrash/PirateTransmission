@@ -13,6 +13,7 @@ public abstract class TorrentClient extends Manager{
 	
 	public abstract boolean addTorrent(ArchivoTorrent torrent);
 	
+	public abstract String getTorrentClientName();
 	public abstract String getServerConfigKey();
 	public abstract String getUserConfigKey();
 	public abstract String getPasswordConfigKey();

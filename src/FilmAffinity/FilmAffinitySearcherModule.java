@@ -126,12 +126,7 @@ public class FilmAffinitySearcherModule {
 		
 		FichaPelicula[] result = null;
 		
-        String query;
-		try {
-			query = "/es/search.php?stext=" + URLEncoder.encode(search, "ISO-8859-1") + "&stype=title";
-		} catch (UnsupportedEncodingException e2) {
-			return null;
-		}
+        String query = "/es/search.php?stext=" + new UtilTools().encodeString(search) + "&stype=title";
         URL url;
 		try {
 			url = new URL(new URL("http://" + urlBase), query);

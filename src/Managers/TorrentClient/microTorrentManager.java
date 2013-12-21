@@ -14,6 +14,7 @@ import Connection.ConnectionManager;
 import Connection.SimpleConnectionManager;
 import JSON.JSONException;
 import JSON.JSONObject;
+import Managers.PirateBayBot;
 import Model.ArchivoTorrent;
 import Utils.UtilTools;
 
@@ -21,6 +22,7 @@ import Utils.UtilTools;
 public class microTorrentManager extends TorrentClient{
 	private static volatile microTorrentManager instance = null;
 	
+	public static final String MICROTORRENT_NAME_CONFIG_VALUE = "microTorrent";
 	public static final String MICROTORRENT_RPC_SERVER_CONFIG_KEY = "microtorrent-rpc-host";
 	public static final String MICROTORRENT_USER_AUTH_CONFIG_KEY = "microtorrent-user";
 	public static final String MICROTORRENT_PASSWORD_AUTH_CONFIG_KEY = "microtorrent-password";
@@ -205,6 +207,11 @@ public class microTorrentManager extends TorrentClient{
 	
 	private String initializeQuery(){
 		return "?token=" + token + "&";
+	}
+	
+	@Override
+	public String getTorrentClientName() {
+		return MICROTORRENT_NAME_CONFIG_VALUE;
 	}
 
 	@Override

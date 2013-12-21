@@ -26,7 +26,6 @@ import javax.swing.border.LineBorder;
 import GUI.Configuration.ConfigView;
 import Managers.FilmAffinityBot;
 import Managers.PirateBayBot;
-import Managers.TorrentClient.TransmissionManager;
 import Model.ArchivoTorrent;
 import Utils.UtilTools;
 
@@ -77,14 +76,16 @@ public class PirateTransmissionDemo extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
-				FilmAffinityBot.getInstance().terminateManager();
+				if(FilmAffinityBot.getInstance().isLogged()){
+					FilmAffinityBot.getInstance().terminateManager();
+				}
 			}
 		});
+		ApplicationConfiguration.getInstance().initManager();
 		setIconImage(Toolkit.getDefaultToolkit().getImage(PirateTransmissionDemo.class.getResource("/images/Transmission-icon.png")));
-		if(!TransmissionManager.getInstance().initManager()){
-			new UtilTools().showWarningDialog(this, "Error", "No se ha podido conectar con Transmission");
-		}else if(!FilmAffinityBot.getInstance().initManager()){
-			new UtilTools().showWarningDialog(this, "Error", "No se ha podido conectar con FilmAffinity");
+		if(!ApplicationConfiguration.getInstance().getDefaultTorrentClient().initManager()){
+			String clientName = ApplicationConfiguration.getInstance().getDefaultTorrentClient().getTorrentClientName();
+			new UtilTools().showWarningDialog(this, "Error", "No se ha podido conectar con " + clientName);
 		}else if(!PirateBayBot.getInstance().initManager()){
 			new UtilTools().showWarningDialog(this, "Error", "No se ha podido conectar con PirateBay. Es posible que haya cambiado la dirección de su servidor");
 		}

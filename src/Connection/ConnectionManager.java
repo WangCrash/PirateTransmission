@@ -186,7 +186,7 @@ public class ConnectionManager {
 			return null;
 		}
 		try {
-			return new String(response.toString().getBytes(), "UTF-8");
+			return new String(response.toString().getBytes(), "ISO-8859-1");
 		} catch (UnsupportedEncodingException e) {
 			return null;
 		}		

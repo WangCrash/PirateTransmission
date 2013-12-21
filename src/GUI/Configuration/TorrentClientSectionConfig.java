@@ -166,7 +166,10 @@ public class TorrentClientSectionConfig extends ConfigurationSection {
 			}
 			String password = new String(passwordField.getPassword());
 			if(!initialPassword.equals(password)){
-				result.put(torrentClient.getPasswordConfigKey(), Base64.encodeBytes(password.getBytes()));
+				if(!password.isEmpty()){
+					password = Base64.encodeBytes(password.getBytes());
+				}
+				result.put(torrentClient.getPasswordConfigKey(), password);
 			}
 		}
 		System.out.println(result);
@@ -185,8 +188,11 @@ public class TorrentClientSectionConfig extends ConfigurationSection {
 
 	@Override
 	public boolean isValidPassLength() {
-		String password = new String(passwordField.getPassword());
-		return super.isValidPassLength(password);
+		if(!userField.getText().isEmpty()){
+			String password = new String(passwordField.getPassword());
+			return super.isValidPassLength(password);
+		}
+		return true;
 	}
 	
 	private void enableAuthFields(boolean selected) {

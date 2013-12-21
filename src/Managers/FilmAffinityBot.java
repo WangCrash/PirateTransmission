@@ -215,4 +215,8 @@ public class FilmAffinityBot extends Manager{
 		}
 		return false;
 	}
+	
+	public boolean isLogged(){
+		return logged;
+	}
 }

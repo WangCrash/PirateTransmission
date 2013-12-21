@@ -6,8 +6,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -83,6 +85,16 @@ public class UtilTools {
 	   
 	public String escapeHtmlSpecialChars(String original){
 		return StringEscapeUtils.unescapeHtml4(original);
+	}
+	
+	public String encodeString(String original){
+		String encoded;
+		try {
+			encoded = URLEncoder.encode(original, "ISO-8859-1");
+		} catch (UnsupportedEncodingException e) {
+			return original;
+		}
+		return encoded;
 	}
 	
 	public String quitQuotes(String chain){

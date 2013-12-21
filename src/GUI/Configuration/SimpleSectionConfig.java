@@ -79,7 +79,10 @@ public class SimpleSectionConfig extends ConfigurationSection {
 		}
 		String password = new String(passwordField.getPassword());
 		if(!initialPassword.equals(password)){
-			result.put(FilmAffinityBot.FILMAFFINITY_PASSWORD_AUTH_CONFIG_KEY, Base64.encodeBytes(password.getBytes()));
+			if(!password.isEmpty()){
+				password = Base64.encodeBytes(password.getBytes());
+			}
+			result.put(FilmAffinityBot.FILMAFFINITY_PASSWORD_AUTH_CONFIG_KEY, password);
 		}
 		return result;
 	}
@@ -96,7 +99,10 @@ public class SimpleSectionConfig extends ConfigurationSection {
 
 	@Override
 	public boolean isValidPassLength() {
-		String password = new String(passwordField.getPassword());
-		return super.isValidPassLength(password);
+		if(!userField.getText().isEmpty()){
+			String password = new String(passwordField.getPassword());
+			return super.isValidPassLength(password);
+		}
+		return true;
 	}
 }

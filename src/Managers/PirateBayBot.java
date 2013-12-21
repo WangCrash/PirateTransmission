@@ -1,11 +1,9 @@
 package Managers;
 
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Map;
@@ -97,15 +95,12 @@ public class PirateBayBot extends Manager{
 		if(search.isEmpty()){
 			return new ArchivoTorrent[0];
 		}
-		
-        String query;
-		try {
-			query = "/search/" + URLEncoder.encode(search, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			return null;
-		}
+        String query = "/search/" + new UtilTools().encodeString(search);
+
         
 		query += "/0/" + orderBy + "/" + category;
+		
+		System.out.println(query);
         
         URI uri;
 		try {
@@ -134,10 +129,11 @@ public class PirateBayBot extends Manager{
         }
 	}
     
-    private ArchivoTorrent[] listResults(String httpResponse){
+    private ArchivoTorrent[] listResults(String htmlResponse){
+    	System.out.println(htmlResponse);
     	String tableRowsRegex = "<table id=\"searchResult\".*?\\<thead.*?</thead>(.*?)</table>";
         Pattern p = Pattern.compile(tableRowsRegex);
-        Matcher m = p.matcher(httpResponse);
+        Matcher m = p.matcher(htmlResponse);
         ArrayList<ArchivoTorrent> lista = new ArrayList<ArchivoTorrent>();
         String resultados;
         int count = 0;
@@ -183,9 +179,8 @@ public class PirateBayBot extends Manager{
                     		at.setCategoria(text);
                     	}
                     }else if(title.contains("Details") || (title.contains("Detalles"))){
-                    	//ESTA FORMA DE ALMACENAR LA URL HABRA QUE CAMBIARLA PARA QUE SOLO SE GUARDE LA DIRECCION RELATIVA
                     	try {
-							at.setDetailsURL(new URI("http", urlBase, link, null).toURL());
+							at.setDetailsURL(new URI("http", urlBase + link, null).toURL());
 						} catch (MalformedURLException e) {
 							System.out.println(e.getMessage());
 							System.out.println("URL de detalles no se ha podido guardar");
