@@ -93,11 +93,6 @@ public class SimpleSectionConfig extends ConfigurationSection {
 	}
 
 	@Override
-	public void setManager(Manager manager) {
-		this.manager = manager;
-	}
-
-	@Override
 	public boolean isValidPassLength() {
 		if(!userField.getText().isEmpty()){
 			String password = new String(passwordField.getPassword());

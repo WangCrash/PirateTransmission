@@ -16,8 +16,12 @@ public abstract class ConfigurationSection extends JPanel{
 	
 	public abstract boolean isValidPassLength();
 	public abstract Map<String, String> getChangedValues();
-	public abstract Manager getManager();
-	public abstract void setManager(Manager manager);
+	public Manager getManager(){
+		return manager;
+	}
+	public void setManager(Manager manager){
+		this.manager = manager;
+	}
 	
 	protected boolean isValidPassLength(String password){
 		return password.length() >= 4;

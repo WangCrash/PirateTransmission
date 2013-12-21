@@ -172,18 +172,12 @@ public class TorrentClientSectionConfig extends ConfigurationSection {
 				result.put(torrentClient.getPasswordConfigKey(), password);
 			}
 		}
-		System.out.println(result);
 		return result;
 	}
 
 	@Override
 	public Manager getManager() {
 		return manager;
-	}
-
-	@Override
-	public void setManager(Manager manager) {
-		this.manager = manager;
 	}
 
 	@Override

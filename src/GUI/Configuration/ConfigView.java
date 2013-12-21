@@ -19,6 +19,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JTabbedPane;
 
+import GUI.ApplicationConfiguration;
 import Managers.FilmAffinityBot;
 import Managers.TorrentClient.TransmissionManager;
 import Managers.TorrentClient.microTorrentManager;
@@ -85,8 +86,8 @@ public class ConfigView extends JFrame {
 		
 		sectionsPane = new JTabbedPane(JTabbedPane.TOP);
 		
-		SimpleSectionConfig generalSection = new SimpleSectionConfig("jandale", "morrito");
-		
+		GeneralSectionConfig generalSection = new GeneralSectionConfig(ApplicationConfiguration.getInstance());
+				
 		TorrentClientSectionConfig transmissionSection = new TorrentClientSectionConfig(TransmissionManager.getInstance());
 		
 		TorrentClientSectionConfig microTorrentSection = new TorrentClientSectionConfig(microTorrentManager.getInstance());
@@ -185,6 +186,7 @@ public class ConfigView extends JFrame {
 	
 	private void checkConfigSectionsAndSave() {
 		ArrayList<Integer> indPruebas = new ArrayList<Integer>();
+		indPruebas.add(0);
 		indPruebas.add(1);
 		indPruebas.add(2);
 		indPruebas.add(3);
