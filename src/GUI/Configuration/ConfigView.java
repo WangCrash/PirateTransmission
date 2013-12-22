@@ -171,7 +171,22 @@ public class ConfigView extends JFrame {
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 	
-	//si cambia para una sección alguna de las propertires avisa de ello
+	private boolean validateSections(){
+		int i = 0;
+		boolean result = true;
+		while(i < sections.length){
+			if(!sections[i].isValidPassLength()){
+				new UtilTools().showWarningDialog(this, "Error de configuración", "La contraseña de " + sectionsPane.getTitleAt(i) + " no tiene 4 caracteres o más");
+				sectionsPane.setSelectedIndex(i);
+				result = false;
+				break;
+			}
+			i++;
+		}
+		return result;
+	}
+	
+	//si cambia para una sección alguna de las properties avisa de ello
 	private boolean setChangedValues(Map<String, String> changedValues){
 		boolean result = false;
 		for (Map.Entry<String, String> entry : changedValues.entrySet())
@@ -185,21 +200,14 @@ public class ConfigView extends JFrame {
 	}
 	
 	private void checkConfigSectionsAndSave() {
-		ArrayList<Integer> indPruebas = new ArrayList<Integer>();
-		indPruebas.add(0);
-		indPruebas.add(1);
-		indPruebas.add(2);
-		indPruebas.add(3);
+		if(!validateSections()){
+			return;
+		}
 		UtilTools tools = new UtilTools();
 		configProperties = tools.getConfiguration();
 		boolean[] needsToReboot = new boolean[sectionsPane.getTabCount()];
 		for (int i = 0; i < sectionsPane.getTabCount(); i++) {
-			if(!sections[i].isValidPassLength()){
-				tools.showWarningDialog(this, "Error de configuración", "La contraseña de " + sectionsPane.getTitleAt(i) + " no tiene 4 caracteres o más");
-				sectionsPane.setSelectedIndex(i);
-				return;
-			}
-			if(indPruebas.contains(new Integer(i))){
+			if(i != 4){
 				System.out.println(sectionsPane.getTitleAt(i));
 				needsToReboot[i] = setChangedValues(sections[i].getChangedValues());
 			}else{

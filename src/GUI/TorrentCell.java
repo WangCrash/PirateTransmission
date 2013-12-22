@@ -49,7 +49,7 @@ public class TorrentCell extends JPanel {
 		JButton showDetailsButton = new JButton("Ver Detalles");
 		showDetailsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(archivoTorrent != null){
+				if((archivoTorrent != null) && (archivoTorrent.getDetailsURL() != null)){
 					new UtilTools().openURLInNavigator(archivoTorrent.getDetailsURL());
 				}
 			}

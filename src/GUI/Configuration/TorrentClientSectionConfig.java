@@ -27,6 +27,7 @@ public class TorrentClientSectionConfig extends ConfigurationSection {
 	private String initialRpcServer;
 	private String initialUser;
 	private String initialPassword;
+	private boolean initialNeedsAuth;
 	
 	private JTextField userField;
 	private JTextField rpcServerField;
@@ -60,16 +61,11 @@ public class TorrentClientSectionConfig extends ConfigurationSection {
 				enableAuthFields(checkBox.isSelected());
 			}
 		});
-		if(initialUser.isEmpty()){
-			needsAuthCheckBox.setSelected(false);
-			enableAuthFields(false);
-		}else{
-			needsAuthCheckBox.setSelected(true);
-			needsAuthCheckBox.doClick();//para que pase por el listener
-			userField.setText(initialUser);
-			passwordField.setText(initialPassword);
-			enableAuthFields(true);
-		}
+
+		needsAuthCheckBox.setSelected(initialNeedsAuth);
+		enableAuthFields(initialNeedsAuth);
+		userField.setText(initialUser);
+		passwordField.setText(initialPassword);
 		
 		rpcServerField = new JTextField();
 		rpcServerField.setColumns(10);
@@ -136,6 +132,7 @@ public class TorrentClientSectionConfig extends ConfigurationSection {
 		if(initialPassword == null){
 			initialPassword = "";
 		}
+		initialNeedsAuth = !initialUser.isEmpty();
 	}
 
 	private String getRPCFieldText(){
@@ -160,16 +157,18 @@ public class TorrentClientSectionConfig extends ConfigurationSection {
 		if(!initialRpcServer.equals(getRPCFieldText())){
 			result.put(torrentClient.getServerConfigKey(), getRPCFieldText());
 		}
-		if(this.needsAuthCheckBox.isSelected()){
-			if(!initialUser.equals(userField.getText().trim())){
+		System.out.println(this.needsAuthCheckBox.isSelected());
+		if(initialNeedsAuth != this.needsAuthCheckBox.isSelected()){
+			if(this.needsAuthCheckBox.isSelected()){
 				result.put(torrentClient.getUserConfigKey(), userField.getText().trim());
-			}
-			String password = new String(passwordField.getPassword());
-			if(!initialPassword.equals(password)){
+				String password = new String(passwordField.getPassword());
 				if(!password.isEmpty()){
 					password = Base64.encodeBytes(password.getBytes());
 				}
 				result.put(torrentClient.getPasswordConfigKey(), password);
+			}else{
+				result.put(torrentClient.getUserConfigKey(), "");
+				result.put(torrentClient.getPasswordConfigKey(), "");
 			}
 		}
 		return result;
@@ -182,7 +181,7 @@ public class TorrentClientSectionConfig extends ConfigurationSection {
 
 	@Override
 	public boolean isValidPassLength() {
-		if(!userField.getText().isEmpty()){
+		if(needsAuthCheckBox.isSelected()){
 			String password = new String(passwordField.getPassword());
 			return super.isValidPassLength(password);
 		}

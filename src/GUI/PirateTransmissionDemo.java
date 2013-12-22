@@ -86,7 +86,8 @@ public class PirateTransmissionDemo extends JFrame {
 		if(!ApplicationConfiguration.getInstance().getDefaultTorrentClient().initManager()){
 			String clientName = ApplicationConfiguration.getInstance().getDefaultTorrentClient().getTorrentClientName();
 			new UtilTools().showWarningDialog(this, "Error", "No se ha podido conectar con " + clientName);
-		}else if(!PirateBayBot.getInstance().initManager()){
+		}
+		if(!PirateBayBot.getInstance().initManager()){
 			new UtilTools().showWarningDialog(this, "Error", "No se ha podido conectar con PirateBay. Es posible que haya cambiado la dirección de su servidor");
 		}
 		setResizable(false);

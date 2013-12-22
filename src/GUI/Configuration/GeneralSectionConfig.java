@@ -98,6 +98,7 @@ public class GeneralSectionConfig extends ConfigurationSection {
 			}else{
 				ApplicationConfiguration.getInstance().setDefaultTorrentClient(TransmissionManager.getInstance());
 			}
+			ApplicationConfiguration.getInstance().getDefaultTorrentClient().initManager();
 		}
 		System.out.println(result);
 		return result;
