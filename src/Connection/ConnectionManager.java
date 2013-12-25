@@ -32,7 +32,7 @@ public class ConnectionManager {
 	private final String USER_AGENT = "orphean_navigator_2.0";
 	
 	private List<String> cookiesList;
-	private int TIMEOUT_MILLI = 1000;
+	private int TIMEOUT_MILLI = 10000;
 	
 	public ConnectionManager(){
 		this(10000);
