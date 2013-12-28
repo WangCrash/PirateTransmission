@@ -70,6 +70,7 @@ public class PirateBayBot extends Manager{
 			}
 			initialized = true;
 		}
+		System.out.println("PirateBay: " + urlBase);
 		return initialized;
 	}
 
@@ -130,6 +131,7 @@ public class PirateBayBot extends Manager{
 	}
     
     private ArchivoTorrent[] listResults(String htmlResponse){
+    	String simpleUrlBase = urlBase.substring(2);
     	System.out.println(htmlResponse);
     	String tableRowsRegex = "<table id=\"searchResult\".*?\\<thead.*?</thead>(.*?)</table>";
         Pattern p = Pattern.compile(tableRowsRegex);
@@ -180,13 +182,17 @@ public class PirateBayBot extends Manager{
                     	}
                     }else if(title.contains("Details") || (title.contains("Detalles"))){
                     	try {
-							at.setDetailsURL(new URI("http", urlBase + link, null).toURL());
+                    		at.setDetailsURL(new URI("http", simpleUrlBase, link, null).toURL());
 						} catch (MalformedURLException e) {
+							System.out.println("MalformedURLException");
 							System.out.println(e.getMessage());
-							System.out.println("URL de detalles no se ha podido guardar");
+							System.out.println("URL de detalles no se ha podido guardar: ");
+							System.out.println("Link: " + link);
 						} catch (URISyntaxException e) {
+							System.out.println("URISyntaxException");
 							System.out.println(e.getMessage());
-							System.out.println("URL de detalles no se ha podido guardar");
+							System.out.println("URL de detalles no se ha podido guardar: ");
+							System.out.println("Link: " + link);
 						}
 						at.setTitulo(text);
                     }else if(title.contains("magnet")){

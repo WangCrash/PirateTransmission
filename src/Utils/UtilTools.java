@@ -113,10 +113,8 @@ public class UtilTools {
 		  try {
 			Desktop.getDesktop().browse(url.toURI());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				System.out.println("couldn't open that URL");
 			} catch (URISyntaxException e) {
-				// TODO Auto-generated catch block
 				System.out.println("couldn't open that URL");
 			}
 		}else{

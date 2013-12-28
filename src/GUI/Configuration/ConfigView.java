@@ -85,14 +85,16 @@ public class ConfigView extends JFrame {
 		setContentPane(contentPane);
 		
 		sectionsPane = new JTabbedPane(JTabbedPane.TOP);
-		
+			
 		GeneralSectionConfig generalSection = new GeneralSectionConfig(ApplicationConfiguration.getInstance());
 				
 		TorrentClientSectionConfig transmissionSection = new TorrentClientSectionConfig(TransmissionManager.getInstance());
 		
 		TorrentClientSectionConfig microTorrentSection = new TorrentClientSectionConfig(microTorrentManager.getInstance());
 		
-		SimpleSectionConfig filmAffinitySection = new SimpleSectionConfig(FilmAffinityBot.getInstance().user, FilmAffinityBot.getInstance().password);
+		UtilTools utils = new UtilTools();
+		Map<String, String> config = utils.getConfiguration();
+		SimpleSectionConfig filmAffinitySection = new SimpleSectionConfig(config.get(FilmAffinityBot.FILMAFFINITY_USER_AUTH_CONFIG_KEY), config.get(FilmAffinityBot.FILMAFFINITY_PASSWORD_AUTH_CONFIG_KEY));
 		filmAffinitySection.setManager(FilmAffinityBot.getInstance());
 		
 		SimpleSectionConfig lastFMSection = new SimpleSectionConfig("WaftFunk", "abcadfasdfasf");

@@ -51,6 +51,8 @@ public class TorrentCell extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				if((archivoTorrent != null) && (archivoTorrent.getDetailsURL() != null)){
 					new UtilTools().openURLInNavigator(archivoTorrent.getDetailsURL());
+				}else{
+					System.out.println(archivoTorrent);
 				}
 			}
 		});
