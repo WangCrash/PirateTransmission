@@ -1,4 +1,4 @@
-package GUI;
+package GUI.PirateBay;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.border.LineBorder;
 
+import GUI.ApplicationConfiguration;
 import Model.ArchivoTorrent;
 import Utils.UtilTools;
 
@@ -18,6 +19,8 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.SystemColor;
+import net.miginfocom.swing.MigLayout;
+import javax.swing.SwingConstants;
 
 
 public class TorrentCell extends JPanel {
@@ -39,10 +42,12 @@ public class TorrentCell extends JPanel {
 		setBorder(new LineBorder(new Color(128, 128, 128), 2, true));
 		
 		categoryLabel = new JLabel("Categor\u00EDa");
+		categoryLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		categoryLabel.setBackground(SystemColor.text);
 		categoryLabel.setText(torrent.getCategoria());
 		
 		titleLabel = new JLabel("T\u00EDtulo");
+		titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		titleLabel.setBackground(SystemColor.text);
 		titleLabel.setText(archivoTorrent.getTitulo());
 		
@@ -69,36 +74,11 @@ public class TorrentCell extends JPanel {
 				}
 			}
 		});
-		GroupLayout groupLayout = new GroupLayout(this);
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(23)
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addComponent(titleLabel, GroupLayout.PREFERRED_SIZE, 415, GroupLayout.PREFERRED_SIZE)
-						.addComponent(categoryLabel, GroupLayout.PREFERRED_SIZE, 415, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap(28, Short.MAX_VALUE))
-				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-					.addContainerGap(122, Short.MAX_VALUE)
-					.addComponent(addTorrentButton)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(showDetailsButton)
-					.addGap(112))
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(categoryLabel)
-					.addGap(5)
-					.addComponent(titleLabel)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(addTorrentButton)
-						.addComponent(showDetailsButton))
-					.addGap(10))
-		);
-		setLayout(groupLayout);
+		setLayout(new MigLayout("", "[175px][10px][171px]", "[14px][14px][23px]"));
+		add(categoryLabel, "cell 0 0 3 1,growx,aligny top");
+		add(titleLabel, "cell 0 1 3 1,growx,aligny top");
+		add(addTorrentButton, "cell 0 2,alignx right,aligny top");
+		add(showDetailsButton, "cell 2 2,alignx left,aligny top");
 
 	}
 

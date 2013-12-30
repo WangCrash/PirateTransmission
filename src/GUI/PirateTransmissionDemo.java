@@ -24,6 +24,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
 
 import GUI.Configuration.ConfigView;
+import GUI.PirateBay.TorrentCell;
 import Managers.FilmAffinityBot;
 import Managers.PirateBayBot;
 import Model.ArchivoTorrent;
@@ -198,6 +199,7 @@ public class PirateTransmissionDemo extends JFrame {
 	}
 	
 	private void openConfigView() {
+		// TODO Auto-generated method stub
 		ConfigView configView = new ConfigView(this);
 		configView.setVisible(true);
 	}
