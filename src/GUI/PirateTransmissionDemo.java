@@ -198,7 +198,6 @@ public class PirateTransmissionDemo extends JFrame {
 	}
 	
 	private void openConfigView() {
-		// TODO Auto-generated method stub
 		ConfigView configView = new ConfigView(this);
 		configView.setVisible(true);
 	}

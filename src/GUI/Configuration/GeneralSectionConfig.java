@@ -23,6 +23,7 @@ public class GeneralSectionConfig extends ConfigurationSection {
 	private static final long serialVersionUID = 7110732631195916702L;
 
 	private String initialTorrentClient;
+	@SuppressWarnings("rawtypes")
 	private JComboBox torrentClientBox;
 	private String[] comboModel;
 	/**
@@ -93,12 +94,12 @@ public class GeneralSectionConfig extends ConfigurationSection {
 		if(!initialTorrentClient.equals(comboModel[torrentClientBox.getSelectedIndex()])){
 			String name = comboModel[torrentClientBox.getSelectedIndex()];
 			result.put(ApplicationConfiguration.DEFAULT_TORRENT_CLIENT_CONFIG_KEY, name);
-			if(name.equals(microTorrentManager.MICROTORRENT_NAME_CONFIG_VALUE)){
+			/*if(name.equals(microTorrentManager.MICROTORRENT_NAME_CONFIG_VALUE)){
 				ApplicationConfiguration.getInstance().setDefaultTorrentClient(microTorrentManager.getInstance());
 			}else{
 				ApplicationConfiguration.getInstance().setDefaultTorrentClient(TransmissionManager.getInstance());
 			}
-			ApplicationConfiguration.getInstance().getDefaultTorrentClient().initManager();
+			ApplicationConfiguration.getInstance().getDefaultTorrentClient().initManager();*/
 		}
 		System.out.println(result);
 		return result;

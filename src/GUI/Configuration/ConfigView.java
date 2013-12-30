@@ -25,7 +25,6 @@ import Managers.TorrentClient.TransmissionManager;
 import Managers.TorrentClient.microTorrentManager;
 import Utils.UtilTools;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import javax.swing.LayoutStyle.ComponentPlacement;

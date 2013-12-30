@@ -2,7 +2,6 @@ package GUI;
 
 import java.util.Map;
 
-import Managers.FilmAffinityBot;
 import Managers.Manager;
 import Managers.TorrentClient.TorrentClient;
 import Managers.TorrentClient.TransmissionManager;
@@ -16,8 +15,6 @@ public class ApplicationConfiguration extends Manager{
 	private static ApplicationConfiguration instance = null;
 	
 	private TorrentClient defaultTorrentClient;
-	private String filmAffinityUser;
-	private String lastFmUser;
 	
 	private ApplicationConfiguration(){
 		initManager();
@@ -26,8 +23,6 @@ public class ApplicationConfiguration extends Manager{
 	@Override
 	public boolean initManager() {
 		setDefaultTorrentClient(null);
-		setFilmAffinityUser(null);
-		setLastFmUser(null);
 		setUpManager();
 		return true;
 	}
@@ -46,9 +41,7 @@ public class ApplicationConfiguration extends Manager{
 		}else{
 			defaultTorrentClient = TransmissionManager.getInstance();
 		}
-		
-		filmAffinityUser = config.get(FilmAffinityBot.FILMAFFINITY_USER_AUTH_CONFIG_KEY);
-		lastFmUser = config.get("Por determinar");
+		System.out.println("Cliente torrent principal: " + nameTorrentClient);
 	}
 	
 	public static ApplicationConfiguration getInstance(){
@@ -68,19 +61,4 @@ public class ApplicationConfiguration extends Manager{
 		this.defaultTorrentClient = defaultTorrentClient;
 	}
 
-	public String getFilmAffinityUser() {
-		return filmAffinityUser;
-	}
-
-	public void setFilmAffinityUser(String filmAffinityUser) {
-		this.filmAffinityUser = filmAffinityUser;
-	}
-
-	public String getLastFmUser() {
-		return lastFmUser;
-	}
-
-	public void setLastFmUser(String lastFmUser) {
-		this.lastFmUser = lastFmUser;
-	}
 }
