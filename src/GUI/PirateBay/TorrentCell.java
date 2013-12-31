@@ -15,9 +15,6 @@ import Utils.UtilTools;
 
 import java.awt.Color;
 
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.SystemColor;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.SwingConstants;

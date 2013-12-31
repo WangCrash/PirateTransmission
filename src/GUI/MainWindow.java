@@ -12,6 +12,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
+import GUI.Configuration.ConfigView;
 import GUI.PirateBay.PiratebaySection;
 import Managers.FilmAffinityBot;
 import Managers.PirateBayBot;
@@ -20,12 +21,15 @@ import Utils.UtilTools;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class MainWindow extends JFrame {
 
 	private static final long serialVersionUID = -6836764944504173037L;
 	private JPanel contentPane;
-	protected JPanel piratebayPanel;
+	private JPanel piratebayPanel;
+	private PiratebaySection pirateBaySection;
 
 	/**
 	 * Launch the application.
@@ -77,6 +81,11 @@ public class MainWindow extends JFrame {
 		menuBar.add(mnAplicacin);
 		
 		JMenuItem mntmConfiguracin = new JMenuItem("Configuraci\u00F3n");
+		mntmConfiguracin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				openConfigView();
+			}
+		});
 		mnAplicacin.add(mntmConfiguracin);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -113,6 +122,12 @@ public class MainWindow extends JFrame {
 	}
 
 	private void includeSections() {
-		piratebayPanel.add(new PiratebaySection(this));
+		pirateBaySection = new PiratebaySection(this);
+		piratebayPanel.add(pirateBaySection);
+	}
+	
+	private void openConfigView() {
+		ConfigView configView = new ConfigView(this);
+		configView.setVisible(true);
 	}
 }

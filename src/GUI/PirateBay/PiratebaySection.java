@@ -25,9 +25,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.FlowLayout;
 
 public class PiratebaySection extends JPanel {
+	
+	private static final long serialVersionUID = -7052443585281459283L;
 	
 	private ArchivoTorrent[] torrents;
 	private JFrame mainFrame;
@@ -41,6 +42,7 @@ public class PiratebaySection extends JPanel {
 		this.mainFrame = parentFrame;
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 		
 		JPanel searchPanel = new JPanel();
 		searchPanel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, Color.DARK_GRAY, null, null, null));
@@ -134,9 +136,12 @@ public class PiratebaySection extends JPanel {
 				TorrentCell cell = new TorrentCell(torrents[i]);
 				cell.setMainFrame(mainFrame);
 				if(i % 2 == 0){
-					cell.setBackground(new Color(196.0f/255.0f, 196.0f/255.0f, 236.0f/255.0f));
+					//amarillo suave
+					cell.setBackground(new Color(255.0f/255.0f, 247.0f/255.0f, 213.0f/255.0f));
 				}else{
-					cell.setBackground(new Color(176.0f/255.0f, 196.0f/255.0f, 222.0f/255.0f));//light steel blue
+					//azul suave
+					//[r=149,g=201,b=250]
+					cell.setBackground(new Color(149.0f/255.0f, 201.0f/255.0f, 250.0f/255.0f));
 				}
 				resultsPanel.add(cell);
 			}
