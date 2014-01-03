@@ -2,7 +2,7 @@ package Model;
 
 import java.util.Map;
 
-public class FichaPelicula {
+public class FichaPelicula extends HelperItem{
 	public static final String MAP_KEY_PREMIOS_AÑO = "año";
 	public static final String MAP_KEY_PREMIOS_PREMIO = "premio";
 	public static final String MAP_KEY_CRITICAS_TEXTO = "texto";

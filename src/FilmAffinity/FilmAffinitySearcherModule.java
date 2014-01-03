@@ -17,16 +17,13 @@ import Model.FichaPelicula;
 import Utils.UtilTools;
 
 public class FilmAffinitySearcherModule {
-	public static final String FAMS_FILTERS_GENRE_KEY = "genre";
-	public static final String FAMS_FILTERS_LIMIT_KEY = "limit";
-	public static final String FAMS_FILTERS_FROM_YEAR_KEY = "fromyear";
-	public static final String FAMS_FILTERS_TO_YEAR_KEY = "toyear";
-	
+		
 	private boolean logged;
 	private ConnectionManager cm;
 	private String urlBase;
 	private Map<String, String> stringsValoraciones;
 	private String[] genresKeys;
+	private String[] searchingOptionsKeys;
 	
 	public FilmAffinitySearcherModule(String urlBase, boolean logged, ConnectionManager cm){
 		this.urlBase = urlBase;
@@ -45,6 +42,7 @@ public class FilmAffinitySearcherModule {
 		stringsValoraciones.put("Excelente", "10");
 		
 		genresKeys = new String[]{"AC", "AN", "AV", "BE", "C-F", "F-N", "CO", "DESC", "DO", "DR", "FAN", "INF", "INT", "MU", "RO", "TV_SE", "TE", "TH", "WE"};
+		searchingOptionsKeys = new String[]{"all", "title", "director", "cast"};
 	}
 	
 	public FichaPelicula[] lookForRecommendations(){
@@ -119,14 +117,14 @@ public class FilmAffinitySearcherModule {
 		return result;
 	}
 		
-	public FichaPelicula[] searchFilm(String search){
+	public FichaPelicula[] searchFilm(String search, int option){
 		if(search.isEmpty()){
 			return null;
 		}
 		
 		FichaPelicula[] result = null;
 		
-        String query = "/es/search.php?stext=" + new UtilTools().encodeString(search) + "&stype=title";
+        String query = "/es/search.php?stext=" + new UtilTools().encodeString(search) + "&stype=" + searchingOptionsKeys[option];
         URL url;
 		try {
 			url = new URL(new URL("http://" + urlBase), query);

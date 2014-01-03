@@ -20,7 +20,10 @@ public class FilmAffinityVotingModule {
 		this.cm = cm;
 	}
 	
-	public boolean voteForFilm(FichaPelicula film, String rating){
+	public boolean voteForFilm(FichaPelicula film){
+		if(film.getNotaUsuario() == null || film.getNotaUsuario().isEmpty()){
+			return false;
+		}
 		String idFilm = this.getFilmIdFromUrl(film.getFilmDetailsUrl());
 		if((idFilm != null) && film.getDataUcd() != null){
 			URL url;
@@ -29,7 +32,7 @@ public class FilmAffinityVotingModule {
 			} catch (MalformedURLException e) {
 				return false;
 			}
-			String parameters = "id=" + idFilm + "&rating=" + rating + "&ucd=" + film.getDataUcd();
+			String parameters = "id=" + idFilm + "&rating=" + film.getNotaUsuario() + "&ucd=" + film.getDataUcd();
 			
 			Map<String, String> response = cm.sendRequest(url, parameters, true, null, ConnectionManager.METHOD_POST, true, true, true);
 			

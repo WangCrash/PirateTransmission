@@ -1,4 +1,4 @@
-import Managers.FilmAffinityBot;
+import Managers.Helpers.FilmAffinityBot;
 import Model.FichaPelicula;
 
 
@@ -9,7 +9,7 @@ public class pruebas {
 		if(initiated){
 			//FichaPelicula[] result = FilmAffinityBot.getListRecommendations();
 			//FichaPelicula[] result = FilmAffinityBot.getListRecommendations(FilmAffinityBot.FAMS_GENRE_KEY_ACTION);
-			FichaPelicula[] result = FilmAffinityBot.getInstance().searchFilm("star trek");
+			FichaPelicula[] result = FilmAffinityBot.getInstance().searchItem("star trek", FilmAffinityBot.FILMAFFINITY_TITLE_SEARCH_OPTION);
 			if(result == null){
 				System.out.println("no hay resultados");
 				return;

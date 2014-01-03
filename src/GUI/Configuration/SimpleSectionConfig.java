@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import Codification.Base64;
-import Managers.FilmAffinityBot;
 import Managers.Manager;
+import Managers.Helpers.FilmAffinityBot;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;

@@ -14,8 +14,8 @@ import javax.swing.JMenuItem;
 
 import GUI.Configuration.ConfigView;
 import GUI.PirateBay.PiratebaySection;
-import Managers.FilmAffinityBot;
 import Managers.PirateBayBot;
+import Managers.Helpers.FilmAffinityBot;
 import Utils.UtilTools;
 
 import java.awt.Toolkit;
@@ -107,14 +107,30 @@ public class MainWindow extends JFrame {
 				.addComponent(piratebayPanel, GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
 				.addComponent(helperPanel, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
 		);
+		
+		JPanel helperRecommendations = new JPanel();
+		
+		JPanel helperSearcher = new JPanel();
+		
+		JPanel helperResults = new JPanel();
 		GroupLayout gl_helperPanel = new GroupLayout(helperPanel);
 		gl_helperPanel.setHorizontalGroup(
 			gl_helperPanel.createParallelGroup(Alignment.LEADING)
-				.addGap(0, 442, Short.MAX_VALUE)
+				.addGroup(Alignment.TRAILING, gl_helperPanel.createSequentialGroup()
+					.addGroup(gl_helperPanel.createParallelGroup(Alignment.TRAILING)
+						.addComponent(helperResults, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE)
+						.addComponent(helperRecommendations, GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE)
+						.addComponent(helperSearcher, GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE))
+					.addContainerGap())
 		);
 		gl_helperPanel.setVerticalGroup(
 			gl_helperPanel.createParallelGroup(Alignment.LEADING)
-				.addGap(0, 551, Short.MAX_VALUE)
+				.addGroup(gl_helperPanel.createSequentialGroup()
+					.addComponent(helperRecommendations, GroupLayout.PREFERRED_SIZE, 94, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(helperSearcher, GroupLayout.PREFERRED_SIZE, 92, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(helperResults, GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE))
 		);
 		helperPanel.setLayout(gl_helperPanel);
 		contentPane.setLayout(gl_contentPane);

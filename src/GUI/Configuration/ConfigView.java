@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTabbedPane;
 
 import GUI.ApplicationConfiguration;
-import Managers.FilmAffinityBot;
+import Managers.Helpers.FilmAffinityBot;
 import Managers.TorrentClient.TransmissionManager;
 import Managers.TorrentClient.microTorrentManager;
 import Utils.UtilTools;
