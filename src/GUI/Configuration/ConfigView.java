@@ -216,7 +216,7 @@ public class ConfigView extends JFrame {
 			}
 		}
 		tools.setConfiguration(configProperties);
-		//reiniciar managers cuya config haya cambiado
+		//reiniciar managers cuya configuración haya cambiado
 		for (int j = 0; j < needsToReboot.length; j++) {
 			if(!needsToReboot[j])
 				continue;
