@@ -83,11 +83,12 @@ public class FilmAffinitySearcherModule {
 			}
 			query = query.substring(0, query.length() - 1);
 		}
-        URL url;
+        URL url = null;
 		try {
 			url = new URL(new URL("http://" + urlBase), query);
 			//url = new URL(urlBase);
 		} catch (MalformedURLException e1) {
+			System.out.println("BAD URL: " + url);
 			return null;
 		}
 

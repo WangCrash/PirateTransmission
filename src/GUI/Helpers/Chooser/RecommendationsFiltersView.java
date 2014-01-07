@@ -20,39 +20,46 @@ import Utils.UtilTools;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.Map;
+import java.awt.Color;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.border.BevelBorder;
 
-public class RecommendationsFieltersView extends JDialog {
+public class RecommendationsFiltersView extends JDialog {
 
 	private static final long serialVersionUID = 8898559080248268287L;
 	
 	private JFrame mainFrame;
 	private HelperChooserSection parentView;
 	private String[] genreComboModel;
-	private int[] genreCodes;
 	private String[] decadeComboModel;
 	private String[] toComboModel;
 	private String[] resultsLimitComboModel;
 	
 	private final JPanel contentPanel = new JPanel();
 	private JLabel lblGnero;
+	@SuppressWarnings("rawtypes")
 	private JComboBox resultsLimitComboBox;
+	@SuppressWarnings("rawtypes")
 	private JComboBox genreComboBox;
+	@SuppressWarnings("rawtypes")
 	private JComboBox decadeComboBox;
+	@SuppressWarnings("rawtypes")
 	private JComboBox toComboBox;
 
 	/**
 	 * Create the dialog.
 	 */
-	public RecommendationsFieltersView(JFrame mainFrame, HelperChooserSection parentView) {
-		super(mainFrame);
-		this.mainFrame = mainFrame;
+	public RecommendationsFiltersView(JFrame rootFrame, HelperChooserSection parentView) {
+		super(rootFrame, true);
+		getContentPane().setForeground(Color.ORANGE);
+		this.mainFrame = rootFrame;
 		this.parentView = parentView;
 		
 		setAttributes();
 		setUndecorated(true);
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPanel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, Color.DARK_GRAY, null, null, null));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		{
 			lblGnero = new JLabel("G\u00E9nero");
@@ -89,10 +96,10 @@ public class RecommendationsFieltersView extends JDialog {
 							.addGroup(gl_contentPanel.createSequentialGroup()
 								.addComponent(lblGnero, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
 								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(genreComboBox, 0, 259, Short.MAX_VALUE))
+								.addComponent(genreComboBox, 0, 263, Short.MAX_VALUE))
 							.addGroup(gl_contentPanel.createSequentialGroup()
-								.addComponent(lblLimitarElNmero, GroupLayout.PREFERRED_SIZE, 166, GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.RELATED)
+								.addComponent(lblLimitarElNmero, GroupLayout.PREFERRED_SIZE, 182, GroupLayout.PREFERRED_SIZE)
+								.addPreferredGap(ComponentPlacement.UNRELATED)
 								.addComponent(resultsLimitComboBox, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE))))
 					.addGap(61))
 		);
@@ -113,11 +120,12 @@ public class RecommendationsFieltersView extends JDialog {
 					.addGroup(gl_contentPanel.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblLimitarElNmero, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
 						.addComponent(resultsLimitComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap(69, Short.MAX_VALUE))
+					.addContainerGap(67, Short.MAX_VALUE))
 		);
 		contentPanel.setLayout(gl_contentPanel);
 		{
 			JPanel buttonPane = new JPanel();
+			buttonPane.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, Color.DARK_GRAY, null, null, null));
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
@@ -144,6 +152,7 @@ public class RecommendationsFieltersView extends JDialog {
 			}
 		}
 		initializeCombos();
+		this.setLocationRelativeTo(this.mainFrame);
 	}
 
 	private void initializeCombos() {
@@ -153,6 +162,7 @@ public class RecommendationsFieltersView extends JDialog {
 		if(genre != null){
 			try{
 				code = Integer.parseInt(genre);
+				code++;
 			}catch(NumberFormatException e){
 				code = 0;
 			}
@@ -171,7 +181,7 @@ public class RecommendationsFieltersView extends JDialog {
 		if(to != null){
 			toIndex = findValue(toComboModel, to);
 		}
-		decadeComboBox.setSelectedIndex(toIndex);
+		toComboBox.setSelectedIndex(toIndex);
 		
 		String limit = filters.get(FilmAffinityBot.FILMAFFINITY_FILTERS_LIMIT_KEY);
 		int limitIndex = 0;
@@ -200,7 +210,11 @@ public class RecommendationsFieltersView extends JDialog {
 	private void setUpFilters(){
 		Map<String, String> filters = parentView.getFilters();
 		
-		String genre = String.valueOf(genreComboBox.getSelectedIndex() - 1);
+		int genreCode = genreComboBox.getSelectedIndex() - 1;
+		String genre = "";
+		if(genreCode >= 0){
+			genre = String.valueOf(genreCode);
+		}
 		filters.put(FilmAffinityBot.FILMAFFINITY_FILTERS_GENRE_KEY, genre);
 		
 		String decade = decadeComboModel[decadeComboBox.getSelectedIndex()];
@@ -242,27 +256,6 @@ public class RecommendationsFieltersView extends JDialog {
 				, "Thriller"
 				, "Western"
 		};
-		genreCodes = new int[]{
-				FilmAffinityBot.FILMAFFINITY_GENRE_KEY_ALL
-				, FilmAffinityBot.FILMAFFINITY_GENRE_KEY_ACTION
-				, FilmAffinityBot.FILMAFFINITY_GENRE_KEY_ANIMATION
-				, FilmAffinityBot.FILMAFFINITY_GENRE_KEY_ADVENTURE
-				, FilmAffinityBot.FILMAFFINITY_GENRE_KEY_WAR
-				, FilmAffinityBot.FILMAFFINITY_GENRE_KEY_SCIENCE_FICTION
-				, FilmAffinityBot.FILMAFFINITY_GENRE_KEY_NOIR
-				, FilmAffinityBot.FILMAFFINITY_GENRE_KEY_COMEDY
-				, FilmAffinityBot.FILMAFFINITY_GENRE_KEY_UNKNOWN
-				, FilmAffinityBot.FILMAFFINITY_GENRE_KEY_DOCUMENTARY
-				, FilmAffinityBot.FILMAFFINITY_GENRE_KEY_DRAMA
-				, FilmAffinityBot.FILMAFFINITY_GENRE_KEY_FANTASTIC
-				, FilmAffinityBot.FILMAFFINITY_GENRE_KEY_INFANTILE
-				, FilmAffinityBot.FILMAFFINITY_GENRE_KEY_INTRIGUE
-				, FilmAffinityBot.FILMAFFINITY_GENRE_KEY_MUSICAL
-				, FilmAffinityBot.FILMAFFINITY_GENRE_KEY_ROMANCE
-				, FilmAffinityBot.FILMAFFINITY_GENRE_KEY_TV_SERIE
-				, FilmAffinityBot.FILMAFFINITY_GENRE_KEY_THRILLER
-				, FilmAffinityBot.FILMAFFINITY_GENRE_KEY_WESTERN
-		};
 		decadeComboModel = new String[]{
 				""
 				, "1910"
@@ -298,7 +291,6 @@ public class RecommendationsFieltersView extends JDialog {
 	}
 	
 	private void close() {
-		mainFrame.setEnabled(true);
 		this.setVisible(false);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}

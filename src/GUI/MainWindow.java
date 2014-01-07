@@ -69,6 +69,10 @@ public class MainWindow extends JFrame {
 		
 		ApplicationConfiguration.getInstance().initManager();
 		setIconImage(Toolkit.getDefaultToolkit().getImage(PirateTransmissionDemo.class.getResource("/images/Transmission-icon.png")));
+		//sustituir por un objeto helpermanager que apunte al helper guardado en la configuración
+		/*if(!FilmAffinityBot.getInstance().initManager()){
+			new UtilTools().showWarningDialog(this, "Error", "No se ha podido iniciar sesión en " + FilmAffinityBot.getInstance().getHelperName());
+		}*/
 		if(!ApplicationConfiguration.getInstance().getDefaultTorrentClient().initManager()){
 			String clientName = ApplicationConfiguration.getInstance().getDefaultTorrentClient().getTorrentClientName();
 			new UtilTools().showWarningDialog(this, "Error", "No se ha podido conectar con " + clientName);
@@ -125,10 +129,10 @@ public class MainWindow extends JFrame {
 			gl_helperPanel.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_helperPanel.createSequentialGroup()
 					.addGroup(gl_helperPanel.createParallelGroup(Alignment.TRAILING)
-						.addComponent(helperResults, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE)
-						.addComponent(helperSearcher, GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE))
+						.addComponent(helperRecommendations, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE)
+						.addComponent(helperResults, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE)
+						.addComponent(helperSearcher, GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE))
 					.addContainerGap())
-				.addComponent(helperRecommendations, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
 		);
 		gl_helperPanel.setVerticalGroup(
 			gl_helperPanel.createParallelGroup(Alignment.LEADING)

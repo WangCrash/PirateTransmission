@@ -11,14 +11,12 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 
-import GUI.Configuration.ConfigView;
 import Managers.Helpers.FilmAffinityBot;
 import Managers.Helpers.HelperManager;
 import Model.HelperItem;
+import Utils.UtilTools;
 
 import java.awt.Color;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.awt.event.ActionListener;
@@ -42,10 +40,13 @@ public class HelperChooserSection extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public HelperChooserSection(JFrame parentFrame) {
-		setBorder(new SoftBevelBorder(BevelBorder.RAISED, new Color(64, 64, 64), null, null, null));
-		this.mainFrame = parentFrame;
+	public HelperChooserSection(JFrame rootFrame) {
+		this.mainFrame = rootFrame;
 		this.filters = new HashMap<String, String>();
+		//de momento por defecto se usa filmaffinity
+		this.helperManager = FilmAffinityBot.getInstance();
+		
+		setBorder(new SoftBevelBorder(BevelBorder.RAISED, new Color(64, 64, 64), null, null, null));
 		setBackground(SystemColor.activeCaption);
 		
 		comboModel = new String[]{FILMS_COMBO_OPTION, MUSIC_COMBO_OPTION};
@@ -55,7 +56,7 @@ public class HelperChooserSection extends JPanel {
 				String option = comboModel[helperChooserComboBox.getSelectedIndex()];
 				if(option.equals(FILMS_COMBO_OPTION)){
 					helperManager = FilmAffinityBot.getInstance();
-					setUpFiltersButton.setEnabled(false);
+					setUpFiltersButton.setEnabled(true);
 				}else{
 					//helperManager = LastFMMAnager.getinstance();
 					setUpFiltersButton.setEnabled(false);
@@ -66,11 +67,17 @@ public class HelperChooserSection extends JPanel {
 		getRecommendationsButton = new JButton("Ver Recomendaciones");
 		getRecommendationsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				System.out.println("FILTERS: " + filters);
+				if(!helperManager.isLogged()){
+					new UtilTools().showWarningDialog(mainFrame, "", "No se ha iniciado sesión en " + helperManager.getHelperName());
+					return;
+				}
 				recommendations = helperManager.getRecommendations(filters);
-				//send to results panel
+				for(int i = 0; i < recommendations.length;i++){
+					System.out.println(recommendations[i]);
+				}
 			}
 		});
-		
 		setUpFiltersButton = new JButton("Ajustar Filtros");
 		setUpFiltersButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -79,24 +86,24 @@ public class HelperChooserSection extends JPanel {
 		});
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.TRAILING)
-				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
-					.addGap(31)
-					.addComponent(getRecommendationsButton, GroupLayout.PREFERRED_SIZE, 170, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
-					.addComponent(setUpFiltersButton, GroupLayout.PREFERRED_SIZE, 167, GroupLayout.PREFERRED_SIZE)
-					.addGap(27))
+			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap(105, Short.MAX_VALUE)
+					.addGap(25)
+					.addComponent(getRecommendationsButton, GroupLayout.PREFERRED_SIZE, 170, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+					.addComponent(setUpFiltersButton, GroupLayout.PREFERRED_SIZE, 167, GroupLayout.PREFERRED_SIZE)
+					.addGap(31))
+				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+					.addContainerGap(87, Short.MAX_VALUE)
 					.addComponent(helperChooserComboBox, GroupLayout.PREFERRED_SIZE, 256, GroupLayout.PREFERRED_SIZE)
-					.addGap(77))
+					.addGap(76))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(6)
+					.addGap(8)
 					.addComponent(helperChooserComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(getRecommendationsButton, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
 						.addComponent(setUpFiltersButton, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))
@@ -115,8 +122,7 @@ public class HelperChooserSection extends JPanel {
 	}
 	
 	private void openFiltersSetUpView() {
-		RecommendationsFieltersView recommView = new RecommendationsFieltersView(mainFrame, this);
-		mainFrame.setEnabled(false);
+		RecommendationsFiltersView recommView = new RecommendationsFiltersView(mainFrame, this);
 		recommView.setVisible(true);
 	}
 }

@@ -153,7 +153,16 @@ public class FilmAffinityBot extends HelperManager{
 			return null;
 		}
 		FilmAffinitySearcherModule fasm = new FilmAffinitySearcherModule(urlBase, logged, cm);
-		
+		String genre = filters.get(FILMAFFINITY_FILTERS_GENRE_KEY);
+		if(genre != null){
+			int genreCode;
+			try{
+				genreCode = Integer.parseInt(genre);
+				filters.put(FILMAFFINITY_FILTERS_GENRE_KEY, fasm.getGenreKey(genreCode));
+			}catch(NumberFormatException e){
+				filters.remove(FILMAFFINITY_FILTERS_GENRE_KEY);
+			}
+		}
 		return fasm.lookForRecommendations(filters);
 	}
 	
@@ -222,5 +231,10 @@ public class FilmAffinityBot extends HelperManager{
 	
 	public boolean isLogged(){
 		return logged;
+	}
+
+	@Override
+	public String getHelperName() {
+		return "FilmAffinity";
 	}
 }
