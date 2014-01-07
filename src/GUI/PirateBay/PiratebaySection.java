@@ -26,7 +26,7 @@ import java.awt.event.ActionEvent;
 import java.awt.Font;
 import java.awt.GridLayout;
 
-public class PiratebaySection extends JPanel {
+public class PiratebaySection extends JPanel implements Runnable{
 	
 	private static final long serialVersionUID = -7052443585281459283L;
 	
@@ -38,7 +38,7 @@ public class PiratebaySection extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public PiratebaySection(JFrame parentFrame) {
+	public PiratebaySection(JFrame parentFrame){
 		this.mainFrame = parentFrame;
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -111,7 +111,7 @@ public class PiratebaySection extends JPanel {
 		search = search.trim();
 		searchField.setText(search);
 		searchField.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		requestSearch(search);
+		run();
 	}
 	
 	private void requestSearch(String search){
@@ -154,5 +154,10 @@ public class PiratebaySection extends JPanel {
 	private void setDefaultCursor(){
 		searchField.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
 		mainFrame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+	}
+
+	@Override
+	public void run() {
+		requestSearch(searchField.getText());
 	}
 }

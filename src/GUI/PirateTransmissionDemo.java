@@ -25,6 +25,7 @@ import javax.swing.border.LineBorder;
 
 import GUI.Configuration.ConfigView;
 import GUI.PirateBay.TorrentCell;
+import Managers.ApplicationConfiguration;
 import Managers.PirateBayBot;
 import Managers.Helpers.FilmAffinityBot;
 import Model.ArchivoTorrent;

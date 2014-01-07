@@ -13,7 +13,9 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 import GUI.Configuration.ConfigView;
+import GUI.Helpers.Chooser.HelperChooserSection;
 import GUI.PirateBay.PiratebaySection;
+import Managers.ApplicationConfiguration;
 import Managers.PirateBayBot;
 import Managers.Helpers.FilmAffinityBot;
 import Utils.UtilTools;
@@ -29,7 +31,12 @@ public class MainWindow extends JFrame {
 	private static final long serialVersionUID = -6836764944504173037L;
 	private JPanel contentPane;
 	private JPanel piratebayPanel;
+	private JPanel helperRecommendations;
+	private JPanel helperSearcher;
+	private JPanel helperResults;
+	
 	private PiratebaySection pirateBaySection;
+	private HelperChooserSection helperChooserSection;
 
 	/**
 	 * Launch the application.
@@ -99,29 +106,29 @@ public class MainWindow extends JFrame {
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addComponent(piratebayPanel, GroupLayout.PREFERRED_SIZE, 440, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(helperPanel, GroupLayout.DEFAULT_SIZE, 442, Short.MAX_VALUE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(helperPanel, GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addComponent(piratebayPanel, GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
-				.addComponent(helperPanel, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
+				.addComponent(piratebayPanel, GroupLayout.DEFAULT_SIZE, 530, Short.MAX_VALUE)
+				.addComponent(helperPanel, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 		);
 		
-		JPanel helperRecommendations = new JPanel();
+		helperRecommendations = new JPanel();
 		
-		JPanel helperSearcher = new JPanel();
+		helperSearcher = new JPanel();
 		
-		JPanel helperResults = new JPanel();
+		helperResults = new JPanel();
 		GroupLayout gl_helperPanel = new GroupLayout(helperPanel);
 		gl_helperPanel.setHorizontalGroup(
-			gl_helperPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, gl_helperPanel.createSequentialGroup()
+			gl_helperPanel.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_helperPanel.createSequentialGroup()
 					.addGroup(gl_helperPanel.createParallelGroup(Alignment.TRAILING)
 						.addComponent(helperResults, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE)
-						.addComponent(helperRecommendations, GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE)
 						.addComponent(helperSearcher, GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE))
 					.addContainerGap())
+				.addComponent(helperRecommendations, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
 		);
 		gl_helperPanel.setVerticalGroup(
 			gl_helperPanel.createParallelGroup(Alignment.LEADING)
@@ -140,10 +147,17 @@ public class MainWindow extends JFrame {
 	private void includeSections() {
 		pirateBaySection = new PiratebaySection(this);
 		piratebayPanel.add(pirateBaySection);
+		
+		helperChooserSection = new HelperChooserSection(this);
+		helperRecommendations.add(helperChooserSection);
 	}
 	
 	private void openConfigView() {
 		ConfigView configView = new ConfigView(this);
 		configView.setVisible(true);
+	}
+	
+	public void searchTorrent(String search){
+		pirateBaySection.searchTorrent(search);
 	}
 }

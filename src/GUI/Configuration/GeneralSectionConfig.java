@@ -3,7 +3,7 @@ package GUI.Configuration;
 import java.util.HashMap;
 import java.util.Map;
 
-import GUI.ApplicationConfiguration;
+import Managers.ApplicationConfiguration;
 import Managers.Manager;
 import Managers.TorrentClient.TransmissionManager;
 import Managers.TorrentClient.microTorrentManager;
@@ -101,7 +101,7 @@ public class GeneralSectionConfig extends ConfigurationSection {
 			}
 			ApplicationConfiguration.getInstance().getDefaultTorrentClient().initManager();*/
 		}
-		System.out.println(result);
+		System.out.println("General Config: " + result);
 		return result;
 	}
 

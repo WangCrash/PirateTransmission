@@ -158,21 +158,21 @@ public class TorrentClientSectionConfig extends ConfigurationSection {
 			result.put(torrentClient.getServerConfigKey(), getRPCFieldText());
 		}
 		System.out.println(this.needsAuthCheckBox.isSelected());
-		if(this.needsAuthCheckBox.isSelected()){
-			if(!userField.getText().trim().equals(initialUser)){
-				result.put(torrentClient.getUserConfigKey(), userField.getText().trim());
+		//if(this.needsAuthCheckBox.isSelected()){
+		if(!userField.getText().trim().equals(initialUser)){
+			result.put(torrentClient.getUserConfigKey(), userField.getText().trim());
+		}
+		String password = new String(passwordField.getPassword());
+		if(!password.equals(initialPassword)){
+			if(!password.isEmpty()){
+				password = Base64.encodeBytes(password.getBytes());
 			}
-			String password = new String(passwordField.getPassword());
-			if(!password.equals(initialPassword)){
-				if(!password.isEmpty()){
-					password = Base64.encodeBytes(password.getBytes());
-				}
-				result.put(torrentClient.getPasswordConfigKey(), password);
-			}
-		}else{
+			result.put(torrentClient.getPasswordConfigKey(), password);
+		}
+		/*}else{
 			result.put(torrentClient.getUserConfigKey(), "");
 			result.put(torrentClient.getPasswordConfigKey(), "");
-		}
+		}*/
 		
 		return result;
 	}

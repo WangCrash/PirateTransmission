@@ -1,8 +1,7 @@
-package GUI;
+package Managers;
 
 import java.util.Map;
 
-import Managers.Manager;
 import Managers.TorrentClient.TorrentClient;
 import Managers.TorrentClient.TransmissionManager;
 import Managers.TorrentClient.microTorrentManager;

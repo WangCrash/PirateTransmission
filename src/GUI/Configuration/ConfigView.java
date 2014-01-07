@@ -19,7 +19,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JTabbedPane;
 
-import GUI.ApplicationConfiguration;
+import Managers.ApplicationConfiguration;
 import Managers.Helpers.FilmAffinityBot;
 import Managers.TorrentClient.TransmissionManager;
 import Managers.TorrentClient.microTorrentManager;
@@ -210,6 +210,7 @@ public class ConfigView extends JFrame {
 		for (int i = 0; i < sectionsPane.getTabCount(); i++) {
 			if(i != 4){
 				System.out.println(sectionsPane.getTitleAt(i));
+				System.out.println(sections[i].getChangedValues());
 				needsToReboot[i] = setChangedValues(sections[i].getChangedValues());
 			}else{
 				needsToReboot[i] = false;

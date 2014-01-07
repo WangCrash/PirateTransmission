@@ -21,7 +21,6 @@ public class LoadingView extends JDialog {
 	private static final long serialVersionUID = 8259210410679000211L;
 	private final JPanel contentPanel = new JPanel();
 	private JLabel messageLabel;
-	private Thread t;
 
 
 	/**

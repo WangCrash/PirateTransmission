@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.border.LineBorder;
 
-import GUI.ApplicationConfiguration;
+import Managers.ApplicationConfiguration;
 import Model.ArchivoTorrent;
 import Utils.UtilTools;
 
