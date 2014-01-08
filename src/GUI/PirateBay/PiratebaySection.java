@@ -46,7 +46,7 @@ public class PiratebaySection extends JPanel implements Runnable{
 		
 		JPanel searchPanel = new JPanel();
 		searchPanel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, Color.DARK_GRAY, null, null, null));
-		searchPanel.setBackground(SystemColor.activeCaption);
+		searchPanel.setBackground(new Color(204, 255, 153));
 		
 		JLabel label = new JLabel("Buscar: ");
 		label.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -64,7 +64,7 @@ public class PiratebaySection extends JPanel implements Runnable{
 		
 		resultsPanel = new JPanel();
 		resultsPanel.setBorder(new SoftBevelBorder(BevelBorder.RAISED, Color.DARK_GRAY, null, null, null));
-		resultsPanel.setBackground(SystemColor.activeCaption);
+		resultsPanel.setBackground(new Color(204, 255, 153));
 		scrollPane.setViewportView(resultsPanel);
 		resultsPanel.setLayout(new GridLayout(0, 1, 0, 0));
 		GroupLayout gl_searchPanel = new GroupLayout(searchPanel);

@@ -12,6 +12,11 @@ import javax.swing.JLabel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JProgressBar;
+import javax.swing.border.BevelBorder;
+import java.awt.Color;
+import java.awt.SystemColor;
+import javax.swing.border.LineBorder;
+import javax.swing.border.CompoundBorder;
 
 public class LoadingView extends JDialog {
 
@@ -27,7 +32,7 @@ public class LoadingView extends JDialog {
 	 * Create the dialog.
 	 */
 	public LoadingView(JFrame mainFrame) {
-		super(mainFrame);
+		super(mainFrame, true);
 		setType(Type.POPUP);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setUndecorated(true);
@@ -36,7 +41,7 @@ public class LoadingView extends JDialog {
 		setModal(true);
 		setBounds(100, 100, 321, 202);
 		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPanel.setBorder(new CompoundBorder(new LineBorder(new Color(0, 0, 0), 1, true), new BevelBorder(BevelBorder.LOWERED, new Color(0, 0, 0), new Color(0, 0, 0), new Color(180, 180, 180), new Color(180, 180, 180))));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		{
 			messageLabel = new JLabel("New label");
@@ -64,8 +69,13 @@ public class LoadingView extends JDialog {
 					.addContainerGap(79, Short.MAX_VALUE))
 		);
 		contentPanel.setLayout(gl_contentPanel);
+		this.setLocationRelativeTo(mainFrame);
 	}
-	public JLabel getMessageLabel() {
-		return messageLabel;
+	public String getMessageLabel() {
+		return messageLabel.getText();
 	}	
+	
+	public void setMessageLabel(String message){
+		messageLabel.setText(message);
+	}
 }

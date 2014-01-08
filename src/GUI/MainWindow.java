@@ -14,6 +14,7 @@ import javax.swing.JMenuItem;
 
 import GUI.Configuration.ConfigView;
 import GUI.Helpers.Chooser.HelperChooserSection;
+import GUI.Helpers.Results.HelperResultsSection;
 import GUI.PirateBay.PiratebaySection;
 import Managers.ApplicationConfiguration;
 import Managers.PirateBayBot;
@@ -37,6 +38,7 @@ public class MainWindow extends JFrame {
 	
 	private PiratebaySection pirateBaySection;
 	private HelperChooserSection helperChooserSection;
+	private HelperResultsSection helperResultsSection;
 
 	/**
 	 * Launch the application.
@@ -70,9 +72,9 @@ public class MainWindow extends JFrame {
 		ApplicationConfiguration.getInstance().initManager();
 		setIconImage(Toolkit.getDefaultToolkit().getImage(PirateTransmissionDemo.class.getResource("/images/Transmission-icon.png")));
 		//sustituir por un objeto helpermanager que apunte al helper guardado en la configuración
-		/*if(!FilmAffinityBot.getInstance().initManager()){
+		if(!FilmAffinityBot.getInstance().initManager()){
 			new UtilTools().showWarningDialog(this, "Error", "No se ha podido iniciar sesión en " + FilmAffinityBot.getInstance().getHelperName());
-		}*/
+		}
 		if(!ApplicationConfiguration.getInstance().getDefaultTorrentClient().initManager()){
 			String clientName = ApplicationConfiguration.getInstance().getDefaultTorrentClient().getTorrentClientName();
 			new UtilTools().showWarningDialog(this, "Error", "No se ha podido conectar con " + clientName);
@@ -154,6 +156,9 @@ public class MainWindow extends JFrame {
 		
 		helperChooserSection = new HelperChooserSection(this);
 		helperRecommendations.add(helperChooserSection);
+		
+		helperResultsSection = new HelperResultsSection(this);
+		helperResults.add(helperResultsSection);
 	}
 	
 	private void openConfigView() {

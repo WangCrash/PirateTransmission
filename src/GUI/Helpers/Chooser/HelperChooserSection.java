@@ -1,7 +1,9 @@
 package GUI.Helpers.Chooser;
 
 import javax.swing.JPanel;
+
 import java.awt.SystemColor;
+
 import javax.swing.JComboBox;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -11,6 +13,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 
+import GUI.LoadingView;
 import Managers.Helpers.FilmAffinityBot;
 import Managers.Helpers.HelperManager;
 import Model.HelperItem;
@@ -22,7 +25,7 @@ import java.util.Map;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class HelperChooserSection extends JPanel {
+public class HelperChooserSection extends JPanel implements Runnable {
 	private static final long serialVersionUID = 9179013116749250575L;
 
 	private HelperManager helperManager;
@@ -37,6 +40,7 @@ public class HelperChooserSection extends JPanel {
 	private static String MUSIC_COMBO_OPTION = "Música";
 	private JButton getRecommendationsButton;
 	private JButton setUpFiltersButton;
+	private LoadingView loadingView;
 	/**
 	 * Create the panel.
 	 */
@@ -47,7 +51,7 @@ public class HelperChooserSection extends JPanel {
 		this.helperManager = FilmAffinityBot.getInstance();
 		
 		setBorder(new SoftBevelBorder(BevelBorder.RAISED, new Color(64, 64, 64), null, null, null));
-		setBackground(SystemColor.activeCaption);
+		setBackground(new Color(204, 255, 153));
 		
 		comboModel = new String[]{FILMS_COMBO_OPTION, MUSIC_COMBO_OPTION};
 		helperChooserComboBox = new JComboBox(comboModel);
@@ -67,15 +71,7 @@ public class HelperChooserSection extends JPanel {
 		getRecommendationsButton = new JButton("Ver Recomendaciones");
 		getRecommendationsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("FILTERS: " + filters);
-				if(!helperManager.isLogged()){
-					new UtilTools().showWarningDialog(mainFrame, "", "No se ha iniciado sesión en " + helperManager.getHelperName());
-					return;
-				}
-				recommendations = helperManager.getRecommendations(filters);
-				for(int i = 0; i < recommendations.length;i++){
-					System.out.println(recommendations[i]);
-				}
+				showRecommendations();
 			}
 		});
 		setUpFiltersButton = new JButton("Ajustar Filtros");
@@ -124,5 +120,37 @@ public class HelperChooserSection extends JPanel {
 	private void openFiltersSetUpView() {
 		RecommendationsFiltersView recommView = new RecommendationsFiltersView(mainFrame, this);
 		recommView.setVisible(true);
+	}
+	
+	private void showRecommendations() {
+		System.out.println("FILTERS: " + filters);
+		if(!helperManager.isLogged()){
+			new UtilTools().showWarningDialog(mainFrame, "", "No se ha iniciado sesión en " + helperManager.getHelperName());
+			return;
+		}
+		
+		Thread t = new Thread(this);
+		t.start();
+		showLoadingView();
+	}
+	
+	private void showLoadingView() {
+		loadingView = new LoadingView(mainFrame);
+		loadingView.setMessageLabel("Esperando...");
+		loadingView.setVisible(true);
+	}
+	
+	private void hideLoadingView(){
+		loadingView.setVisible(false);
+		loadingView = null;
+	}
+
+	@Override
+	public void run() {
+		recommendations = helperManager.getRecommendations(filters);
+		for(int i = 0; i < recommendations.length;i++){
+			System.out.println(recommendations[i]);
+		}
+		hideLoadingView();
 	}
 }
