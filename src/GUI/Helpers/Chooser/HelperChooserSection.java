@@ -14,6 +14,7 @@ import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 
 import GUI.LoadingView;
+import GUI.MainWindow;
 import Managers.Helpers.FilmAffinityBot;
 import Managers.Helpers.HelperManager;
 import Model.HelperItem;
@@ -32,7 +33,7 @@ public class HelperChooserSection extends JPanel implements Runnable {
 	private Map<String, String> filters;
 	private HelperItem[] recommendations;
 	
-	private JFrame mainFrame;
+	private MainWindow mainFrame;
 	private String[] comboModel;
 	private JComboBox helperChooserComboBox;
 	
@@ -44,7 +45,7 @@ public class HelperChooserSection extends JPanel implements Runnable {
 	/**
 	 * Create the panel.
 	 */
-	public HelperChooserSection(JFrame rootFrame) {
+	public HelperChooserSection(MainWindow rootFrame) {
 		this.mainFrame = rootFrame;
 		this.filters = new HashMap<String, String>();
 		//de momento por defecto se usa filmaffinity
@@ -148,9 +149,10 @@ public class HelperChooserSection extends JPanel implements Runnable {
 	@Override
 	public void run() {
 		recommendations = helperManager.getRecommendations(filters);
-		for(int i = 0; i < recommendations.length;i++){
+		/*for(int i = 0; i < recommendations.length;i++){
 			System.out.println(recommendations[i]);
-		}
+		}*/
+		this.mainFrame.getHelperResultsSection().showResults(recommendations);
 		hideLoadingView();
 	}
 }

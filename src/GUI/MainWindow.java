@@ -157,7 +157,7 @@ public class MainWindow extends JFrame {
 		helperChooserSection = new HelperChooserSection(this);
 		helperRecommendations.add(helperChooserSection);
 		
-		helperResultsSection = new HelperResultsSection(this);
+		helperResultsSection = new HelperResultsSection(this, pirateBaySection);
 		helperResults.add(helperResultsSection);
 	}
 	
@@ -168,5 +168,9 @@ public class MainWindow extends JFrame {
 	
 	public void searchTorrent(String search){
 		pirateBaySection.searchTorrent(search);
+	}
+	
+	public HelperResultsSection getHelperResultsSection(){
+		return this.helperResultsSection;
 	}
 }

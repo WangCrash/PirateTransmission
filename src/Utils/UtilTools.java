@@ -129,5 +129,15 @@ public class UtilTools {
 	public void showWarningDialog(JFrame frame, String title, String message){
 		JOptionPane.showMessageDialog(frame, message, title, JOptionPane.WARNING_MESSAGE);
 	}
+	
+	public boolean showYesNoDialog(JFrame frame, String title, String message){
+		Object[] options = {"Sí", "No"};
+		return (JOptionPane.showOptionDialog(frame, 
+				message, 
+				title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, 
+				null,     //do not use a custom Icon
+				options,  //the titles of buttons
+				options[0]) == JOptionPane.YES_OPTION); //default button title
+	}
 }
 	
