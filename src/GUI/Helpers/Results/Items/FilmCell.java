@@ -23,6 +23,16 @@ import java.net.URL;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JTextField;
+import java.awt.Component;
+import javax.swing.Box;
+import net.miginfocom.swing.MigLayout;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.factories.FormFactory;
+import com.jgoodies.forms.layout.RowSpec;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.MatteBorder;
 
 public class FilmCell extends HelperResultItem implements Runnable {
 
@@ -39,9 +49,12 @@ public class FilmCell extends HelperResultItem implements Runnable {
 	private JLabel notWatchedLabel;
 	
 	private URL imageURL;
+	private JPanel noteFrame;
+	private JLabel lblNewLabel_1;
 
-	public FilmCell(JFrame mainFrame, HelperResultsSection parentView, HelperItem helperItem, boolean showAllLabels) {
+	public FilmCell(JFrame mainFrame, HelperResultsSection parentView, HelperItem helperItem, boolean showForRating) {
 		super(mainFrame, parentView, helperItem);
+		setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		
 		imageLabel = new JLabel("Image");
 		imageLabel.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -53,13 +66,11 @@ public class FilmCell extends HelperResultItem implements Runnable {
 		titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		directorLabel = new JLabel("Director");
+		directorLabel.setFont(new Font("Dialog", Font.PLAIN, 11));
 		
-		JPanel panel = new JPanel();
-		panel.setBackground(new Color(255, 255, 255));
-		
-		countryLabel = new JLabel("Pa\u00EDs");
-		
-		yearLabel = new JLabel("A\u00F1o");
+		noteFrame = new JPanel();
+		noteFrame.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
+		noteFrame.setBackground(new Color(255, 255, 255));
 		
 		voteButton = new JButton("Votar");
 		voteButton.addActionListener(new ActionListener() {
@@ -84,90 +95,138 @@ public class FilmCell extends HelperResultItem implements Runnable {
 		
 		notWatchedLabel = new JLabel("No vista");
 		notWatchedLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		JLabel lblDirector = new JLabel("Director");
+		lblDirector.setFont(new Font("Dialog", Font.BOLD, 11));
+		
+		JLabel lblNewLabel = new JLabel("Pa\u00EDs");
+		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 11));
+		
+		JLabel lblAo = new JLabel("A\u00F1o");
+		lblAo.setFont(new Font("Dialog", Font.BOLD, 11));
+		
+		noteLabel = new JLabel("10");
+		noteLabel.setFont(new Font("Tahoma", Font.PLAIN, 33));
+		noteLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		GroupLayout gl_noteFrame = new GroupLayout(noteFrame);
+		gl_noteFrame.setHorizontalGroup(
+			gl_noteFrame.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_noteFrame.createSequentialGroup()
+					.addGap(5)
+					.addComponent(noteLabel, GroupLayout.PREFERRED_SIZE, 47, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
+		gl_noteFrame.setVerticalGroup(
+			gl_noteFrame.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_noteFrame.createSequentialGroup()
+					.addGap(3)
+					.addComponent(noteLabel, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
+		noteFrame.setLayout(gl_noteFrame);
+		
+		countryLabel = new JLabel("Pa\u00EDs");
+		countryLabel.setFont(new Font("Dialog", Font.PLAIN, 11));
+		
+		yearLabel = new JLabel("A\u00F1o");
+		yearLabel.setFont(new Font("Dialog", Font.PLAIN, 11));
+		
+		lblNewLabel_1 = new JLabel("New label");
+		lblNewLabel_1.setVisible(false);
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(22)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
-								.addComponent(titleLabel, GroupLayout.PREFERRED_SIZE, 322, GroupLayout.PREFERRED_SIZE)
-								.addGroup(groupLayout.createSequentialGroup()
-									.addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-										.addComponent(directorLabel, GroupLayout.PREFERRED_SIZE, 147, GroupLayout.PREFERRED_SIZE)
-										.addGroup(groupLayout.createSequentialGroup()
-											.addComponent(countryLabel, GroupLayout.PREFERRED_SIZE, 93, GroupLayout.PREFERRED_SIZE)
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(yearLabel, GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)))
-									.addPreferredGap(ComponentPlacement.RELATED, 10, GroupLayout.PREFERRED_SIZE)
-									.addComponent(panel, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE))))
+							.addGap(6)
+							.addComponent(titleLabel, GroupLayout.PREFERRED_SIZE, 381, GroupLayout.PREFERRED_SIZE))
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(75)
+							.addGap(6)
+							.addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 								.addGroup(groupLayout.createSequentialGroup()
-									.addComponent(searchTorrentButton)
-									.addGap(18)
-									.addComponent(showDetailsButton, GroupLayout.PREFERRED_SIZE, 103, GroupLayout.PREFERRED_SIZE))
+									.addPreferredGap(ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+										.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+											.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+												.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
+												.addComponent(countryLabel, GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE))
+											.addGap(2)
+											.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+												.addComponent(lblAo, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+												.addComponent(yearLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+											.addGap(25))
+										.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+											.addComponent(searchTorrentButton)
+											.addPreferredGap(ComponentPlacement.UNRELATED)
+											.addComponent(showDetailsButton, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE))
+										.addComponent(directorLabel, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 217, GroupLayout.PREFERRED_SIZE))
+									.addPreferredGap(ComponentPlacement.RELATED))
 								.addGroup(groupLayout.createSequentialGroup()
-									.addGap(2)
-									.addComponent(notWatchedLabel, GroupLayout.PREFERRED_SIZE, 57, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.UNRELATED)
-									.addComponent(voteButton, GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE)))))
-					.addContainerGap(21, Short.MAX_VALUE))
+									.addGap(18)
+									.addComponent(lblDirector, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
+									.addGap(106)))
+							.addGap(16)
+							.addComponent(noteFrame, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
+							.addGap(2))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(109)
+							.addComponent(notWatchedLabel)
+							.addGap(20)
+							.addComponent(voteButton, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)))
+					.addGap(8))
+				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+					.addContainerGap(178, Short.MAX_VALUE)
+					.addComponent(lblNewLabel_1)
+					.addGap(175))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(12)
+					.addGap(6)
 					.addComponent(titleLabel)
-					.addGap(18)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(3)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(3)
+									.addComponent(lblDirector)
+									.addGap(3)
+									.addComponent(directorLabel)
+									.addGap(7)
+									.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+										.addComponent(lblNewLabel)
+										.addComponent(lblAo))
+									.addGap(6)
+									.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+										.addComponent(countryLabel)
+										.addComponent(yearLabel))))
+							.addGap(3)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(4)
+									.addComponent(notWatchedLabel))
+								.addComponent(voteButton))
+							.addPreferredGap(ComponentPlacement.RELATED)
 							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-								.addComponent(imageLabel, GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
-								.addComponent(countryLabel)
-								.addComponent(yearLabel))
-							.addComponent(directorLabel))
-						.addComponent(panel, GroupLayout.PREFERRED_SIZE, 61, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(notWatchedLabel)
-						.addComponent(voteButton))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(searchTorrentButton)
-						.addComponent(showDetailsButton))
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+								.addComponent(searchTorrentButton)
+								.addComponent(showDetailsButton))
+							.addPreferredGap(ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+							.addComponent(lblNewLabel_1))
+						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+							.addGap(14)
+							.addComponent(noteFrame, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
+							.addGap(98))))
 		);
-		
-		noteLabel = new JLabel("10");
-		noteLabel.setFont(new Font("Tahoma", Font.PLAIN, 35));
-		noteLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		GroupLayout gl_panel = new GroupLayout(panel);
-		gl_panel.setHorizontalGroup(
-			gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(noteLabel, GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
-					.addContainerGap())
-		);
-		gl_panel.setVerticalGroup(
-			gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(noteLabel, GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
-					.addContainerGap())
-		);
-		panel.setLayout(gl_panel);
 		setLayout(groupLayout);
 		
-		initLabels(showAllLabels);
+		initLabels(showForRating);
 	}
 
-	private void initLabels(boolean showAll) {
+	private void initLabels(boolean showForRating) {
 		FichaPelicula ficha = (FichaPelicula)this.helperItem;
 		System.out.println(ficha);
 		try {
@@ -182,10 +241,16 @@ public class FilmCell extends HelperResultItem implements Runnable {
 		directorLabel.setText(director);
 		countryLabel.setText(ficha.getPais());
 		yearLabel.setText(ficha.getAño());
-		noteLabel.setText(ficha.getValoracion());
-		noteLabel.setVisible(showAll);
-		voteButton.setVisible(showAll);
-		notWatchedLabel.setVisible(showAll);
+		
+		if((ficha.getValoracion() == null) || (ficha.getValoracion().isEmpty())){
+			noteLabel.setVisible(false);
+			noteFrame.setVisible(false);
+		}else{
+			noteLabel.setText(ficha.getValoracion());
+		}
+		
+		voteButton.setVisible(showForRating);
+		notWatchedLabel.setVisible(showForRating);
 	}
 
 	private String convertArrayToStringLine(String[] array) {
@@ -206,7 +271,7 @@ public class FilmCell extends HelperResultItem implements Runnable {
 		if(new UtilTools().showYesNoDialog(this.mainFrame, "Buscar Torrent", "Buscar en su idioma original")){
 			search = ficha.getTituloOriginal();
 		}else{
-			search = ficha.getTitulo();
+			search = new UtilTools().killFilmAffinityWords(ficha.getTitulo());
 		}
 		this.parentView.searchTorrent(search);
 	}
@@ -227,6 +292,7 @@ public class FilmCell extends HelperResultItem implements Runnable {
 
 	private void getFilmImage() {
 		ImageIcon image = new ImageIcon(imageURL);
+		imageLabel.setText("");
 		imageLabel.setIcon(image);
 	}
 }

@@ -24,7 +24,7 @@ public class MultipartScrollableResultsContainer extends ResultsContainer{
 	private HelperResultsSection parentView;
 	
 	private JButton searchTorrentButton;
-	private JPanel contentPanel;
+	private JPanel resultsPanel;
 
 	/**
 	 * Create the panel.
@@ -34,6 +34,7 @@ public class MultipartScrollableResultsContainer extends ResultsContainer{
 		this.parentView = parentView;		
 		
 		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 		
 		JPanel staticPane = new JPanel();
 		staticPane.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, new Color(64, 64, 64), null, null, null));
@@ -59,11 +60,11 @@ public class MultipartScrollableResultsContainer extends ResultsContainer{
 		});
 		GroupLayout gl_staticPane = new GroupLayout(staticPane);
 		gl_staticPane.setHorizontalGroup(
-			gl_staticPane.createParallelGroup(Alignment.TRAILING)
-				.addGroup(Alignment.LEADING, gl_staticPane.createSequentialGroup()
-					.addGap(163)
+			gl_staticPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_staticPane.createSequentialGroup()
+					.addGap(165)
 					.addComponent(searchTorrentButton)
-					.addContainerGap(162, Short.MAX_VALUE))
+					.addContainerGap(170, Short.MAX_VALUE))
 		);
 		gl_staticPane.setVerticalGroup(
 			gl_staticPane.createParallelGroup(Alignment.LEADING)
@@ -73,22 +74,23 @@ public class MultipartScrollableResultsContainer extends ResultsContainer{
 		);
 		staticPane.setLayout(gl_staticPane);
 		
-		contentPanel = new JPanel();
-		contentPanel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, Color.DARK_GRAY, null, null, null));
-		contentPanel.setBackground(new Color(204, 255, 153));
-		scrollPane.setViewportView(contentPanel);
-		contentPanel.setLayout(new GridLayout(0, 1, 0, 0));
+		resultsPanel = new JPanel();
+		resultsPanel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, Color.DARK_GRAY, null, null, null));
+		resultsPanel.setBackground(new Color(204, 255, 153));
+		scrollPane.setViewportView(resultsPanel);
+		resultsPanel.setLayout(new GridLayout(0, 1, 0, 0));
 		setLayout(groupLayout);
 
 	}
 
 	@Override
 	protected void showResults() {
+		
 	}
 	public JButton getSearchTorrentButton() {
 		return searchTorrentButton;
 	}
 	public JPanel getContentPanel() {
-		return contentPanel;
+		return resultsPanel;
 	}
 }

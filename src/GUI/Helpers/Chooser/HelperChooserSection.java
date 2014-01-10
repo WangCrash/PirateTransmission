@@ -2,14 +2,13 @@ package GUI.Helpers.Chooser;
 
 import javax.swing.JPanel;
 
-import java.awt.SystemColor;
 
 import javax.swing.JComboBox;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.SwingUtilities;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 
@@ -83,15 +82,15 @@ public class HelperChooserSection extends JPanel implements Runnable {
 		});
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
+			groupLayout.createParallelGroup(Alignment.TRAILING)
+				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
 					.addGap(25)
 					.addComponent(getRecommendationsButton, GroupLayout.PREFERRED_SIZE, 170, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
 					.addComponent(setUpFiltersButton, GroupLayout.PREFERRED_SIZE, 167, GroupLayout.PREFERRED_SIZE)
 					.addGap(31))
-				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-					.addContainerGap(87, Short.MAX_VALUE)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap(96, Short.MAX_VALUE)
 					.addComponent(helperChooserComboBox, GroupLayout.PREFERRED_SIZE, 256, GroupLayout.PREFERRED_SIZE)
 					.addGap(76))
 		);
@@ -133,6 +132,9 @@ public class HelperChooserSection extends JPanel implements Runnable {
 		Thread t = new Thread(this);
 		t.start();
 		showLoadingView();
+		/*recommendations = helperManager.getRecommendations(filters);
+		System.out.println("ESTAMOS EN EL EDT?: " + java.awt.EventQueue.isDispatchThread());
+		mainFrame.getHelperResultsSection().showResults(recommendations);*/
 	}
 	
 	private void showLoadingView() {
@@ -152,7 +154,12 @@ public class HelperChooserSection extends JPanel implements Runnable {
 		/*for(int i = 0; i < recommendations.length;i++){
 			System.out.println(recommendations[i]);
 		}*/
-		this.mainFrame.getHelperResultsSection().showResults(recommendations);
-		hideLoadingView();
+		SwingUtilities.invokeLater(new Runnable() {
+		    public void run() {
+		    	mainFrame.getHelperResultsSection().showResults(recommendations);
+				hideLoadingView();
+				mainFrame.revalidate();
+		    }
+		});
 	}
 }

@@ -1,6 +1,7 @@
 package FilmAffinity;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -99,6 +100,7 @@ public class FilmAffinitySearcherModule {
 		try{
 			responseCode = Integer.parseInt(response.get("ResponseCode"));
 		}catch(NumberFormatException e){
+			System.out.println("Response Code is not a number");
 			return null;
 		}
 		if(responseCode == 0){
@@ -107,17 +109,19 @@ public class FilmAffinitySearcherModule {
 		}
 		String responseText = response.get("ResponseBody");
 		if(responseText == null){
+			System.out.println("Error: it was supposed to be a body in the response");
 			return null;
 		}
 		if(responseCode == HttpURLConnection.HTTP_OK){
 			ArrayList<FichaPelicula> lista = new ArrayList<FichaPelicula>();
 			lista = extractFilmsArray(responseText, lista);
+			lista = extractNotes(responseText, lista);
 			result = Arrays.copyOf(lista.toArray(), lista.size(), FichaPelicula[].class);
 		}
 		
 		return result;
 	}
-		
+
 	public FichaPelicula[] searchFilm(String search, int option){
 		if(search.isEmpty()){
 			return null;
@@ -282,6 +286,7 @@ public class FilmAffinitySearcherModule {
 			}else{
 				continue;
 			}
+			
 			FichaPelicula pelicula = new FichaPelicula();
 			pelicula.setTitulo(new UtilTools().escapeHtmlSpecialChars(title));
 			pelicula.setFilmDetailsUrl(detailsLink);
@@ -289,9 +294,34 @@ public class FilmAffinitySearcherModule {
 			pelicula.setAño(year);
 			pelicula.setPais(country);
 			
+			String directorRegex = "<div class=\"mc-director\">\\s*?(<a href=.*?>.*?</a>)\\s*?</div>";
+			subP = Pattern.compile(directorRegex);
+			subM = subP.matcher(filmCard);
+			String directorValue = null;
+			if(subM.find()){
+				System.out.println("director encontrado!!: " + subM.group(1));
+				directorValue = subM.group(1);
+				pelicula = fillFichaPelicula("Director", directorValue, pelicula);
+			}else{
+				System.out.println("director no encontrado :(");
+			}
+			
 			lista.add(pelicula);
 		}
 		
+		return lista;
+	}
+	
+	private ArrayList<FichaPelicula> extractNotes(String html, ArrayList<FichaPelicula> lista) {
+		String filmsNotesRegex = "<span class=\"wrat\">(.*?)</span>";
+		Pattern p = Pattern.compile(filmsNotesRegex);
+		Matcher m = p.matcher(html);
+		int i = 0;
+		while(m.find()){
+			FichaPelicula pelicula = lista.get(i);
+			pelicula.setValoracion(m.group(1).trim());
+			i++;
+		}
 		return lista;
 	}
 	
@@ -470,6 +500,7 @@ public class FilmAffinitySearcherModule {
 		}else if(field.equals("Pa&iacute;s")){//País
 			ficha.setPais(value);
 		}else if(field.equals("Director")){
+			System.out.println("getListFromValueForDirector");
 			ficha.setDirector(this.getListFromValue(value));
 		}else if(field.equals("Gui&oacute;n")){//Guión
 			ficha.setGuion(value);
@@ -504,25 +535,32 @@ public class FilmAffinitySearcherModule {
 		while(m.find()){
 			lista.add(m.group(1));
 		}
+		System.out.println(lista);
 		return Arrays.copyOf(lista.toArray(), lista.size(), String[].class);
 	}
 	
 	public static void main(String[] args) throws MalformedURLException{
-		FilmAffinitySearcherModule f = new FilmAffinitySearcherModule("http://localhost:8080", true, new ConnectionManager());
+		ConnectionManager cm = new ConnectionManager();
+		FilmAffinitySearcherModule f = new FilmAffinitySearcherModule("127.0.0.1:8081", true, cm);
+		URL url = new URL("http://127.0.0.1:8081");
+		System.out.println(url);
+		Map<String, String> response = cm.sendRequest(url, ConnectionManager.METHOD_POST, true, false, false);
 		//"http://www.filmaffinity.com/es/search.php?stype=title&stext=batman"
 		/*Map<String, String> filters = new HashMap<String, String>();
 		filters.put("genre", "BE");
 		filters.put("limit", "50");
 		filters.put("fromyear", "1980");
-		filters.put("toyear", "2020");
-		FichaPelicula[] result = f.lookForRecommendations(filters);*/
-		FichaPelicula result = f.getFilmDetails(new URL("http://localhost:8080"));
-		if(result == null){
+		filters.put("toyear", "2020");*/
+		//FichaPelicula[] result = f.lookForRecommendations(filters);
+		ArrayList<FichaPelicula> lista = new ArrayList<FichaPelicula>();
+		lista = f.extractFilmsArray(response.get(ConnectionManager.BODY_TEXT_RESPONSE_KEY), lista);
+		//FichaPelicula result = f.getFilmDetails(new URL("http://localhost:8080"));
+		if(lista == null){
+			System.out.println("RESULTS IS NULL");
 			return;
 		}
-		System.out.println(result);
-		/*for (int i = 0; i < result.length; i++) {
-			System.out.println(result[i]);
-		}*/
+		for (int i = 0; i < lista.size(); i++) {
+			System.out.println(lista.get(i));
+		}
 	}
 }

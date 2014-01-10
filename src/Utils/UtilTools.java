@@ -21,6 +21,12 @@ import javax.swing.JOptionPane;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 public class UtilTools {	
+	private String[] filmAffinityWords;
+	
+	public UtilTools(){
+		filmAffinityWords = new String[]{"\\(\\s*?Serie de TV\\s*?\\)"};
+	}
+	
 	private String readConfigFile(){
 		BufferedReader bf;
 		try {
@@ -138,6 +144,15 @@ public class UtilTools {
 				null,     //do not use a custom Icon
 				options,  //the titles of buttons
 				options[0]) == JOptionPane.YES_OPTION); //default button title
+	}
+	
+	//quita palabras que filmaffinity pone en los títulos de las fichas como aclaración y que provocan búsquedas fallidas en pirateBay
+	public String killFilmAffinityWords(String corruptedWord){
+		String cleanedWord = corruptedWord;
+		for (int i = 0; i < filmAffinityWords.length; i++) {
+			cleanedWord = cleanedWord.replaceAll(filmAffinityWords[i], "");
+		}
+		return cleanedWord;
 	}
 }
 	

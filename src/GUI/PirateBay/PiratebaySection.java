@@ -66,7 +66,7 @@ public class PiratebaySection extends JPanel implements Runnable{
 		resultsPanel.setBorder(new SoftBevelBorder(BevelBorder.RAISED, Color.DARK_GRAY, null, null, null));
 		resultsPanel.setBackground(new Color(204, 255, 153));
 		scrollPane.setViewportView(resultsPanel);
-		resultsPanel.setLayout(new GridLayout(0, 1, 0, 0));
+		resultsPanel.setLayout(new GridLayout(0, 1, 1, 2));
 		GroupLayout gl_searchPanel = new GroupLayout(searchPanel);
 		gl_searchPanel.setHorizontalGroup(
 			gl_searchPanel.createParallelGroup(Alignment.LEADING)

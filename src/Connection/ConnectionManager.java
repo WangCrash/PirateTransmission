@@ -126,7 +126,6 @@ public class ConnectionManager {
 		if((responseCode == HttpURLConnection.HTTP_OK) || (responseCode == HttpURLConnection.HTTP_MOVED_TEMP) || responseCode == HttpURLConnection.HTTP_MOVED_PERM){
 			if(responseCode == HttpURLConnection.HTTP_MOVED_TEMP || responseCode == HttpURLConnection.HTTP_MOVED_PERM){
 				result.put("Location", con.getHeaderField("Location"));
-				
 			}
 			if((watchCookies) && con.getHeaderField("Set-Cookie") != null){
 				if(cookiesList == null){
