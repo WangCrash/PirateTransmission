@@ -151,6 +151,7 @@ public class HelperChooserSection extends JPanel implements Runnable {
 	@Override
 	public void run() {
 		recommendations = helperManager.getRecommendations(filters);
+		System.out.println("Obtenidas recomendaciones para los filtros:\n" + filters);
 		/*for(int i = 0; i < recommendations.length;i++){
 			System.out.println(recommendations[i]);
 		}*/

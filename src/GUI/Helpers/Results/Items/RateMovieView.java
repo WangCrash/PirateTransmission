@@ -36,7 +36,7 @@ public class RateMovieView extends JDialog {
 	
 	private JFrame mainFrame;
 	private FichaPelicula film;
-	private FilmCell parentView;
+	private FilmResultItem parentView;
 	
 	
 	private final JPanel contentPanel = new JPanel();
@@ -45,7 +45,7 @@ public class RateMovieView extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public RateMovieView(JFrame rootFrame, FilmCell parentView, FichaPelicula film) {
+	public RateMovieView(JFrame rootFrame, FilmResultItem parentView, FichaPelicula film) {
 		super(rootFrame, true);
 		getContentPane().setForeground(Color.ORANGE);
 		this.mainFrame = rootFrame;

@@ -5,12 +5,16 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.SwingUtilities;
+
 import java.awt.Color;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JButton;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 
+import GUI.Helpers.Results.Items.FilmDetailsPanel;
+import Model.FichaPelicula;
 import Model.HelperItem;
 
 import java.awt.event.ActionListener;
@@ -25,6 +29,7 @@ public class MultipartScrollableResultsContainer extends ResultsContainer{
 	
 	private HelperResultsSection parentView;
 	private HelperItem helperItem;
+	private FilmDetailsPanel filmDetailsPanel;
 	
 	private JButton searchTorrentButton;
 	private JPanel resultsPanel;
@@ -33,12 +38,11 @@ public class MultipartScrollableResultsContainer extends ResultsContainer{
 	/**
 	 * Create the panel.
 	 */
-	public MultipartScrollableResultsContainer(JFrame mainFrame, HelperResultsSection parentView, HelperItem helperItem, HelperItem[] items) {
-		super(mainFrame, items);
+	public MultipartScrollableResultsContainer(JFrame mainFrame, HelperResultsSection parentView, HelperItem helperItem, boolean enableBackButton) {
+		super(mainFrame, null);
 		setBackground(SystemColor.menu);
 		this.parentView = parentView;
 		this.helperItem = helperItem;
-		this.items = items;
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(1, 24, 441, 251);
@@ -52,11 +56,12 @@ public class MultipartScrollableResultsContainer extends ResultsContainer{
 		sendBackButton = new JButton("");
 		sendBackButton.setIcon(new ImageIcon(MultipartScrollableResultsContainer.class.getResource("/images/backButton.png")));
 		sendBackButton.setBounds(209, 2, 37, 23);
-		sendBackButton.setEnabled(items != null);
+		sendBackButton.setEnabled(enableBackButton);
 		
 		searchTorrentButton = new JButton("Buscar Torrent");
 		searchTorrentButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				filmDetailsPanel.searchItemTorrent();
 			}
 		});
 		GroupLayout gl_staticPane = new GroupLayout(staticPane);
@@ -84,12 +89,23 @@ public class MultipartScrollableResultsContainer extends ResultsContainer{
 		add(scrollPane);
 		add(sendBackButton);
 		add(staticPane);
-
+		showResults();
 	}
 
 	@Override
 	protected void showResults() {
-		
+		System.out.println("Showing results");
+		filmDetailsPanel = new FilmDetailsPanel(mainFrame, parentView, helperItem);
+		filmDetailsPanel.setBackground(new Color(204, 255, 153));
+		//resultsPanel.add(filmDetailsPanel);
+		resultsPanel.add(new JButton("ADFSASDFASDFASDF"));
+		resultsPanel.revalidate();
+		SwingUtilities.invokeLater(new Runnable(){
+			public void run(){
+				parentView.revalidate();
+				mainFrame.revalidate();
+			}
+		});
 	}
 	public void goBack(){
 		if(items != null){

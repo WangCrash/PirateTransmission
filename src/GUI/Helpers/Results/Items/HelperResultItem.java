@@ -12,7 +12,7 @@ public abstract class HelperResultItem extends JPanel{
 	
 	protected JFrame mainFrame;
 	protected HelperResultsSection parentView;
-	protected HelperItem helperItem;
+	private HelperItem helperItem;
 	
 	public HelperResultItem(JFrame mainFrame, HelperResultsSection parentView, HelperItem helperItem){
 		this.mainFrame = mainFrame;

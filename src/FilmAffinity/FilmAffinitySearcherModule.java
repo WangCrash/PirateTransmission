@@ -14,6 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import Connection.ConnectionManager;
+import Managers.Helpers.FilmAffinityBot;
 import Model.FichaPelicula;
 import Utils.UtilTools;
 
@@ -80,7 +81,17 @@ public class FilmAffinitySearcherModule {
 			query += "?";
 			for (Map.Entry<String, String> entry : filters.entrySet())
 			{
-			    query += entry.getKey() + "=" + entry.getValue() + "&";
+				String value = entry.getValue();
+				if(entry.getKey().equals(FilmAffinityBot.FILMAFFINITY_FILTERS_GENRE_KEY)){
+					int genreCode;
+					try{
+						genreCode = Integer.parseInt(entry.getValue());
+						value = getGenreKey(genreCode);
+					}catch(NumberFormatException e){
+						continue;
+					}
+				}
+			    query += entry.getKey() + "=" + value + "&";
 			}
 			query = query.substring(0, query.length() - 1);
 		}

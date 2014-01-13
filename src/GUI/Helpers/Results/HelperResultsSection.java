@@ -20,6 +20,7 @@ public class HelperResultsSection extends JPanel {
 	private PiratebaySection piratebaySection;
 	private JPanel rootPanel;
 	private ResultsContainer resultsContainer;
+	private HelperItem[] items;
 
 	/**
 	 * Create the panel.
@@ -60,16 +61,35 @@ public class HelperResultsSection extends JPanel {
 			System.out.println("no hay items");
 			return;
 		}
+		this.items = items;
 		if(rootPanel.getComponentCount() > 0){
 			rootPanel.removeAll();
 		}
 		if(items.length == 1){
 			System.out.println("multipart results container");
-			resultsContainer = new MultipartScrollableResultsContainer(this.mainFrame, this, items[0], null);
+			resultsContainer = new MultipartScrollableResultsContainer(this.mainFrame, this, items[0], false);
 		}else{
 			System.out.println("simple results container");
 			resultsContainer = new SimpleScrollableResultsContainer(this.mainFrame, this, items);
 		}
+		rootPanel.add(resultsContainer);
+	}
+	
+	public void showItemDetails(HelperItem item){
+		if(items == null){
+			System.out.println("items es null");
+			return;
+		}
+		else if(items.length == 0){
+			System.out.println("no hay items");
+			return;
+		}
+		if(rootPanel.getComponentCount() > 0){
+			rootPanel.removeAll();
+		}
+		
+		System.out.println("multipart results container");
+		resultsContainer = new MultipartScrollableResultsContainer(this.mainFrame, this, item, true);
 		rootPanel.add(resultsContainer);
 	}
 }

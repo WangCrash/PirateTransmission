@@ -1,6 +1,5 @@
 package GUI.Helpers.Results.Items;
 
-import GUI.Helpers.Chooser.RecommendationsFiltersView;
 import GUI.Helpers.Results.HelperResultsSection;
 import Managers.Helpers.FilmAffinityBot;
 import Model.FichaPelicula;
@@ -26,7 +25,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.border.MatteBorder;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-public class FilmCell extends HelperResultItem implements Runnable {
+public class FilmCell extends FilmResultItem implements Runnable {
 
 	private static final long serialVersionUID = -5062658692098221504L;
 	private JLabel titleLabel;
@@ -268,7 +267,7 @@ public class FilmCell extends HelperResultItem implements Runnable {
 	}
 	
 	public void filmSuccesfullyRated(FichaPelicula film){
-		helperItem = film;
+		this.setFilm(film);
 		boolean flag = film.getNotaUsuario().isEmpty();
 		yourNoteLabel.setVisible(!flag);
 		usersNoteFrame.setVisible(!flag);
@@ -278,7 +277,7 @@ public class FilmCell extends HelperResultItem implements Runnable {
 	}
 
 	private void initLabels(boolean showForRating) {
-		FichaPelicula ficha = (FichaPelicula)this.helperItem;
+		FichaPelicula ficha = this.getFilm();
 		System.out.println(ficha);
 		try {
 			imageURL = new URL(ficha.getImageUrl());
@@ -314,30 +313,9 @@ public class FilmCell extends HelperResultItem implements Runnable {
 		}
 		return result.substring(0, result.length() - 1);
 	}
-
-	@Override
-	public void searchItemTorrent() {
-		FichaPelicula ficha = (FichaPelicula)this.helperItem;
-		String search;
-		if(new UtilTools().showYesNoDialog(this.mainFrame, "Buscar Torrent", "Buscar en su idioma original")){
-			if(ficha.getTituloOriginal() == null || ficha.getTituloOriginal().isEmpty()){
-				ficha = FilmAffinityBot.getInstance().fillFichaPelicula(ficha);
-			}
-			search = ficha.getTituloOriginal();
-		}else{
-			search = new UtilTools().killFilmAffinityWords(ficha.getTitulo());
-		}
-		this.parentView.searchTorrent(search);
-	}
 	
 	private void showFilmDetails() {
-		
-	}
-
-	@Override
-	public void rateItem() {
-		RateMovieView rateView = new RateMovieView(mainFrame, this, (FichaPelicula)helperItem);
-		rateView.setVisible(true);
+		parentView.showItemDetails(this.getFilm());
 	}
 
 	@Override
