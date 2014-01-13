@@ -128,7 +128,7 @@ public class HelperChooserSection extends JPanel implements Runnable {
 			new UtilTools().showWarningDialog(mainFrame, "", "No se ha iniciado sesión en " + helperManager.getHelperName());
 			return;
 		}
-		
+				
 		Thread t = new Thread(this);
 		t.start();
 		showLoadingView();
@@ -158,7 +158,7 @@ public class HelperChooserSection extends JPanel implements Runnable {
 		    public void run() {
 		    	mainFrame.getHelperResultsSection().showResults(recommendations);
 				hideLoadingView();
-				mainFrame.revalidate();
+				//mainFrame.revalidate();
 		    }
 		});
 	}

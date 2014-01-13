@@ -38,8 +38,8 @@ public class PiratebaySection extends JPanel implements Runnable{
 	/**
 	 * Create the panel.
 	 */
-	public PiratebaySection(JFrame parentFrame){
-		this.mainFrame = parentFrame;
+	public PiratebaySection(JFrame mainFrame){
+		this.mainFrame = mainFrame;
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
@@ -116,6 +116,11 @@ public class PiratebaySection extends JPanel implements Runnable{
 	
 	private void requestSearch(String search){
 		mainFrame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		if(!PirateBayBot.getInstance().isInitialized()){
+			if(!PirateBayBot.getInstance().initManager()){
+				new UtilTools().showWarningDialog(mainFrame, "Error", "No ha sido posible conectar con PirateBay");
+			}
+		}
 		torrents = PirateBayBot.getInstance().searchTorrent(search, PirateBayBot.CATEGORY_ALL, PirateBayBot.ORDERBY_SEEDERS);
 		if(torrents == null){
 			new UtilTools().showWarningDialog(mainFrame, "Error", "Puede que no estés conectado");
@@ -135,14 +140,14 @@ public class PiratebaySection extends JPanel implements Runnable{
 			for(int i = 0; i < torrents.length; i++){
 				TorrentCell cell = new TorrentCell(torrents[i]);
 				cell.setMainFrame(mainFrame);
-				if(i % 2 == 0){
+				/*if(i % 2 == 0){
 					//amarillo suave
 					cell.setBackground(new Color(255.0f/255.0f, 247.0f/255.0f, 213.0f/255.0f));
 				}else{
 					//azul suave
 					//[r=149,g=201,b=250]
 					cell.setBackground(new Color(149.0f/255.0f, 201.0f/255.0f, 250.0f/255.0f));
-				}
+				}*/
 				resultsPanel.add(cell);
 			}
 			resultsPanel.revalidate();

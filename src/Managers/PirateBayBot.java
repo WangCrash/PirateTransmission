@@ -129,6 +129,10 @@ public class PirateBayBot extends Manager{
         	return null;
         }
 	}
+	
+	public boolean isInitialized(){
+		return initialized;
+	}
     
     private ArchivoTorrent[] listResults(String htmlResponse){
     	String simpleUrlBase = urlBase.substring(2);

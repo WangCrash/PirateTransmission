@@ -9,6 +9,7 @@ public abstract class ResultsContainer extends JPanel{
 	private static final long serialVersionUID = -1930445475344304331L;
 	
 	protected JFrame mainFrame;
+	protected HelperResultsSection parentView;
 	protected HelperItem[] items;
 	
 	public ResultsContainer(JFrame mainFrame, HelperItem[] items){

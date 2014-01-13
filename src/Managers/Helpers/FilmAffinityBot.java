@@ -54,6 +54,8 @@ public class FilmAffinityBot extends HelperManager{
 	public static final String FILMAFFINITY_FILTERS_FROM_YEAR_KEY = "fromyear";
 	public static final String FILMAFFINITY_FILTERS_TO_YEAR_KEY = "toyear";
 	
+	public static final String FILMAFFINITY_FILM_NOT_WATCHED = "-1";
+	
 	public String user;
 	public String password;
 	

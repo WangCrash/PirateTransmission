@@ -1,8 +1,6 @@
 package GUI.Helpers.Results;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.GroupLayout;
@@ -23,8 +21,6 @@ import javax.swing.ScrollPaneConstants;
 public class SimpleScrollableResultsContainer extends ResultsContainer{
 
 	private static final long serialVersionUID = 8817672622988670420L;
-	
-	private HelperResultsSection parentView;
 	
 	private JPanel resultsPanel;
 
@@ -59,15 +55,9 @@ public class SimpleScrollableResultsContainer extends ResultsContainer{
 		showResults();
 	}
 
-	private void testing() {
-		for(int i = 0; i < 10; i++){
-			JLabel label = new JLabel("LABEL " + i);
-			resultsPanel.add(label);
-		}
-	}
-
 	@Override
 	protected void showResults() {
+		System.out.println("VA a mostrar");
 		if(items == null){
 			System.out.println("Items vacío");
 			return;
@@ -77,6 +67,12 @@ public class SimpleScrollableResultsContainer extends ResultsContainer{
 			resultsPanel.add(cell);
 			System.out.println("celda añadida");
 		}
+		resultsPanel.revalidate();
+		SwingUtilities.invokeLater(new Runnable(){
+			public void run(){
+				mainFrame.revalidate();
+			}
+		});
 	}
 	
 	public JPanel getContentPanel() {

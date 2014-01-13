@@ -1,20 +1,20 @@
 package GUI.Helpers.Results.Items;
 
+import GUI.Helpers.Chooser.RecommendationsFiltersView;
 import GUI.Helpers.Results.HelperResultsSection;
+import Managers.Helpers.FilmAffinityBot;
 import Model.FichaPelicula;
 import Model.HelperItem;
 import Utils.UtilTools;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JPanel;
 import java.awt.Font;
 import java.net.MalformedURLException;
@@ -23,16 +23,8 @@ import java.net.URL;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
-import java.awt.Component;
-import javax.swing.Box;
-import net.miginfocom.swing.MigLayout;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.factories.FormFactory;
-import com.jgoodies.forms.layout.RowSpec;
-import javax.swing.border.EtchedBorder;
 import javax.swing.border.MatteBorder;
+import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class FilmCell extends HelperResultItem implements Runnable {
 
@@ -50,16 +42,18 @@ public class FilmCell extends HelperResultItem implements Runnable {
 	
 	private URL imageURL;
 	private JPanel noteFrame;
-	private JLabel lblNewLabel_1;
+	private JLabel yourNoteLabel;
+	private JLabel usersNoteLabel;
+	private JPanel usersNoteFrame;
 
 	public FilmCell(JFrame mainFrame, HelperResultsSection parentView, HelperItem helperItem, boolean showForRating) {
 		super(mainFrame, parentView, helperItem);
 		setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		
-		imageLabel = new JLabel("Image");
+		imageLabel = new JLabel("");
 		imageLabel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		imageLabel.setIcon(null);
+		imageLabel.setIcon(new ImageIcon(FilmCell.class.getResource("/com/sun/java/swing/plaf/motif/icons/image-delayed.png")));
 		
 		titleLabel = new JLabel("T\u00EDtulo");
 		titleLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
@@ -73,6 +67,7 @@ public class FilmCell extends HelperResultItem implements Runnable {
 		noteFrame.setBackground(new Color(255, 255, 255));
 		
 		voteButton = new JButton("Votar");
+		voteButton.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		voteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				rateItem();
@@ -80,6 +75,7 @@ public class FilmCell extends HelperResultItem implements Runnable {
 		});
 		
 		searchTorrentButton = new JButton("Buscar Torrent");
+		searchTorrentButton.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		searchTorrentButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				searchItemTorrent();
@@ -87,6 +83,7 @@ public class FilmCell extends HelperResultItem implements Runnable {
 		});
 		
 		showDetailsButton = new JButton("Ver Detalles");
+		showDetailsButton.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		showDetailsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				showFilmDetails();
@@ -131,99 +128,153 @@ public class FilmCell extends HelperResultItem implements Runnable {
 		yearLabel = new JLabel("A\u00F1o");
 		yearLabel.setFont(new Font("Dialog", Font.PLAIN, 11));
 		
-		lblNewLabel_1 = new JLabel("New label");
-		lblNewLabel_1.setVisible(false);
+		usersNoteFrame = new JPanel();
+		usersNoteFrame.setVisible(false);
+		usersNoteFrame.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
+		usersNoteFrame.setBackground(Color.WHITE);
+		
+		usersNoteLabel = new JLabel("10");
+		usersNoteLabel.setVisible(false);
+		usersNoteLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		usersNoteLabel.setFont(new Font("Tahoma", Font.PLAIN, 33));
+		GroupLayout gl_usersNoteFrame = new GroupLayout(usersNoteFrame);
+		gl_usersNoteFrame.setHorizontalGroup(
+			gl_usersNoteFrame.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 60, Short.MAX_VALUE)
+				.addGroup(gl_usersNoteFrame.createSequentialGroup()
+					.addGap(5)
+					.addComponent(usersNoteLabel, GroupLayout.PREFERRED_SIZE, 47, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
+		gl_usersNoteFrame.setVerticalGroup(
+			gl_usersNoteFrame.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 69, Short.MAX_VALUE)
+				.addGroup(gl_usersNoteFrame.createSequentialGroup()
+					.addGap(3)
+					.addComponent(usersNoteLabel, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
+		usersNoteFrame.setLayout(gl_usersNoteFrame);
+		
+		yourNoteLabel = new JLabel("Tu nota");
+		yourNoteLabel.setVisible(false);
+		
+		JButton btnNewButton = new JButton("botonParaAjuste");
+		btnNewButton.setVisible(false);
+		btnNewButton.setEnabled(false);
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(6)
+					.addComponent(titleLabel, GroupLayout.PREFERRED_SIZE, 381, GroupLayout.PREFERRED_SIZE))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(6)
+					.addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(6)
-							.addComponent(titleLabel, GroupLayout.PREFERRED_SIZE, 381, GroupLayout.PREFERRED_SIZE))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(6)
-							.addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)
+							.addGap(12)
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 								.addGroup(groupLayout.createSequentialGroup()
-									.addPreferredGap(ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
-									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-										.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-											.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-												.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
-												.addComponent(countryLabel, GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE))
-											.addGap(2)
-											.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
-												.addComponent(lblAo, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-												.addComponent(yearLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-											.addGap(25))
-										.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-											.addComponent(searchTorrentButton)
-											.addPreferredGap(ComponentPlacement.UNRELATED)
-											.addComponent(showDetailsButton, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE))
-										.addComponent(directorLabel, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 217, GroupLayout.PREFERRED_SIZE))
-									.addPreferredGap(ComponentPlacement.RELATED))
+									.addGap(7)
+									.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
+									.addGap(28)
+									.addComponent(lblAo, GroupLayout.PREFERRED_SIZE, 52, GroupLayout.PREFERRED_SIZE))
 								.addGroup(groupLayout.createSequentialGroup()
-									.addGap(18)
-									.addComponent(lblDirector, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
-									.addGap(106)))
-							.addGap(16)
-							.addComponent(noteFrame, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
-							.addGap(2))
+									.addGap(7)
+									.addComponent(countryLabel, GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE)
+									.addGap(2)
+									.addComponent(yearLabel))))
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(109)
-							.addComponent(notWatchedLabel)
-							.addGap(20)
-							.addComponent(voteButton, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)))
-					.addGap(8))
-				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-					.addContainerGap(178, Short.MAX_VALUE)
-					.addComponent(lblNewLabel_1)
-					.addGap(175))
+							.addGap(10)
+							.addComponent(directorLabel, GroupLayout.PREFERRED_SIZE, 217, GroupLayout.PREFERRED_SIZE))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(10)
+							.addComponent(lblDirector, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)))
+					.addGap(18)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(1)
+							.addComponent(noteFrame, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE))
+						.addComponent(yourNoteLabel, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(97)
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(12)
+									.addComponent(notWatchedLabel)
+									.addGap(20)
+									.addComponent(voteButton, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(searchTorrentButton)
+									.addGap(10)
+									.addComponent(showDetailsButton, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE)))
+							.addGap(15))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+							.addGap(84)))
+					.addComponent(usersNoteFrame, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(6)
 					.addComponent(titleLabel)
+					.addGap(3)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(4)
+							.addComponent(lblDirector)
+							.addGap(2)
+							.addComponent(directorLabel)
+							.addGap(7)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblNewLabel)
+								.addComponent(lblAo))
+							.addGap(6)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(countryLabel)
+								.addComponent(yearLabel)))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(8)
+							.addComponent(noteFrame, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
+							.addGap(11)
+							.addComponent(yourNoteLabel)))
+					.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(3)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
-								.addGroup(groupLayout.createSequentialGroup()
-									.addGap(3)
-									.addComponent(lblDirector)
-									.addGap(3)
-									.addComponent(directorLabel)
-									.addGap(7)
-									.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-										.addComponent(lblNewLabel)
-										.addComponent(lblAo))
-									.addGap(6)
-									.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-										.addComponent(countryLabel)
-										.addComponent(yearLabel))))
-							.addGap(3)
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 								.addGroup(groupLayout.createSequentialGroup()
 									.addGap(4)
 									.addComponent(notWatchedLabel))
 								.addComponent(voteButton))
+							.addGap(11)
+							.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 								.addComponent(searchTorrentButton)
-								.addComponent(showDetailsButton))
-							.addPreferredGap(ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
-							.addComponent(lblNewLabel_1))
-						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-							.addGap(14)
-							.addComponent(noteFrame, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
-							.addGap(98))))
+								.addComponent(showDetailsButton)))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(4)
+							.addComponent(usersNoteFrame, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)))
+					.addGap(23))
 		);
 		setLayout(groupLayout);
 		
 		initLabels(showForRating);
+	}
+	
+	public void filmSuccesfullyRated(FichaPelicula film){
+		helperItem = film;
+		boolean flag = film.getNotaUsuario().isEmpty();
+		yourNoteLabel.setVisible(!flag);
+		usersNoteFrame.setVisible(!flag);
+		usersNoteLabel.setText(film.getNotaUsuario());
+		usersNoteLabel.setVisible(!flag);
+		notWatchedLabel.setVisible(flag);
 	}
 
 	private void initLabels(boolean showForRating) {
@@ -269,6 +320,9 @@ public class FilmCell extends HelperResultItem implements Runnable {
 		FichaPelicula ficha = (FichaPelicula)this.helperItem;
 		String search;
 		if(new UtilTools().showYesNoDialog(this.mainFrame, "Buscar Torrent", "Buscar en su idioma original")){
+			if(ficha.getTituloOriginal() == null || ficha.getTituloOriginal().isEmpty()){
+				ficha = FilmAffinityBot.getInstance().fillFichaPelicula(ficha);
+			}
 			search = ficha.getTituloOriginal();
 		}else{
 			search = new UtilTools().killFilmAffinityWords(ficha.getTitulo());
@@ -282,7 +336,8 @@ public class FilmCell extends HelperResultItem implements Runnable {
 
 	@Override
 	public void rateItem() {
-		
+		RateMovieView rateView = new RateMovieView(mainFrame, this, (FichaPelicula)helperItem);
+		rateView.setVisible(true);
 	}
 
 	@Override
@@ -293,6 +348,7 @@ public class FilmCell extends HelperResultItem implements Runnable {
 	private void getFilmImage() {
 		ImageIcon image = new ImageIcon(imageURL);
 		imageLabel.setText("");
+		imageLabel.setBorder(null);
 		imageLabel.setIcon(image);
 	}
 }

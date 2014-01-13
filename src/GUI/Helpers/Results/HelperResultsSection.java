@@ -4,24 +4,13 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
 
 import java.awt.Color;
 
-import javax.swing.ScrollPaneConstants;
-
 import GUI.PirateBay.PiratebaySection;
-import Model.FichaPelicula;
 import Model.HelperItem;
-import javax.swing.JTextField;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import java.awt.CardLayout;
-import javax.swing.border.SoftBevelBorder;
-import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
 import java.awt.FlowLayout;
-import java.awt.SystemColor;
 
 public class HelperResultsSection extends JPanel {
 	
@@ -71,9 +60,12 @@ public class HelperResultsSection extends JPanel {
 			System.out.println("no hay items");
 			return;
 		}
+		if(rootPanel.getComponentCount() > 0){
+			rootPanel.removeAll();
+		}
 		if(items.length == 1){
 			System.out.println("multipart results container");
-			resultsContainer = new MultipartScrollableResultsContainer(this.mainFrame, this, items);
+			resultsContainer = new MultipartScrollableResultsContainer(this.mainFrame, this, items[0], null);
 		}else{
 			System.out.println("simple results container");
 			resultsContainer = new SimpleScrollableResultsContainer(this.mainFrame, this, items);

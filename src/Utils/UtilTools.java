@@ -1,5 +1,6 @@
 package Utils;
 
+import java.awt.Color;
 import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -16,7 +17,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
