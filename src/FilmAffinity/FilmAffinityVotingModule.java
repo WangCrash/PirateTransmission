@@ -32,7 +32,14 @@ public class FilmAffinityVotingModule {
 			} catch (MalformedURLException e) {
 				return false;
 			}
-			String parameters = "id=" + idFilm + "&rating=" + film.getNotaUsuario() + "&ucd=" + film.getDataUcd();
+			String mark;
+			try{
+				Integer.parseInt(film.getNotaUsuario());
+				mark = film.getNotaUsuario();
+			}catch(NumberFormatException e){
+				mark = "ns";
+			}
+			String parameters = "id=" + idFilm + "&rating=" + mark + "&ucd=" + film.getDataUcd();
 			
 			Map<String, String> response = cm.sendRequest(url, parameters, true, null, ConnectionManager.METHOD_POST, true, true, true);
 			

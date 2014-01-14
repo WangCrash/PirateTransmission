@@ -70,13 +70,13 @@ public class MultipartScrollableResultsContainer extends ResultsContainer{
 				.addGroup(gl_staticPane.createSequentialGroup()
 					.addGap(165)
 					.addComponent(searchTorrentButton)
-					.addContainerGap(170, Short.MAX_VALUE))
+					.addContainerGap(167, Short.MAX_VALUE))
 		);
 		gl_staticPane.setVerticalGroup(
 			gl_staticPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_staticPane.createSequentialGroup()
 					.addComponent(searchTorrentButton, GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)
-					.addContainerGap())
+					.addGap(8))
 		);
 		staticPane.setLayout(gl_staticPane);
 		setLayout(null);
@@ -100,6 +100,7 @@ public class MultipartScrollableResultsContainer extends ResultsContainer{
 		//resultsPanel.add(filmDetailsPanel);
 		resultsPanel.add(new JButton("ADFSASDFASDFASDF"));
 		resultsPanel.revalidate();
+		this.revalidate();
 		SwingUtilities.invokeLater(new Runnable(){
 			public void run(){
 				parentView.revalidate();
