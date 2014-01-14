@@ -19,8 +19,10 @@ import Utils.UtilTools;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.HashMap;
 import java.util.Map;
 import java.awt.Color;
+
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 import javax.swing.UIManager;
@@ -35,6 +37,7 @@ public class RecommendationsFiltersView extends JDialog {
 	private String[] decadeComboModel;
 	private String[] toComboModel;
 	private String[] resultsLimitComboModel;
+	Map<Integer, String> genreCorrespondency;
 	
 	private final JPanel contentPanel = new JPanel();
 	private JComboBox genreComboBox;
@@ -183,15 +186,19 @@ public class RecommendationsFiltersView extends JDialog {
 		Map<String, String> filters = parentView.getFilters();
 		String genre = filters.get(FilmAffinityBot.FILMAFFINITY_FILTERS_GENRE_KEY);
 		int code = 0;
+		int genreIndex = 0;
 		if(genre != null){
 			try{
 				code = Integer.parseInt(genre);
-				code++;
+				genreIndex = code;
+				if(code != FilmAffinityBot.FILMAFFINITY_GENRE_KEY_ALL){
+					genreIndex = findValue(genreComboModel, genreCorrespondency.get(code));
+				}
 			}catch(NumberFormatException e){
-				code = 0;
+				genreIndex = 0;
 			}
 		}
-		genreComboBox.setSelectedIndex(code);
+		genreComboBox.setSelectedIndex(genreIndex);
 		
 		String decade = filters.get(FilmAffinityBot.FILMAFFINITY_FILTERS_FROM_YEAR_KEY);
 		int decadeIndex = 0;
@@ -231,15 +238,26 @@ public class RecommendationsFiltersView extends JDialog {
 		return index;
 	}
 	
+	private Integer findValue(Map<Integer, String> map, String value){
+		Integer result = null;
+		for (Map.Entry<Integer, String> entry : map.entrySet())
+		{
+			if(entry.getValue().equals(value)){
+				result = entry.getKey();
+				break;
+			}
+		}
+		return result;
+	}
+	
 	private void setUpFilters(){
 		Map<String, String> filters = parentView.getFilters();
 		
-		int genreCode = genreComboBox.getSelectedIndex() - 1;
-		String genre = "";
-		if(genreCode >= 0){
-			genre = String.valueOf(genreCode);
+		Integer genre = findValue(genreCorrespondency, genreComboModel[genreComboBox.getSelectedIndex()]);
+		if(genre == null){
+			genre = FilmAffinityBot.FILMAFFINITY_GENRE_KEY_ALL;
 		}
-		filters.put(FilmAffinityBot.FILMAFFINITY_FILTERS_GENRE_KEY, genre);
+		filters.put(FilmAffinityBot.FILMAFFINITY_FILTERS_GENRE_KEY, genre.toString());
 		
 		String decade = decadeComboModel[decadeComboBox.getSelectedIndex()];
 		if(!decade.isEmpty()){
@@ -277,9 +295,31 @@ public class RecommendationsFiltersView extends JDialog {
 				, "Musical"
 				, "Romance"
 				, "Serie de TV"
+				, "Terror"
 				, "Thriller"
 				, "Western"
 		};
+		genreCorrespondency = new HashMap<Integer, String>();
+		genreCorrespondency.put(new Integer(FilmAffinityBot.FILMAFFINITY_GENRE_KEY_ACTION), genreComboModel[1]);
+		genreCorrespondency.put(new Integer(FilmAffinityBot.FILMAFFINITY_GENRE_KEY_ANIMATION), genreComboModel[2]);
+		genreCorrespondency.put(new Integer(FilmAffinityBot.FILMAFFINITY_GENRE_KEY_ADVENTURE), genreComboModel[3]);
+		genreCorrespondency.put(new Integer(FilmAffinityBot.FILMAFFINITY_GENRE_KEY_WAR), genreComboModel[4]);
+		genreCorrespondency.put(new Integer(FilmAffinityBot.FILMAFFINITY_GENRE_KEY_SCIENCE_FICTION), genreComboModel[5]);
+		genreCorrespondency.put(new Integer(FilmAffinityBot.FILMAFFINITY_GENRE_KEY_NOIR), genreComboModel[6]);
+		genreCorrespondency.put(new Integer(FilmAffinityBot.FILMAFFINITY_GENRE_KEY_COMEDY), genreComboModel[7]);
+		genreCorrespondency.put(new Integer(FilmAffinityBot.FILMAFFINITY_GENRE_KEY_UNKNOWN), genreComboModel[8]);
+		genreCorrespondency.put(new Integer(FilmAffinityBot.FILMAFFINITY_GENRE_KEY_DOCUMENTARY), genreComboModel[9]);
+		genreCorrespondency.put(new Integer(FilmAffinityBot.FILMAFFINITY_GENRE_KEY_DRAMA), genreComboModel[10]);
+		genreCorrespondency.put(new Integer(FilmAffinityBot.FILMAFFINITY_GENRE_KEY_FANTASTIC), genreComboModel[11]);
+		genreCorrespondency.put(new Integer(FilmAffinityBot.FILMAFFINITY_GENRE_KEY_INFANTILE), genreComboModel[12]);
+		genreCorrespondency.put(new Integer(FilmAffinityBot.FILMAFFINITY_GENRE_KEY_INTRIGUE), genreComboModel[13]);
+		genreCorrespondency.put(new Integer(FilmAffinityBot.FILMAFFINITY_GENRE_KEY_MUSICAL), genreComboModel[14]);
+		genreCorrespondency.put(new Integer(FilmAffinityBot.FILMAFFINITY_GENRE_KEY_ROMANCE), genreComboModel[15]);
+		genreCorrespondency.put(new Integer(FilmAffinityBot.FILMAFFINITY_GENRE_KEY_TV_SERIE), genreComboModel[16]);
+		genreCorrespondency.put(new Integer(FilmAffinityBot.FILMAFFINITY_GENRE_KEY_TERROR), genreComboModel[17]);
+		genreCorrespondency.put(new Integer(FilmAffinityBot.FILMAFFINITY_GENRE_KEY_THRILLER), genreComboModel[18]);
+		genreCorrespondency.put(new Integer(FilmAffinityBot.FILMAFFINITY_GENRE_KEY_WESTERN), genreComboModel[19]);
+		
 		decadeComboModel = new String[]{
 				""
 				, "1910"
