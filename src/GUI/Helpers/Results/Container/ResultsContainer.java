@@ -1,8 +1,9 @@
-package GUI.Helpers.Results;
+package GUI.Helpers.Results.Container;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import GUI.Helpers.Results.HelperResultsSection;
 import Model.HelperItem;
 
 public abstract class ResultsContainer extends JPanel{

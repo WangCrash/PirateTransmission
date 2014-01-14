@@ -1,4 +1,4 @@
-package GUI.Helpers.Results.Items;
+package GUI.Helpers.Results.Items.Films;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -23,11 +23,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.Map;
 import java.awt.Color;
+
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 import javax.swing.UIManager;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
+
 import java.awt.Font;
 
 public class RateMovieView extends JDialog {

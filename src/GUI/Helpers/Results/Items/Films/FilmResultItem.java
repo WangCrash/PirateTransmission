@@ -1,8 +1,9 @@
-package GUI.Helpers.Results.Items;
+package GUI.Helpers.Results.Items.Films;
 
 import javax.swing.JFrame;
 
 import GUI.Helpers.Results.HelperResultsSection;
+import GUI.Helpers.Results.Items.HelperResultItem;
 import Managers.Helpers.FilmAffinityBot;
 import Model.FichaPelicula;
 import Model.HelperItem;

@@ -1,4 +1,4 @@
-package GUI.Helpers.Results.Items;
+package GUI.Helpers.Results.Items.Films;
 
 import GUI.Helpers.Results.HelperResultsSection;
 import Managers.Helpers.FilmAffinityBot;

@@ -1,4 +1,4 @@
-package GUI.Helpers.Results;
+package GUI.Helpers.Results.Container;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -8,13 +8,16 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.SwingUtilities;
 
 import java.awt.Color;
+
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 
-import GUI.Helpers.Results.Items.FilmCell;
+import GUI.Helpers.Results.HelperResultsSection;
+import GUI.Helpers.Results.Items.Films.FilmCell;
 import Model.HelperItem;
 
 import java.awt.GridLayout;
+
 import javax.swing.ScrollPaneConstants;
 
 

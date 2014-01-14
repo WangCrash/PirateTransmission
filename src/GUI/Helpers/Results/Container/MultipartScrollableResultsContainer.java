@@ -1,4 +1,4 @@
-package GUI.Helpers.Results;
+package GUI.Helpers.Results.Container;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -8,12 +8,14 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.SwingUtilities;
 
 import java.awt.Color;
+
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JButton;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 
-import GUI.Helpers.Results.Items.FilmDetailsPanel;
+import GUI.Helpers.Results.HelperResultsSection;
+import GUI.Helpers.Results.Items.Films.FilmDetailsPanel;
 import Model.FichaPelicula;
 import Model.HelperItem;
 
@@ -21,6 +23,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
 import java.awt.SystemColor;
+
 import javax.swing.ImageIcon;
 
 public class MultipartScrollableResultsContainer extends ResultsContainer{
@@ -97,14 +100,13 @@ public class MultipartScrollableResultsContainer extends ResultsContainer{
 		System.out.println("Showing results");
 		filmDetailsPanel = new FilmDetailsPanel(mainFrame, parentView, helperItem);
 		filmDetailsPanel.setBackground(new Color(204, 255, 153));
-		//resultsPanel.add(filmDetailsPanel);
-		resultsPanel.add(new JButton("ADFSASDFASDFASDF"));
+		resultsPanel.add(filmDetailsPanel);
+		//resultsPanel.add(new JButton("ADFSASDFASDFASDF"));
 		resultsPanel.revalidate();
-		this.revalidate();
 		SwingUtilities.invokeLater(new Runnable(){
 			public void run(){
-				parentView.revalidate();
-				mainFrame.revalidate();
+				//parentView.revalidate();
+				mainFrame.validate();
 			}
 		});
 	}

@@ -15,6 +15,7 @@ import javax.swing.JMenuItem;
 import GUI.Configuration.ConfigView;
 import GUI.Helpers.Chooser.HelperChooserSection;
 import GUI.Helpers.Results.HelperResultsSection;
+import GUI.Helpers.Searcher.HelperSearcherSection;
 import GUI.PirateBay.PiratebaySection;
 import Managers.ApplicationConfiguration;
 import Managers.PirateBayBot;
@@ -38,6 +39,7 @@ public class MainWindow extends JFrame {
 	
 	private PiratebaySection pirateBaySection;
 	private HelperChooserSection helperChooserSection;
+	private HelperSearcherSection helperSearcherSection;
 	private HelperResultsSection helperResultsSection;
 
 	/**
@@ -156,6 +158,9 @@ public class MainWindow extends JFrame {
 		
 		helperChooserSection = new HelperChooserSection(this);
 		helperRecommendations.add(helperChooserSection);
+		
+		helperSearcherSection = new HelperSearcherSection();
+		helperSearcher.add(helperSearcherSection);
 		
 		helperResultsSection = new HelperResultsSection(this, pirateBaySection);
 		helperResults.add(helperResultsSection);

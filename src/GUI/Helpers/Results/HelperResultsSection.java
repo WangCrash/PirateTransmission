@@ -7,6 +7,9 @@ import javax.swing.GroupLayout.Alignment;
 
 import java.awt.Color;
 
+import GUI.Helpers.Results.Container.MultipartScrollableResultsContainer;
+import GUI.Helpers.Results.Container.ResultsContainer;
+import GUI.Helpers.Results.Container.SimpleScrollableResultsContainer;
 import GUI.PirateBay.PiratebaySection;
 import Model.HelperItem;
 
