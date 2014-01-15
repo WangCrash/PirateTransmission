@@ -33,7 +33,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.border.TitledBorder;
 import javax.swing.UIManager;
 
-public class FilmDetailsPanel extends FilmResultItem implements Runnable{
+public class FilmDetailsView extends FilmResultItem implements Runnable{
 	private URL imageURL;
 	
 	private JLabel markLabel;
@@ -54,15 +54,15 @@ public class FilmDetailsPanel extends FilmResultItem implements Runnable{
 	private JTable reviewsTable;
 	private JPanel infoPanel;
 	
-	public FilmDetailsPanel(JFrame mainFrame, HelperResultsSection parentView, HelperItem helperItem) {
+	public FilmDetailsView(JFrame mainFrame, HelperResultsSection parentView, HelperItem helperItem) {
 		super(mainFrame, parentView, helperItem);
 		
-		setBorder(new SoftBevelBorder(BevelBorder.RAISED, new Color(64, 64, 64), null, null, null));
+		setBorder(new SoftBevelBorder(BevelBorder.LOWERED, new Color(64, 64, 64), null, null, null));
 		setLayout(null);
 		
 		infoPanel = new JPanel();
-		infoPanel.setBorder(UIManager.getBorder("Button.border"));
-		infoPanel.setBounds(0, -2, 418, 762);
+		infoPanel.setBorder(UIManager.getBorder("InternalFrame.border"));
+		infoPanel.setBounds(10, 6, 418, 750);
 		add(infoPanel);
 		
 		titleLabel = new JLabel("T\u00EDtulo");
@@ -90,7 +90,7 @@ public class FilmDetailsPanel extends FilmResultItem implements Runnable{
 		imageLabel = new JLabel("");
 		imageLabel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		imageLabel.setIcon(new ImageIcon(FilmDetailsPanel.class.getResource("/javax/swing/plaf/basic/icons/image-delayed.png")));
+		imageLabel.setIcon(new ImageIcon(FilmDetailsView.class.getResource("/javax/swing/plaf/basic/icons/image-delayed.png")));
 		
 		JLabel lblNewLabel_5 = new JLabel("A\u00F1o");
 		lblNewLabel_5.setFont(new Font("Tahoma", Font.BOLD, 12));

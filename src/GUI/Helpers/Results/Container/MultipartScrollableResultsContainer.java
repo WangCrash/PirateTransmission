@@ -15,7 +15,7 @@ import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 
 import GUI.Helpers.Results.HelperResultsSection;
-import GUI.Helpers.Results.Items.Films.FilmDetailsPanel;
+import GUI.Helpers.Results.Items.Films.FilmDetailsView;
 import Model.FichaPelicula;
 import Model.HelperItem;
 
@@ -32,7 +32,7 @@ public class MultipartScrollableResultsContainer extends ResultsContainer{
 	
 	private HelperResultsSection parentView;
 	private HelperItem helperItem;
-	private FilmDetailsPanel filmDetailsPanel;
+	private FilmDetailsView filmDetailsPanel;
 	
 	private JButton searchTorrentButton;
 	private JPanel resultsPanel;
@@ -98,7 +98,7 @@ public class MultipartScrollableResultsContainer extends ResultsContainer{
 	@Override
 	protected void showResults() {
 		System.out.println("Showing results");
-		filmDetailsPanel = new FilmDetailsPanel(mainFrame, parentView, helperItem);
+		filmDetailsPanel = new FilmDetailsView(mainFrame, parentView, helperItem);
 		filmDetailsPanel.setBackground(new Color(204, 255, 153));
 		resultsPanel.add(filmDetailsPanel);
 		//resultsPanel.add(new JButton("ADFSASDFASDFASDF"));

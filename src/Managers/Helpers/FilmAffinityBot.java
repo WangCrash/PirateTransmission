@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 import Utils.UtilTools;
@@ -227,6 +228,21 @@ public class FilmAffinityBot extends HelperManager{
 
 	@Override
 	public String getHelperName() {
-		return "FilmAffinity";
+		return HELPERMANAGER_NAME_FILMS;
+	}
+
+	@Override
+	public int getDefaultSearchOption() {
+		return FILMAFFINITY_TITLE_SEARCH_OPTION;
+	}
+
+	@Override
+	public Map<String, Integer> getSearchOptions() {
+		Map<String, Integer> options = new HashMap<String, Integer>();
+		options.put("Todo", FILMAFFINITY_ALL_SEARCH_OPTION);
+		options.put("Título", FILMAFFINITY_TITLE_SEARCH_OPTION);
+		options.put("Director", FILMAFFINITY_DIRECTOR_SEARCH_OPTION);
+		options.put("Reparto", FILMAFFINITY_CAST_SEARCH_OPTION);
+		return options;
 	}
 }

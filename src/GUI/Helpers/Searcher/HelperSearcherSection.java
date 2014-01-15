@@ -39,6 +39,7 @@ public class HelperSearcherSection extends JPanel implements Runnable {
 
 	private HelperManager helperManager;
 	private HelperItem[] results;
+	private int searchOption;
 	
 	private MainWindow mainFrame;
 	
@@ -49,10 +50,8 @@ public class HelperSearcherSection extends JPanel implements Runnable {
 	/**
 	 * Create the panel.
 	 */
-	public HelperSearcherSection() {
-		//this.mainFrame = rootFrame;
-		//de momento por defecto se usa filmaffinity
-		this.helperManager = FilmAffinityBot.getInstance();
+	public HelperSearcherSection(MainWindow mainFrame) {
+		this.mainFrame = mainFrame;		
 		
 		setBorder(new SoftBevelBorder(BevelBorder.RAISED, new Color(64, 64, 64), null, null, null));
 		setBackground(new Color(204, 255, 153));
@@ -61,12 +60,18 @@ public class HelperSearcherSection extends JPanel implements Runnable {
 		configSearchButton.setIcon(new ImageIcon(HelperSearcherSection.class.getResource("/javax/swing/plaf/metal/icons/sortDown.png")));
 		configSearchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				showConfigSearchView();
 			}
 		});
 		
 		searchField = new JTextField();
+		searchField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				searchItem();
+			}
+		});
 		searchField.setMargin(new Insets(12, 12, 12, 12));
-		searchField.setBorder(new LineBorder(new Color(171, 173, 179), 2, true));
+		searchField.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		searchField.setColumns(10);
 		
 		titleLabel = new JLabel("New label");
@@ -95,7 +100,9 @@ public class HelperSearcherSection extends JPanel implements Runnable {
 					.addContainerGap())
 		);
 		setLayout(groupLayout);
-
+		
+		//de momento por defecto se usa filmaffinity
+		setHelperManager(FilmAffinityBot.getInstance());
 	}
 	
 	private void showLoadingView() {
@@ -111,7 +118,8 @@ public class HelperSearcherSection extends JPanel implements Runnable {
 
 	@Override
 	public void run() {
-		//recommendations = helperManager.getRecommendations(filters);
+		results = helperManager.searchItem(searchField.getText().trim(), searchOption);
+		System.out.println(results);
 		SwingUtilities.invokeLater(new Runnable() {
 		    public void run() {
 		    	mainFrame.getHelperResultsSection().showResults(results);
@@ -120,7 +128,55 @@ public class HelperSearcherSection extends JPanel implements Runnable {
 		    }
 		});
 	}
-	public void setTitle(String title) {
-		titleLabel.setText(title);
+	
+	private String getOptionName(int option){
+		String result = "";
+		for (Map.Entry<String, Integer> entry : helperManager.getSearchOptions().entrySet()){
+			if(entry.getValue() == option){
+				result = entry.getKey();
+			}
+		}
+		return result;
+	}
+	
+	private void searchItem() {
+		/*if(!helperManager.isLogged()){
+			new UtilTools().showWarningDialog(mainFrame, "", "No se ha iniciado sesión en " + helperManager.getHelperName());
+			return;
+		}*/
+				
+		Thread t = new Thread(this);
+		t.start();
+		showLoadingView();
+	}
+	
+	private void showConfigSearchView() {
+		SearchOptionsView searchOptionsView = new SearchOptionsView(mainFrame, this, "Opciones de búsqueda de película", helperManager.getSearchOptions(), searchOption);
+		searchOptionsView.setVisible(true);
+	}
+	
+	public void setHelperManager(HelperManager helperManager){
+		this.helperManager = helperManager;
+		setSearchOption(helperManager.getDefaultSearchOption());
+		setTitle();
+	}
+	
+	public void setTitle() {
+		String title;
+		if(helperManager.getHelperName().equals(HelperManager.HELPERMANAGER_NAME_FILMS)){
+			title = "Búsqueda de películas";
+		}else{
+			title = "Búsqueda de música";
+		}
+		titleLabel.setText(title + " por " + getOptionName(searchOption));
+	}
+
+	public int getSearchOption(){
+		return searchOption;
+	}
+
+	public void setSearchOption(int searchOption) {
+		this.searchOption = searchOption;
+		setTitle();
 	}
 }

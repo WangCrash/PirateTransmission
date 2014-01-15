@@ -91,9 +91,11 @@ public class HelperResultsSection extends JPanel {
 		if(rootPanel.getComponentCount() > 0){
 			rootPanel.removeAll();
 		}
+		rootPanel.revalidate();
 		
 		System.out.println("multipart results container");
 		resultsContainer = new MultipartScrollableResultsContainer(this.mainFrame, this, item, true);
 		rootPanel.add(resultsContainer);
+		rootPanel.revalidate();
 	}
 }
