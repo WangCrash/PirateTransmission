@@ -31,6 +31,7 @@ import java.awt.event.ActionEvent;
 public class MainWindow extends JFrame {
 
 	private static final long serialVersionUID = -6836764944504173037L;
+	private static volatile MainWindow instance = null;
 	private JPanel contentPane;
 	private JPanel piratebayPanel;
 	private JPanel helperRecommendations;
@@ -41,6 +42,15 @@ public class MainWindow extends JFrame {
 	private HelperChooserSection helperChooserSection;
 	private HelperSearcherSection helperSearcherSection;
 	private HelperResultsSection helperResultsSection;
+	
+	public static MainWindow getInstance(){
+		synchronized (FilmAffinityBot.class) {
+			if(instance == null){
+				instance = new MainWindow();
+			}
+		}
+		return instance;
+	}
 
 	/**
 	 * Launch the application.
@@ -49,7 +59,7 @@ public class MainWindow extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainWindow frame = new MainWindow();
+					MainWindow frame = MainWindow.getInstance();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -61,7 +71,7 @@ public class MainWindow extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public MainWindow() {
+	private MainWindow() {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent arg0) {

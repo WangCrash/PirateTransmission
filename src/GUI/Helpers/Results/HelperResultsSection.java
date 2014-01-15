@@ -11,6 +11,9 @@ import GUI.Helpers.Results.Container.MultipartScrollableResultsContainer;
 import GUI.Helpers.Results.Container.ResultsContainer;
 import GUI.Helpers.Results.Container.SimpleScrollableResultsContainer;
 import GUI.PirateBay.PiratebaySection;
+import Managers.Helpers.FilmAffinityBot;
+import Managers.Helpers.HelperManager;
+import Model.FichaPelicula;
 import Model.HelperItem;
 
 import javax.swing.border.LineBorder;
@@ -79,9 +82,13 @@ public class HelperResultsSection extends JPanel {
 		rootPanel.add(resultsContainer);
 	}
 	
+	public void showResults(){
+		showResults(this.items);
+	}
+	
 	public void showItemDetails(HelperItem item){
-		if(items == null){
-			System.out.println("items es null");
+		if(item == null){
+			System.out.println("item es null");
 			return;
 		}
 		else if(items.length == 0){
@@ -91,11 +98,10 @@ public class HelperResultsSection extends JPanel {
 		if(rootPanel.getComponentCount() > 0){
 			rootPanel.removeAll();
 		}
-		rootPanel.revalidate();
 		
+		item = FilmAffinityBot.getInstance().fillFichaPelicula((FichaPelicula)item);
 		System.out.println("multipart results container");
 		resultsContainer = new MultipartScrollableResultsContainer(this.mainFrame, this, item, true);
 		rootPanel.add(resultsContainer);
-		rootPanel.revalidate();
 	}
 }

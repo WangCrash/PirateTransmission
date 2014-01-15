@@ -48,17 +48,19 @@ public class MultipartScrollableResultsContainer extends ResultsContainer{
 		this.helperItem = helperItem;
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(1, 24, 441, 251);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 		
 		JPanel staticPane = new JPanel();
-		staticPane.setBounds(1, 279, 441, 37);
 		staticPane.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, new Color(64, 64, 64), null, null, null));
 		staticPane.setBackground(new Color(204, 255, 153));
 		
 		sendBackButton = new JButton("");
+		sendBackButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				goBack();
+			}
+		});
 		sendBackButton.setIcon(new ImageIcon(MultipartScrollableResultsContainer.class.getResource("/images/backButton.png")));
-		sendBackButton.setBounds(209, 2, 37, 23);
 		sendBackButton.setEnabled(enableBackButton);
 		
 		searchTorrentButton = new JButton("Buscar Torrent");
@@ -71,27 +73,49 @@ public class MultipartScrollableResultsContainer extends ResultsContainer{
 		gl_staticPane.setHorizontalGroup(
 			gl_staticPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_staticPane.createSequentialGroup()
-					.addGap(165)
+					.addGap(166)
 					.addComponent(searchTorrentButton)
-					.addContainerGap(167, Short.MAX_VALUE))
+					.addContainerGap(166, Short.MAX_VALUE))
 		);
 		gl_staticPane.setVerticalGroup(
 			gl_staticPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_staticPane.createSequentialGroup()
+				.addGroup(Alignment.TRAILING, gl_staticPane.createSequentialGroup()
+					.addGap(5)
 					.addComponent(searchTorrentButton, GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)
-					.addGap(8))
+					.addGap(3))
 		);
 		staticPane.setLayout(gl_staticPane);
-		setLayout(null);
 		
 		resultsPanel = new JPanel();
-		resultsPanel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, Color.DARK_GRAY, null, null, null));
 		resultsPanel.setBackground(new Color(204, 255, 153));
 		scrollPane.setViewportView(resultsPanel);
 		resultsPanel.setLayout(new GridLayout(0, 1, 0, 0));
-		add(scrollPane);
-		add(sendBackButton);
-		add(staticPane);
+		GroupLayout groupLayout = new GroupLayout(this);
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(1)
+							.addComponent(staticPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(1)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(sendBackButton, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
+								.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 441, GroupLayout.PREFERRED_SIZE))))
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addComponent(sendBackButton, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+					.addGap(1)
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 251, GroupLayout.PREFERRED_SIZE)
+					.addGap(3)
+					.addComponent(staticPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(5))
+		);
+		setLayout(groupLayout);
 		showResults();
 	}
 
@@ -111,8 +135,7 @@ public class MultipartScrollableResultsContainer extends ResultsContainer{
 		});
 	}
 	public void goBack(){
-		if(items != null){
-			parentView.showResults(items);
-		}
+		System.out.println("GOING BACK");
+		parentView.showResults();
 	}
 }
