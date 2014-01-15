@@ -44,11 +44,13 @@ public class HelperResultsSection extends JPanel {
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addComponent(rootPanel, GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addComponent(rootPanel, GroupLayout.PREFERRED_SIZE, 462, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addComponent(rootPanel, GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
+				.addComponent(rootPanel, GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
 		);
 		FlowLayout fl_rootPanel = new FlowLayout(FlowLayout.CENTER, 0, 0);
 		rootPanel.setLayout(fl_rootPanel);
@@ -101,7 +103,7 @@ public class HelperResultsSection extends JPanel {
 		
 		item = FilmAffinityBot.getInstance().fillFichaPelicula((FichaPelicula)item);
 		System.out.println("multipart results container");
-		resultsContainer = new MultipartScrollableResultsContainer(this.mainFrame, this, item, true);
+		resultsContainer = new MultipartScrollableResultsContainer(this.mainFrame, this, item, (items.length > 1));
 		rootPanel.add(resultsContainer);
 	}
 }
