@@ -8,6 +8,11 @@ public class FichaPelicula extends HelperItem{
 	public static final String MAP_KEY_CRITICAS_TEXTO = "texto";
 	public static final String MAP_KEY_CRITICAS_AUTOR_REVISTA = "autor_revista";
 	
+	public static final int FICHAPELICULA_CRITICA_POSITIVA = 0;
+	public static final int FICHAPELICULA_CRITICA_NEUTRA = 1;
+	public static final int FICHAPELICULA_CRITICA_NEGATIVA = 2;
+	public static final int FICHAPELICULA_CRITICA_NO_DETERMINADA = -1;
+	
 	private String dataUcd;
 	private String imageUrl;
 	private String filmDetailsUrl;
@@ -138,6 +143,25 @@ public class FichaPelicula extends HelperItem{
 	public void setCriticas(Map<String, String[]> criticas) {
 		this.criticas = criticas;
 	}
+	
+	public String getCritica(String autor){
+		String[] criticaYValoracion = this.getCriticas().get(autor);
+		return criticaYValoracion[0];
+	}
+	
+	public int getValoracionCritica(String autor){
+		String[] criticaYValoracion = this.getCriticas().get(autor);
+		String valoracion = criticaYValoracion[1];
+		if(valoracion.equals("crítica positiva")){
+			return FICHAPELICULA_CRITICA_POSITIVA;
+		}else if(valoracion.equals("crítica negativa")){
+			return FICHAPELICULA_CRITICA_NEGATIVA;
+		}else if(valoracion.equals("crítica neutra")){
+			return FICHAPELICULA_CRITICA_NEUTRA;
+		}
+		return -1;
+	}
+	
 	public String getValoracion() {
 		return valoracion;
 	}

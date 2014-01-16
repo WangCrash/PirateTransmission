@@ -82,6 +82,7 @@ public class RateMovieView extends JDialog {
 		titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		rateField = new JTextField();
+		rateField.setText((film.getNotaUsuario() == null) || (film.getNotaUsuario().equals("-1"))?"":film.getNotaUsuario());
 		rateField.setHorizontalAlignment(SwingConstants.CENTER);
 		rateField.setFont(new Font("Tahoma", Font.PLAIN, 50));
 		rateField.setColumns(2);
@@ -152,9 +153,13 @@ public class RateMovieView extends JDialog {
 		int value;
 		try{
 			value = Integer.parseInt(rating);
+			if((value <= 0) || (value > 10)){
+				tools.showInfoOKDialog(mainFrame, "","Los valores de la votación deben estar entre 1 y 10");
+				return false;
+			}
 		}catch(NumberFormatException e){
-			tools.showInfoOKDialog(mainFrame, "","Sólo números");
 			if(!rating.isEmpty()){
+				tools.showInfoOKDialog(mainFrame, "","Para votar sólo usa números enteros o déjalo en blanco");
 				return false;
 			}
 		}
