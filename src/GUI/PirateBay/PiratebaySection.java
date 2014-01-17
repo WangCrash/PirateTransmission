@@ -25,6 +25,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 import java.awt.GridLayout;
+import javax.swing.SwingConstants;
 
 public class PiratebaySection extends JPanel implements Runnable{
 	
@@ -48,9 +49,10 @@ public class PiratebaySection extends JPanel implements Runnable{
 		searchPanel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, Color.DARK_GRAY, null, null, null));
 		searchPanel.setBackground(new Color(204, 255, 153));
 		
-		JLabel label = new JLabel("Buscar: ");
-		label.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		label.setBackground(Color.LIGHT_GRAY);
+		JLabel lblBuscarTorrent = new JLabel("Buscar Torrent");
+		lblBuscarTorrent.setHorizontalAlignment(SwingConstants.CENTER);
+		lblBuscarTorrent.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblBuscarTorrent.setBackground(Color.LIGHT_GRAY);
 		
 		searchField = new JTextField();
 		searchField.addActionListener(new ActionListener() {
@@ -71,19 +73,23 @@ public class PiratebaySection extends JPanel implements Runnable{
 		gl_searchPanel.setHorizontalGroup(
 			gl_searchPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_searchPanel.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(label, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(searchField, GroupLayout.PREFERRED_SIZE, 345, GroupLayout.PREFERRED_SIZE)
-					.addGap(14))
+					.addGroup(gl_searchPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_searchPanel.createSequentialGroup()
+							.addGap(5)
+							.addComponent(searchField, GroupLayout.PREFERRED_SIZE, 402, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_searchPanel.createSequentialGroup()
+							.addGap(7)
+							.addComponent(lblBuscarTorrent, GroupLayout.PREFERRED_SIZE, 398, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		gl_searchPanel.setVerticalGroup(
-			gl_searchPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_searchPanel.createSequentialGroup()
-					.addGap(17)
-					.addGroup(gl_searchPanel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(searchField, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
-						.addComponent(label, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)))
+			gl_searchPanel.createParallelGroup(Alignment.TRAILING)
+				.addGroup(Alignment.LEADING, gl_searchPanel.createSequentialGroup()
+					.addGap(3)
+					.addComponent(lblBuscarTorrent, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+					.addGap(11)
+					.addComponent(searchField, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		searchPanel.setLayout(gl_searchPanel);
 		GroupLayout groupLayout = new GroupLayout(this);

@@ -82,17 +82,18 @@ public class HelperChooserSection extends JPanel implements Runnable {
 		});
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.TRAILING)
-				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
-					.addGap(25)
-					.addComponent(getRecommendationsButton, GroupLayout.PREFERRED_SIZE, 170, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
-					.addComponent(setUpFiltersButton, GroupLayout.PREFERRED_SIZE, 167, GroupLayout.PREFERRED_SIZE)
-					.addGap(31))
+			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap(96, Short.MAX_VALUE)
-					.addComponent(helperChooserComboBox, GroupLayout.PREFERRED_SIZE, 256, GroupLayout.PREFERRED_SIZE)
-					.addGap(76))
+					.addContainerGap(55, Short.MAX_VALUE)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+							.addComponent(getRecommendationsButton, GroupLayout.PREFERRED_SIZE, 170, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(setUpFiltersButton, GroupLayout.PREFERRED_SIZE, 167, GroupLayout.PREFERRED_SIZE)
+							.addGap(44))
+						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+							.addComponent(helperChooserComboBox, GroupLayout.PREFERRED_SIZE, 256, GroupLayout.PREFERRED_SIZE)
+							.addGap(76))))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -101,8 +102,8 @@ public class HelperChooserSection extends JPanel implements Runnable {
 					.addComponent(helperChooserComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(getRecommendationsButton, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-						.addComponent(setUpFiltersButton, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))
+						.addComponent(setUpFiltersButton, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+						.addComponent(getRecommendationsButton, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
 					.addContainerGap())
 		);
 		setLayout(groupLayout);
@@ -122,7 +123,7 @@ public class HelperChooserSection extends JPanel implements Runnable {
 		recommView.setVisible(true);
 	}
 	
-	private void showRecommendations() {
+	public void showRecommendations() {
 		System.out.println("FILTERS: " + filters);
 		if(!helperManager.isLogged()){
 			new UtilTools().showWarningDialog(mainFrame, "", "No se ha iniciado sesión en " + helperManager.getHelperName());
@@ -139,7 +140,7 @@ public class HelperChooserSection extends JPanel implements Runnable {
 	
 	private void showLoadingView() {
 		loadingView = new LoadingView(mainFrame);
-		loadingView.setMessageLabel("Esperando...");
+		loadingView.setMessageLabel("Esperando recomendaciones ...");
 		loadingView.setVisible(true);
 	}
 	

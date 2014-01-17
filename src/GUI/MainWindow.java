@@ -72,6 +72,7 @@ public class MainWindow extends JFrame {
 	 * Create the frame.
 	 */
 	private MainWindow() {
+		setResizable(false);
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
@@ -174,6 +175,8 @@ public class MainWindow extends JFrame {
 		
 		helperResultsSection = new HelperResultsSection(this, pirateBaySection);
 		helperResults.add(helperResultsSection);
+		
+		helperChooserSection.showRecommendations();
 	}
 	
 	private void openConfigView() {

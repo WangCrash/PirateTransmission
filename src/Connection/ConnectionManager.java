@@ -29,7 +29,7 @@ public class ConnectionManager {
 	public static final String STATUS_CODE_RESPONSE_KEY = "ResponseCode";
 	
 	private final int NO_INTERNET_REACHABILITY = 0;
-	private final String USER_AGENT = "orphean_navigator_2.0";
+	public static final String USER_AGENT = "orphean_navigator_2.0";
 	
 	private List<String> cookiesList;
 	private int TIMEOUT_MILLI = 10000;

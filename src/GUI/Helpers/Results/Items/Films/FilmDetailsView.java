@@ -418,16 +418,18 @@ public class FilmDetailsView extends FilmResultItem implements Runnable{
 			System.out.println("BAD URL: " + film.getImageUrl());
 		}
 		
+		UtilTools tools = new UtilTools();
+		
 		titleLabel.setText(film.getTitulo());
-		setToolTipText(titleLabel, film.getTitulo());
+		tools.setToolTipText(titleLabel, film.getTitulo());
 		
 		originalTitleLabel.setText(film.getTituloOriginal());
-		setToolTipText(originalTitleLabel, film.getTituloOriginal());
+		tools.setToolTipText(originalTitleLabel, film.getTituloOriginal());
 		
 		sinopsisTextPane.setText(film.getSinopsis());
 		
 		directorLabel.setText(arrayToString(film.getDirector()));
-		setToolTipText(directorLabel, arrayToString(film.getDirector()));
+		tools.setToolTipText(directorLabel, arrayToString(film.getDirector()));
 		
 		if(film.getReparto() != null){
 			castingList.setListData(film.getReparto());
@@ -451,7 +453,7 @@ public class FilmDetailsView extends FilmResultItem implements Runnable{
 		}
 		
 		countryLabel.setText(film.getPais());
-		setToolTipText(countryLabel, film.getPais());		
+		tools.setToolTipText(countryLabel, film.getPais());		
 		
 		yearLabel.setText(film.getAño());
 		
@@ -466,12 +468,6 @@ public class FilmDetailsView extends FilmResultItem implements Runnable{
 		twinSoulsMarkLabel.setText(film.getNotaAlmasGemelas());
 		twinSoulsMarkLabel.setVisible(userLogged);
 		rateButton.setEnabled(userLogged);
-	}
-	
-	private void setToolTipText(JComponent component, String text){
-		if((text != null) && !text.isEmpty()){
-			component.setToolTipText(text);
-		}
 	}
 	
 	@Override

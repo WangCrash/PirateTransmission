@@ -21,6 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -170,6 +171,12 @@ public class UtilTools {
 	    g2.drawImage(srcImg, 0, 0, w, h, null);
 	    g2.dispose();
 	    return new ImageIcon(resizedImg);
+	}
+	
+	public void setToolTipText(JComponent component, String text){
+		if((text != null) && !text.isEmpty()){
+			component.setToolTipText(text);
+		}
 	}
 }
 	

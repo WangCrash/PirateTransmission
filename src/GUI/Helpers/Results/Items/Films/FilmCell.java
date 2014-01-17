@@ -139,17 +139,15 @@ public class FilmCell extends FilmResultItem implements Runnable {
 		GroupLayout gl_usersNoteFrame = new GroupLayout(usersNoteFrame);
 		gl_usersNoteFrame.setHorizontalGroup(
 			gl_usersNoteFrame.createParallelGroup(Alignment.LEADING)
-				.addGap(0, 60, Short.MAX_VALUE)
 				.addGroup(gl_usersNoteFrame.createSequentialGroup()
-					.addGap(5)
+					.addGap(6)
 					.addComponent(usersNoteLabel, GroupLayout.PREFERRED_SIZE, 47, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		gl_usersNoteFrame.setVerticalGroup(
 			gl_usersNoteFrame.createParallelGroup(Alignment.LEADING)
-				.addGap(0, 69, Short.MAX_VALUE)
 				.addGroup(gl_usersNoteFrame.createSequentialGroup()
-					.addGap(3)
+					.addGap(5)
 					.addComponent(usersNoteLabel, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
@@ -169,11 +167,14 @@ public class FilmCell extends FilmResultItem implements Runnable {
 					.addGap(6)
 					.addComponent(titleLabel, GroupLayout.PREFERRED_SIZE, 381, GroupLayout.PREFERRED_SIZE))
 				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(95)
+					.addComponent(lblDirector, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE))
+				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(6)
 					.addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)
 					.addGap(10)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblDirector, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
+						.addComponent(directorLabel, GroupLayout.PREFERRED_SIZE, 274, GroupLayout.PREFERRED_SIZE)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(9)
 							.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
@@ -182,74 +183,75 @@ public class FilmCell extends FilmResultItem implements Runnable {
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(9)
 							.addComponent(countryLabel, GroupLayout.PREFERRED_SIZE, 139, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addGap(10)
 							.addComponent(yearLabel, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE))
-						.addComponent(directorLabel, GroupLayout.PREFERRED_SIZE, 274, GroupLayout.PREFERRED_SIZE))
-					.addGap(10)
-					.addComponent(noteFrame, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE))
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(379)
-					.addComponent(yourNoteLabel, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE))
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(118)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addGroup(groupLayout.createSequentialGroup()
-									.addComponent(searchTorrentButton)
-									.addGap(10)
-									.addComponent(showDetailsButton, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE))
-								.addGroup(groupLayout.createSequentialGroup()
-									.addComponent(notWatchedLabel, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
-									.addGap(18)
-									.addComponent(voteButton, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)))
-							.addGap(44))
-						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-							.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-							.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-							.addGap(118)))
-					.addComponent(usersNoteFrame, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE))
+							.addGap(26)
+							.addComponent(notWatchedLabel, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(voteButton, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(26)
+							.addComponent(searchTorrentButton)
+							.addGap(6)
+							.addComponent(showDetailsButton, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE)))
+					.addGap(10)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(noteFrame, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
+						.addComponent(yourNoteLabel, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(1)
+							.addComponent(usersNoteFrame, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE))))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(196)
+					.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(6)
 					.addComponent(titleLabel)
-					.addGap(3)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(4)
+							.addGap(7)
 							.addComponent(lblDirector)
 							.addGap(2)
-							.addComponent(directorLabel)
-							.addGap(7)
-							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblNewLabel)
-								.addComponent(lblAo))
-							.addGap(6)
-							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-								.addComponent(countryLabel)
-								.addComponent(yearLabel)))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(33)
-							.addComponent(noteFrame, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)))
-					.addGap(9)
-					.addComponent(yourNoteLabel)
-					.addPreferredGap(ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-								.addComponent(voteButton)
-								.addComponent(notWatchedLabel))
-							.addGap(18)
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(searchTorrentButton)
-								.addComponent(showDetailsButton))
-							.addGap(1)
-							.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE))
-						.addComponent(usersNoteFrame, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap())
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(directorLabel)
+									.addGap(7)
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+										.addComponent(lblNewLabel)
+										.addComponent(lblAo))
+									.addGap(6)
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+										.addComponent(countryLabel)
+										.addComponent(yearLabel))
+									.addGap(32)
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+										.addGroup(groupLayout.createSequentialGroup()
+											.addGap(4)
+											.addComponent(notWatchedLabel))
+										.addComponent(voteButton))
+									.addGap(36)
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+										.addComponent(searchTorrentButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+										.addComponent(showDetailsButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+									.addGap(3))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(12)
+									.addComponent(noteFrame, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
+									.addGap(9)
+									.addComponent(yourNoteLabel)
+									.addGap(2)
+									.addComponent(usersNoteFrame, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)))
+							.addGap(6)
+							.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE)
+							.addGap(6))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(47)
+							.addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
+							.addContainerGap())))
 		);
 		setLayout(groupLayout);
 		
@@ -276,10 +278,18 @@ public class FilmCell extends FilmResultItem implements Runnable {
 		} catch (MalformedURLException e) {
 			System.out.println("BAD URL: " + ficha.getImageUrl());
 		}
+		UtilTools tools = new UtilTools();
+		
 		titleLabel.setText(ficha.getTitulo());
+		tools.setToolTipText(titleLabel, ficha.getTitulo());
+		
 		String director = convertArrayToStringLine(ficha.getDirector());
 		directorLabel.setText(director);
+		tools.setToolTipText(directorLabel, director);
+		
 		countryLabel.setText(ficha.getPais());
+		tools.setToolTipText(countryLabel, ficha.getPais());
+		
 		yearLabel.setText(ficha.getAño());
 		
 		if((ficha.getValoracion() == null) || (ficha.getValoracion().isEmpty())){
@@ -316,7 +326,6 @@ public class FilmCell extends FilmResultItem implements Runnable {
 	private void getFilmImage() {
 		ImageIcon image = new ImageIcon(imageURL);
 		imageLabel.setText("");
-		imageLabel.setBorder(null);
 		imageLabel.setIcon(image);
 	}
 }

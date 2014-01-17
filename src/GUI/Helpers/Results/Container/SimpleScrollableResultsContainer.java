@@ -41,20 +41,18 @@ public class SimpleScrollableResultsContainer extends ResultsContainer{
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
+				.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 466, Short.MAX_VALUE)
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 314, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+				.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
 		);
 		
 		resultsPanel = new JPanel();
 		resultsPanel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, Color.DARK_GRAY, null, null, null));
 		resultsPanel.setBackground(new Color(204, 255, 153));
 		scrollPane.setViewportView(resultsPanel);
-		resultsPanel.setLayout(new GridLayout(0, 1, 1, 2));
+		resultsPanel.setLayout(new GridLayout(0, 1, 1, 10));
 		setLayout(groupLayout);
 		
 		//testing();
