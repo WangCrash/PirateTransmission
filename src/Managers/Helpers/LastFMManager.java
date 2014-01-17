@@ -103,6 +103,9 @@ public class LastFMManager extends HelperManager {
 	}
 	
 	public Artista getArtistTopAlbums(Artista artista){
+		if(session == null){
+			return artista;
+		}
 		List<Disco> discografia = new ArrayList<Disco>();
 		for (Album album : Artist.getTopAlbums(artista.getNombre(), apiKey)) {
 			if(album == null){
@@ -120,6 +123,9 @@ public class LastFMManager extends HelperManager {
 	}
 	
 	public Disco getAlbumTracks(Disco disco){
+		if(session == null){
+			return disco;
+		}
 		Album album = Album.getInfo(disco.getArtista(), disco.getMbid(), apiKey);
 		List<String> tracks = new ArrayList<String>();
 		for (Track track : album.getTracks()) {
@@ -246,6 +252,18 @@ public class LastFMManager extends HelperManager {
 		HelperItem[] results = LastFMManager.getInstance().getRecommendations();
 		for (int i = 0; i < results.length; i++) {
 			System.out.println(results[i]);
+		}
+		Artista artista = (Artista)results[0];
+		System.out.println("Discos de " + artista.getNombre());
+		artista = LastFMManager.getInstance().getArtistTopAlbums(artista);
+		for (int i = 0; i < artista.getDiscografia().length; i++) {
+			System.out.println(artista.getDiscografia()[i]);
+		}
+		Disco disco = (Disco)artista.getDiscografia()[0];
+		System.out.println("Canciones del " + disco.getNombre() + "de " + artista.getNombre());
+		disco = LastFMManager.getInstance().getAlbumTracks(disco);
+		for (int i = 0; i < disco.getCanciones().length; i++) {
+			System.out.println(disco.getCanciones()[i]);
 		}
 	}
 }

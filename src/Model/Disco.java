@@ -52,4 +52,8 @@ public class Disco extends HelperItem {
 	public void setMbid(String mbid) {
 		this.mbid = mbid;
 	}
+	@Override
+	public String toString(){
+		return this.getNombre();
+	}
 }
