@@ -245,4 +245,14 @@ public class FilmAffinityBot extends HelperManager{
 		options.put("Reparto", FILMAFFINITY_CAST_SEARCH_OPTION);
 		return options;
 	}
+
+	@Override
+	public String getUserConfigKey() {
+		return FILMAFFINITY_USER_AUTH_CONFIG_KEY;
+	}
+
+	@Override
+	public String getPasswordConfigKey() {
+		return FILMAFFINITY_PASSWORD_AUTH_CONFIG_KEY;
+	}
 }

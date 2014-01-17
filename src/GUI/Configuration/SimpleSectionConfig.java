@@ -5,7 +5,7 @@ import java.util.Map;
 
 import Codification.Base64;
 import Managers.Manager;
-import Managers.Helpers.FilmAffinityBot;
+import Managers.Helpers.HelperManager;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -28,8 +28,8 @@ public class SimpleSectionConfig extends ConfigurationSection {
 	 * Create the panel.
 	 */
 	public SimpleSectionConfig(String initialUser, String initialPassword) {
-		this.initialUser = initialUser;
-		this.initialPassword = initialPassword;
+		this.initialUser = (initialUser == null)?"":initialUser;
+		this.initialPassword = (initialPassword == null)?"":initialPassword;
 		JLabel lblNewLabel = new JLabel("Usuario");
 		
 		JLabel lblNewLabel_1 = new JLabel("Password");
@@ -73,16 +73,17 @@ public class SimpleSectionConfig extends ConfigurationSection {
 
 	@Override
 	public Map<String, String> getChangedValues() {
+		HelperManager helperManager = (HelperManager)this.manager;
 		Map<String, String> result = new HashMap<String, String>();
 		if(!initialUser.equals(userField.getText().trim())){
-			result.put(FilmAffinityBot.FILMAFFINITY_USER_AUTH_CONFIG_KEY, userField.getText().trim());
+			result.put(helperManager.getUserConfigKey(), userField.getText().trim());
 		}
 		String password = new String(passwordField.getPassword());
 		if(!initialPassword.equals(password)){
 			if(!password.isEmpty()){
 				password = Base64.encodeBytes(password.getBytes());
 			}
-			result.put(FilmAffinityBot.FILMAFFINITY_PASSWORD_AUTH_CONFIG_KEY, password);
+			result.put(helperManager.getPasswordConfigKey(), password);
 		}
 		return result;
 	}

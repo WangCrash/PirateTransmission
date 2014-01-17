@@ -14,6 +14,10 @@ public abstract class HelperManager extends Manager{
 	
 	public abstract HelperItem[] getRecommendations(Map<String, String> filters);
 	
+	public abstract String getUserConfigKey();
+	
+	public abstract String getPasswordConfigKey();
+	
 	public abstract boolean rateItem(HelperItem item);
 	
 	public abstract HelperItem[] searchItem(String search, int option);
@@ -23,4 +27,5 @@ public abstract class HelperManager extends Manager{
 	public abstract int getDefaultSearchOption();
 	
 	public abstract Map<String, Integer> getSearchOptions();
+	
 }

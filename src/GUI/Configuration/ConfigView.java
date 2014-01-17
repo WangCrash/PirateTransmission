@@ -21,6 +21,7 @@ import javax.swing.JTabbedPane;
 
 import Managers.ApplicationConfiguration;
 import Managers.Helpers.FilmAffinityBot;
+import Managers.Helpers.LastFMManager;
 import Managers.TorrentClient.TransmissionManager;
 import Managers.TorrentClient.microTorrentManager;
 import Utils.UtilTools;
@@ -96,8 +97,8 @@ public class ConfigView extends JFrame {
 		SimpleSectionConfig filmAffinitySection = new SimpleSectionConfig(config.get(FilmAffinityBot.FILMAFFINITY_USER_AUTH_CONFIG_KEY), config.get(FilmAffinityBot.FILMAFFINITY_PASSWORD_AUTH_CONFIG_KEY));
 		filmAffinitySection.setManager(FilmAffinityBot.getInstance());
 		
-		SimpleSectionConfig lastFMSection = new SimpleSectionConfig("WaftFunk", "abcadfasdfasf");
-		//lastFMSection.setManager(LastFMManager.getInstance());
+		SimpleSectionConfig lastFMSection = new SimpleSectionConfig(config.get(LastFMManager.LASTFM_USER_AUTH_CONFIG_KEY), config.get(LastFMManager.LASTFM_PASSWORD_AUTH_CONFIG_KEY));
+		lastFMSection.setManager(LastFMManager.getInstance());
 		
 		sectionsPane.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, Color.DARK_GRAY, null, null, null));
 		sectionsPane.addTab("General",	generalSection);
@@ -208,13 +209,9 @@ public class ConfigView extends JFrame {
 		configProperties = tools.getConfiguration();
 		boolean[] needsToReboot = new boolean[sectionsPane.getTabCount()];
 		for (int i = 0; i < sectionsPane.getTabCount(); i++) {
-			if(i != 4){
-				System.out.println(sectionsPane.getTitleAt(i));
-				System.out.println(sections[i].getChangedValues());
-				needsToReboot[i] = setChangedValues(sections[i].getChangedValues());
-			}else{
-				needsToReboot[i] = false;
-			}
+			System.out.println(sectionsPane.getTitleAt(i));
+			System.out.println(sections[i].getChangedValues());
+			needsToReboot[i] = setChangedValues(sections[i].getChangedValues());
 		}
 		tools.setConfiguration(configProperties);
 		//reiniciar managers cuya configuración haya cambiado
