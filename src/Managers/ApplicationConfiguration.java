@@ -29,6 +29,9 @@ public class ApplicationConfiguration extends Manager{
 	@Override
 	protected void setUpManager() {
 		Map<String, String> config = new UtilTools().getConfiguration();
+		if(config == null){
+			return;
+		}		
 		
 		String nameTorrentClient = config.get(DEFAULT_TORRENT_CLIENT_CONFIG_KEY);
 		if(nameTorrentClient != null){
@@ -58,6 +61,11 @@ public class ApplicationConfiguration extends Manager{
 
 	public void setDefaultTorrentClient(TorrentClient defaultTorrentClient) {
 		this.defaultTorrentClient = defaultTorrentClient;
+	}
+
+	@Override
+	public boolean isStared() {
+		return (instance != null);
 	}
 
 }

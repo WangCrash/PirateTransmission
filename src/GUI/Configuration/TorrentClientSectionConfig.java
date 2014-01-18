@@ -119,17 +119,18 @@ public class TorrentClientSectionConfig extends ConfigurationSection {
 	
 	private void setInitialVariables() {
 		Map<String, String> config = new UtilTools().getConfiguration();
+		
 		TorrentClient torrentClient = (TorrentClient)manager;
 		initialRpcServer = config.get(torrentClient.getServerConfigKey());
-		if(initialRpcServer == null){
+		if(config == null || initialRpcServer == null){
 			initialRpcServer = "";
 		}
 		initialUser = config.get(torrentClient.getUserConfigKey());
-		if(initialUser == null){
+		if(config == null || initialUser == null){
 			initialUser = "";
 		}
 		initialPassword = config.get(torrentClient.getPasswordConfigKey());
-		if(initialPassword == null){
+		if(config == null || initialPassword == null){
 			initialPassword = "";
 		}
 		initialNeedsAuth = !initialUser.isEmpty();
@@ -137,10 +138,13 @@ public class TorrentClientSectionConfig extends ConfigurationSection {
 
 	private String getRPCFieldText(){
 		String prefix = "";
-		if(!rpcServerField.getText().startsWith("//")){
+		if(rpcServerField.getText().trim().isEmpty()){
+			return rpcServerField.getText().trim();
+		}
+		if(!rpcServerField.getText().trim().startsWith("//")){
 			prefix = "//";
 		}
-		return prefix + rpcServerField.getText();
+		return prefix + rpcServerField.getText().trim();
 	}
 	
 	private void setRPCFieldText(String rpcServer){

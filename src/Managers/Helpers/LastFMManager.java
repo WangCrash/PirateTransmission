@@ -266,4 +266,9 @@ public class LastFMManager extends HelperManager {
 			System.out.println(disco.getCanciones()[i]);
 		}
 	}
+
+	@Override
+	public boolean isStared() {
+		return isLogged();
+	}
 }

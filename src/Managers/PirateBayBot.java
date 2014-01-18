@@ -34,7 +34,7 @@ public class PirateBayBot extends Manager{
 	
 	private PirateBayBot(){
 		initialized = false;
-		urlBase = "thepiratebay.org";
+		urlBase = "//thepiratebay.org";
 	}
 	
 	public static PirateBayBot getInstance(){
@@ -52,6 +52,7 @@ public class PirateBayBot extends Manager{
 		URL url;
 		try {
 			url =  new URL("http:" + urlBase);
+			System.out.println("PIRATE BAY URL: " + url);
 		} catch (MalformedURLException e) {
 			initialized = false;
 			return initialized;
@@ -213,4 +214,9 @@ public class PirateBayBot extends Manager{
         System.out.println("Resultados: " + count);
         return Arrays.copyOf(lista.toArray(), lista.toArray().length, ArchivoTorrent[].class);
     }
+
+	@Override
+	public boolean isStared() {
+		return initialized;
+	}
 }

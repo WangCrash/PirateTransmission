@@ -63,7 +63,9 @@ public class TorrentCell extends JPanel {
 		addTorrentButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(archivoTorrent != null){
-					if(ApplicationConfiguration.getInstance().getDefaultTorrentClient().addTorrent(archivoTorrent)){
+					if(!ApplicationConfiguration.getInstance().getDefaultTorrentClient().isStared()){
+						new UtilTools().showWarningDialog(mainFrame, "Error", "No hay ningún cliente Torrent configurado");
+					}else if(ApplicationConfiguration.getInstance().getDefaultTorrentClient().addTorrent(archivoTorrent)){
 						new UtilTools().showInfoOKDialog(mainFrame, "", "Torrent añadido");
 					}else{
 						new UtilTools().showWarningDialog(mainFrame, "", "No se ha podido añadir el torrent");

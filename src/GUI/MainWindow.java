@@ -98,7 +98,7 @@ public class MainWindow extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MainWindow.class.getResource("/images/Transmission-icon.png")));
 		setTitle("Pirate Transmission");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 957, 599);
+		setBounds(100, 100, 934, 599);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -120,19 +120,6 @@ public class MainWindow extends JFrame {
 		piratebayPanel = new JPanel();
 		
 		JPanel helperPanel = new JPanel();
-		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addComponent(piratebayPanel, GroupLayout.PREFERRED_SIZE, 440, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(helperPanel, GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE))
-		);
-		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addComponent(piratebayPanel, GroupLayout.DEFAULT_SIZE, 530, Short.MAX_VALUE)
-				.addComponent(helperPanel, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-		);
 		
 		helperRecommendations = new JPanel();
 		
@@ -159,6 +146,19 @@ public class MainWindow extends JFrame {
 					.addComponent(helperResults, GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE))
 		);
 		helperPanel.setLayout(gl_helperPanel);
+		GroupLayout gl_contentPane = new GroupLayout(contentPane);
+		gl_contentPane.setHorizontalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addComponent(piratebayPanel, GroupLayout.PREFERRED_SIZE, 440, GroupLayout.PREFERRED_SIZE)
+					.addGap(6)
+					.addComponent(helperPanel, GroupLayout.PREFERRED_SIZE, 481, GroupLayout.PREFERRED_SIZE))
+		);
+		gl_contentPane.setVerticalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addComponent(piratebayPanel, GroupLayout.PREFERRED_SIZE, 540, GroupLayout.PREFERRED_SIZE)
+				.addComponent(helperPanel, GroupLayout.PREFERRED_SIZE, 540, GroupLayout.PREFERRED_SIZE)
+		);
 		contentPane.setLayout(gl_contentPane);
 		includeSections();
 	}

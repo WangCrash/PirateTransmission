@@ -94,10 +94,22 @@ public class ConfigView extends JFrame {
 		
 		UtilTools utils = new UtilTools();
 		Map<String, String> config = utils.getConfiguration();
-		SimpleSectionConfig filmAffinitySection = new SimpleSectionConfig(config.get(FilmAffinityBot.FILMAFFINITY_USER_AUTH_CONFIG_KEY), config.get(FilmAffinityBot.FILMAFFINITY_PASSWORD_AUTH_CONFIG_KEY));
+		String filmAffinityUser = "";
+		String filmAffinityPassword = "";
+		if(config != null){
+			filmAffinityUser = config.get(FilmAffinityBot.FILMAFFINITY_USER_AUTH_CONFIG_KEY);
+			filmAffinityPassword = config.get(FilmAffinityBot.FILMAFFINITY_PASSWORD_AUTH_CONFIG_KEY);
+		}
+		SimpleSectionConfig filmAffinitySection = new SimpleSectionConfig(filmAffinityUser, filmAffinityPassword);
 		filmAffinitySection.setManager(FilmAffinityBot.getInstance());
 		
-		SimpleSectionConfig lastFMSection = new SimpleSectionConfig(config.get(LastFMManager.LASTFM_USER_AUTH_CONFIG_KEY), config.get(LastFMManager.LASTFM_PASSWORD_AUTH_CONFIG_KEY));
+		String lastFMUser = "";
+		String lastFMPassword = "";
+		if(config != null){
+			lastFMUser = config.get(LastFMManager.LASTFM_USER_AUTH_CONFIG_KEY);
+			lastFMPassword = config.get(LastFMManager.LASTFM_PASSWORD_AUTH_CONFIG_KEY);
+		}
+		SimpleSectionConfig lastFMSection = new SimpleSectionConfig(lastFMUser, lastFMPassword);
 		lastFMSection.setManager(LastFMManager.getInstance());
 		
 		sectionsPane.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, Color.DARK_GRAY, null, null, null));
@@ -215,13 +227,20 @@ public class ConfigView extends JFrame {
 		}
 		tools.setConfiguration(configProperties);
 		//reiniciar managers cuya configuración haya cambiado
+		String message = "";
 		for (int j = 0; j < needsToReboot.length; j++) {
-			if(!needsToReboot[j])
+			System.out.print(sectionsPane.getTitleAt(j) + " " + needsToReboot[j]);
+			if(!needsToReboot[j]){
 				continue;
+			}
 			if(!sections[j].getManager().initManager()){
-				tools.showWarningDialog(parentFrame, "Error", "No se pudo conectar con " + sectionsPane.getTitleAt(j));
+				message += "\t" + sectionsPane.getTitleAt(j) + "\n";
 			}
 		}
-		close();
+		if(!message.isEmpty()){
+			tools.showWarningDialog(parentFrame, "Error", "No se ha podido conectar con:\n" + message);
+		}else{
+			close();
+		}
 	}
 }

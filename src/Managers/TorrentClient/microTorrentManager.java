@@ -62,7 +62,7 @@ public class microTorrentManager extends TorrentClient{
 			return;
 		}
 		String server = configProperties.get(MICROTORRENT_RPC_SERVER_CONFIG_KEY);
-		if(server != null){
+		if(server != null && !server.isEmpty()){
 			urlBase = server;
 			if(!server.contains("gui")){
 				if(!server.endsWith("/")){
@@ -227,6 +227,11 @@ public class microTorrentManager extends TorrentClient{
 	@Override
 	public String getPasswordConfigKey() {
 		return MICROTORRENT_PASSWORD_AUTH_CONFIG_KEY;
+	}
+
+	@Override
+	public boolean isStared() {
+		return logged;
 	}
 }
 

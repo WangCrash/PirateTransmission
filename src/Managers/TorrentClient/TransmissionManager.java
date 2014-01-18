@@ -61,6 +61,8 @@ public class TransmissionManager extends TorrentClient{
 		try {
 			//String[] response = ConnectionManager.getAuthorization(loginUrl);
 			Map<String, String> httpAuth = new HashMap<String, String>();
+			httpAuth.put(SimpleConnectionManager.TOKEN_NAME_BASIC_AUTH_KEY, "X-Transmission-Session-Id");
+	        httpAuth.put(SimpleConnectionManager.TOKEN_ID_BASIC_AUTH_KEY, "");
 			httpAuth.put(SimpleConnectionManager.USER_BASIC_AUTH_KEY, user);
 			httpAuth.put(SimpleConnectionManager.PASSWORD_BASIC_AUTH_KEY, password);
 			//Map<String, String> response = ConnectionManager.sendRequest(loginUrl, null, httpAuth, ConnectionManager.METHOD_GET, true, false, false);
@@ -211,7 +213,7 @@ public class TransmissionManager extends TorrentClient{
 			return;
 		}
 		String server = configProperties.get(TRANSMISSION_RPC_SERVER_CONFIG_KEY);
-		if(server != null){
+		if(server != null && !server.isEmpty()){
 			urlBase = server;
 			if(!server.contains("transmission/rpc")){
 				urlBase += "/transmission/rpc";
@@ -219,7 +221,7 @@ public class TransmissionManager extends TorrentClient{
 		}
 		
 		String transmissionUser = configProperties.get(TRANSMISSION_USER_AUTH_CONFIG_KEY);		
-		if(user != null){
+		if(transmissionUser != null){
 			user = transmissionUser;
 		}else{
 			System.out.println("Transmmission user not set.");
@@ -258,5 +260,10 @@ public class TransmissionManager extends TorrentClient{
 	@Override
 	public String getPasswordConfigKey() {
 		return TRANSMISSION_PASSWORD_AUTH_CONFIG_KEY;
+	}
+
+	@Override
+	public boolean isStared() {
+		return logged;
 	}
 }

@@ -255,4 +255,9 @@ public class FilmAffinityBot extends HelperManager{
 	public String getPasswordConfigKey() {
 		return FILMAFFINITY_PASSWORD_AUTH_CONFIG_KEY;
 	}
+
+	@Override
+	public boolean isStared() {
+		return isLogged();
+	}
 }

@@ -7,6 +7,7 @@ import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -74,6 +75,7 @@ public class UtilTools {
 	public Map<String, String> getConfiguration(){
 		String config = this.readConfigFile();
 		if(config == null){
+			createFileConfig();
 			return null;
 		}	
 		Map<String, String> properties = new HashMap<String, String>();
@@ -88,6 +90,16 @@ public class UtilTools {
 		return properties;
 	}
 	
+	private void createFileConfig() {
+		File config = new File("config");
+		try {
+			config.createNewFile();
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+			return;
+		}
+	}
+
 	public boolean setConfiguration(Map<String, String> properties){
 		String config = "";
 		for (Map.Entry<String, String> entry : properties.entrySet())

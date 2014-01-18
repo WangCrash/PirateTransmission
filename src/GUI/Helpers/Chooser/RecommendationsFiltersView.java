@@ -3,6 +3,7 @@ package GUI.Helpers.Chooser;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 
+import javax.naming.LimitExceededException;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -253,23 +254,27 @@ public class RecommendationsFiltersView extends JDialog {
 	private void setUpFilters(){
 		Map<String, String> filters = parentView.getFilters();
 		
-		Integer genre = findValue(genreCorrespondency, genreComboModel[genreComboBox.getSelectedIndex()]);
+		int selectedGenre = (genreComboBox.getSelectedIndex() != -1)?genreComboBox.getSelectedIndex():0;
+		Integer genre = findValue(genreCorrespondency, genreComboModel[selectedGenre]);
 		if(genre == null){
 			genre = FilmAffinityBot.FILMAFFINITY_GENRE_KEY_ALL;
 		}
 		filters.put(FilmAffinityBot.FILMAFFINITY_FILTERS_GENRE_KEY, genre.toString());
 		
-		String decade = decadeComboModel[decadeComboBox.getSelectedIndex()];
+		int selectedDecade = (decadeComboBox.getSelectedIndex() != -1)?decadeComboBox.getSelectedIndex():0;
+		String decade = decadeComboModel[selectedDecade];
 		if(!decade.isEmpty()){
 			filters.put(FilmAffinityBot.FILMAFFINITY_FILTERS_FROM_YEAR_KEY, decade);
 		}
 		
-		String to = toComboModel[toComboBox.getSelectedIndex()];
+		int selectedTo = (toComboBox.getSelectedIndex() != -1)?toComboBox.getSelectedIndex():0;
+		String to = toComboModel[selectedTo];
 		if(!to.isEmpty()){
 			filters.put(FilmAffinityBot.FILMAFFINITY_FILTERS_TO_YEAR_KEY, to);
 		}
 		
-		String limit = resultsLimitComboModel[resultsLimitComboBox.getSelectedIndex()];
+		int selectedLimit = (resultsLimitComboBox.getSelectedIndex() != -1)?resultsLimitComboBox.getSelectedIndex():0;
+		String limit = resultsLimitComboModel[selectedLimit];
 		if(!limit.isEmpty()){
 			filters.put(FilmAffinityBot.FILMAFFINITY_FILTERS_LIMIT_KEY, limit);
 		}
