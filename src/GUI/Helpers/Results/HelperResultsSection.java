@@ -1,18 +1,16 @@
 package GUI.Helpers.Results;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 
 import java.awt.Color;
 
+import GUI.MainWindow;
 import GUI.Helpers.Results.Container.MultipartScrollableResultsContainer;
 import GUI.Helpers.Results.Container.ResultsContainer;
 import GUI.Helpers.Results.Container.SimpleScrollableResultsContainer;
-import GUI.PirateBay.PiratebaySection;
 import Managers.Helpers.FilmAffinityBot;
-import Managers.Helpers.HelperManager;
 import Model.FichaPelicula;
 import Model.HelperItem;
 
@@ -24,8 +22,7 @@ public class HelperResultsSection extends JPanel {
 	
 	private static final long serialVersionUID = -263118633110893005L;
 	
-	private JFrame mainFrame;
-	private PiratebaySection piratebaySection;
+	private MainWindow mainFrame;
 	private JPanel rootPanel;
 	private ResultsContainer resultsContainer;
 	private HelperItem[] items;
@@ -33,10 +30,9 @@ public class HelperResultsSection extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public HelperResultsSection(JFrame rootFrame, PiratebaySection piratebaySection) {
+	public HelperResultsSection(MainWindow rootFrame) {
 		setBackground(new Color(230, 230, 250));
 		this.mainFrame = rootFrame;
-		this.piratebaySection = piratebaySection;
 		
 		setBorder(new LineBorder(new Color(64, 64, 64)));		
 		rootPanel = new JPanel();
@@ -56,7 +52,7 @@ public class HelperResultsSection extends JPanel {
 	}
 
 	public void searchTorrent(String search){
-		piratebaySection.searchTorrent(search);
+		this.mainFrame.searchTorrent(search);
 	}
 	
 	public void showResults(HelperItem[] items){

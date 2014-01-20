@@ -13,7 +13,12 @@ import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 
 import GUI.Helpers.Results.HelperResultsSection;
+import GUI.Helpers.Results.Items.HelperResultItem;
 import GUI.Helpers.Results.Items.Films.FilmCell;
+import GUI.Helpers.Results.Items.Films.FilmDetailsView;
+import Model.Artista;
+import Model.Disco;
+import Model.FichaPelicula;
 import Model.HelperItem;
 
 import java.awt.GridLayout;
@@ -67,9 +72,22 @@ public class SimpleScrollableResultsContainer extends ResultsContainer{
 			return;
 		}
 		for (int i = 0; i < items.length; i++) {
-			FilmCell cell = new FilmCell(mainFrame, parentView, items[i], true);
-			resultsPanel.add(cell);
-			System.out.println("celda añadida");
+			HelperResultItem cell;
+			if(items[i].getClass() == FichaPelicula.class){
+				cell = new FilmCell(mainFrame, parentView, items[i], true);
+			}else{
+				if(items[i].getClass() == Artista.class){
+					cell = null;//new ArtistCell()
+				}else if(items[i].getClass() == Disco.class){
+					cell = null;//new AlbumCell()
+				}else{
+					cell = null;
+				}
+			}
+			if(cell != null){
+				resultsPanel.add(cell);
+				System.out.println("celda añadida");
+			}
 		}
 		resultsPanel.revalidate();
 		SwingUtilities.invokeLater(new Runnable(){

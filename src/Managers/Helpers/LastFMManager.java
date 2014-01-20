@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import de.umass.lastfm.Library;
 import de.umass.lastfm.PaginatedResult;
 import de.umass.lastfm.Result;
 import de.umass.lastfm.Session;
+import de.umass.lastfm.Tag;
 import de.umass.lastfm.Track;
 import de.umass.lastfm.User;
 
@@ -162,17 +164,98 @@ public class LastFMManager extends HelperManager {
 	public HelperItem[] searchItem(String search, int option) {
 		switch (option) {
 		case LASTFM_ALL_SEARCH_OPTION:
-			
-			break;
+			return searchAll(search);
 		case LASTFM_ARTIST_SEARCH_OPTION:
-			
-			break;
+			return searchArtist(search);
 		case LASTFM_ALBUM_SEARCH_OPTION:
-			break;
+			return searchAlbum(search);
 		default:
-			break;
+			return null;
 		}
-		return null;
+	}
+
+	private HelperItem[] searchAlbum(String search) {
+		Collection<Album> albumResults = Album.search(search, apiKey);
+		Disco[] results = new Disco[albumResults.size()];
+		int i = 0;
+		for (Album album : albumResults) {
+			if(album == null){
+				continue;
+			}
+			results[i] = new Disco();
+			results[i].setMbid(album.getMbid());
+			results[i].setNombre(album.getName());
+			results[i].setImageURL(album.getImageURL(ImageSize.MEDIUM));
+			i++;
+		}
+		return results;
+	}
+
+	private HelperItem[] searchArtist(String search) {
+		Collection<Artist> artistResults = Artist.search(search, apiKey);
+		Artista[] results = new Artista[artistResults.size()];
+		int i = 0;
+		for (Artist artist : artistResults) {
+			if(artist == null){
+				continue;
+			}
+			results[i] = new Artista();
+			results[i].setMbid(artist.getMbid());
+			results[i].setNombre(artist.getName());
+			results[i].setImageURL(artist.getImageURL(ImageSize.MEDIUM));
+			i++;
+		}
+		return results;
+	}
+
+	private HelperItem[] searchAll(String search) {
+		HelperItem[] artistResults = searchArtist(search);
+		HelperItem[] albumsResults = searchAlbum(search);
+		HelperItem[] total = new HelperItem[artistResults.length + albumsResults.length];
+		System.arraycopy(artistResults, 0, total, 0, artistResults.length);
+		System.arraycopy(albumsResults, 0, total, artistResults.length, albumsResults.length);
+		return total;
+	}
+	
+	public Artista getSimilarArtists(Artista artista){
+		Collection<Artist> similarArtists = Artist.getSimilar(artista.getMbid(), 5, apiKey);
+		Artista[] similarArtistsArray = new Artista[similarArtists.size()];
+		int i = 0;
+		for (Artist artist : similarArtists) {
+			if(artist == null){
+				continue;
+			}
+			similarArtistsArray[i] = new Artista();
+			similarArtistsArray[i].setMbid(artist.getMbid());
+			similarArtistsArray[i].setNombre(artist.getName());
+			i++;
+		}
+		artista.setSimilares(similarArtistsArray);
+		return artista;
+	}
+	
+	public Artista getArtistTags(Artista artista){
+		Collection<Tag> tags = Artist.getTopTags(artista.getNombre(), apiKey);
+		String[] tagsNames = new String[tags.size()];
+		int i = 0;
+		for (Tag tag : tags) {
+			tagsNames[i] = tag.getName();
+			i++;
+		}
+		artista.setTags(tagsNames);
+		return artista;
+	}
+	
+	public Disco getAlbumTags(Disco disco){
+		Collection<Tag> tags = Album.getTopTags(disco.getArtista(), disco.getNombre(), apiKey);
+		String[] tagsNames = new String[tags.size()];
+		int i = 0;
+		for (Tag tag : tags) {
+			tagsNames[i] = tag.getName();
+			i++;
+		}
+		disco.setTags(tagsNames);
+		return disco;
 	}
 
 	@Override
@@ -246,29 +329,23 @@ public class LastFMManager extends HelperManager {
 	public String getPasswordConfigKey() {
 		return LASTFM_PASSWORD_AUTH_CONFIG_KEY;
 	}
-	
-	public static void main(String[] args){
-		LastFMManager.getInstance().initManager();
-		HelperItem[] results = LastFMManager.getInstance().getRecommendations();
-		for (int i = 0; i < results.length; i++) {
-			System.out.println(results[i]);
-		}
-		Artista artista = (Artista)results[0];
-		System.out.println("Discos de " + artista.getNombre());
-		artista = LastFMManager.getInstance().getArtistTopAlbums(artista);
-		for (int i = 0; i < artista.getDiscografia().length; i++) {
-			System.out.println(artista.getDiscografia()[i]);
-		}
-		Disco disco = (Disco)artista.getDiscografia()[0];
-		System.out.println("Canciones del " + disco.getNombre() + "de " + artista.getNombre());
-		disco = LastFMManager.getInstance().getAlbumTracks(disco);
-		for (int i = 0; i < disco.getCanciones().length; i++) {
-			System.out.println(disco.getCanciones()[i]);
-		}
-	}
 
 	@Override
 	public boolean isStared() {
 		return isLogged();
+	}
+	
+	public static void main(String[] args){
+		LastFMManager.getInstance().initManager();
+		HelperItem[] results = LastFMManager.getInstance().searchItem("Los enemigos", LASTFM_ALL_SEARCH_OPTION);
+		for (int i = 0; i < results.length; i++) {
+			System.out.println(results[i]);
+		}
+		System.out.println("Tags de " + ((Artista)results[0]).getNombre() + ":");
+		results[0] = LastFMManager.getInstance().getArtistTags((Artista)results[0]);
+		String[] tags = ((Artista)results[0]).getTags();
+		for (int i = 0; i < tags.length; i++) {
+			System.out.println(tags[i]);
+		}
 	}
 }

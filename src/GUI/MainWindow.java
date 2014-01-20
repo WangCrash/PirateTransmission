@@ -173,7 +173,7 @@ public class MainWindow extends JFrame {
 		helperSearcherSection = new HelperSearcherSection(this);
 		helperSearcher.add(helperSearcherSection);
 		
-		helperResultsSection = new HelperResultsSection(this, pirateBaySection);
+		helperResultsSection = new HelperResultsSection(this);
 		helperResults.add(helperResultsSection);
 		
 		helperChooserSection.showRecommendations();

@@ -10,6 +10,7 @@ public class Disco extends HelperItem {
 	private int año;
 	private URL imageURL;
 	private String[] canciones;
+	private String[] tags;
 	
 	public String getArtista() {
 		return artista;
@@ -52,8 +53,15 @@ public class Disco extends HelperItem {
 	public void setMbid(String mbid) {
 		this.mbid = mbid;
 	}
+	public String[] getTags() {
+		return tags;
+	}
+	public void setTags(String[] tags) {
+		this.tags = tags;
+	}
+	
 	@Override
 	public String toString(){
-		return this.getNombre();
+		return "Disco: " + this.getNombre();
 	}
 }

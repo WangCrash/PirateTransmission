@@ -8,6 +8,8 @@ public class Artista extends HelperItem {
 	private String nombre;
 	private Disco[] discografia;
 	private URL imageURL;
+	private Artista[] similares;
+	private String[] tags;
 	
 	public void setNombre(String nombre){
 		this.nombre = nombre;
@@ -20,11 +22,6 @@ public class Artista extends HelperItem {
 	}
 	public void setDiscografia(Disco[] discografia) {
 		this.discografia = discografia;
-	}
-	
-	@Override
-	public String toString(){
-		return getNombre();
 	}
 	public URL getImageURL() {
 		return imageURL;
@@ -42,5 +39,22 @@ public class Artista extends HelperItem {
 	}
 	public void setMbid(String mbid) {
 		this.mbid = mbid;
+	}
+	public Artista[] getSimilares() {
+		return similares;
+	}
+	public void setSimilares(Artista[] similares) {
+		this.similares = similares;
+	}
+	public String[] getTags() {
+		return tags;
+	}
+	public void setTags(String[] tags) {
+		this.tags = tags;
+	}
+	
+	@Override
+	public String toString(){
+		return "Artista: " + getNombre();
 	}
 }

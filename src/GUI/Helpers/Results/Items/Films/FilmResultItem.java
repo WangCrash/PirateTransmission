@@ -9,6 +9,7 @@ import Model.FichaPelicula;
 import Model.HelperItem;
 import Utils.UtilTools;
 
+@SuppressWarnings("serial")
 public abstract class FilmResultItem extends HelperResultItem{
 	private FichaPelicula film;
 	
