@@ -2,6 +2,7 @@ package Model;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 
 public class Artista extends HelperItem {
 	private String mbid;
@@ -10,6 +11,7 @@ public class Artista extends HelperItem {
 	private URL imageURL;
 	private Artista[] similares;
 	private String[] tags;
+	private String bio;
 	
 	public void setNombre(String nombre){
 		this.nombre = nombre;
@@ -49,10 +51,19 @@ public class Artista extends HelperItem {
 	public String[] getTags() {
 		return tags;
 	}
+	public String[] getNFirstTags(int n){
+		return Arrays.copyOf(this.getTags(), n);
+	}
 	public void setTags(String[] tags) {
 		this.tags = tags;
 	}
-	
+	public String getBio() {
+		return bio;
+	}
+	public void setBio(String bio) {
+		this.bio = bio;
+	}
+
 	@Override
 	public String toString(){
 		return "Artista: " + getNombre();

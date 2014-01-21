@@ -15,7 +15,8 @@ import javax.swing.border.BevelBorder;
 import GUI.Helpers.Results.HelperResultsSection;
 import GUI.Helpers.Results.Items.HelperResultItem;
 import GUI.Helpers.Results.Items.Films.FilmCell;
-import GUI.Helpers.Results.Items.Films.FilmDetailsView;
+import GUI.Helpers.Results.Items.Music.AlbumCell;
+import GUI.Helpers.Results.Items.Music.ArtistCell;
 import Model.Artista;
 import Model.Disco;
 import Model.FichaPelicula;
@@ -77,9 +78,9 @@ public class SimpleScrollableResultsContainer extends ResultsContainer{
 				cell = new FilmCell(mainFrame, parentView, items[i], true);
 			}else{
 				if(items[i].getClass() == Artista.class){
-					cell = null;//new ArtistCell()
+					cell = new ArtistCell(mainFrame, parentView, items[i]);
 				}else if(items[i].getClass() == Disco.class){
-					cell = null;//new AlbumCell()
+					cell = new AlbumCell(mainFrame, parentView, items[i]);
 				}else{
 					cell = null;
 				}

@@ -2,6 +2,9 @@ package Model;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 public class Disco extends HelperItem {
 	private String mbid;
@@ -11,6 +14,7 @@ public class Disco extends HelperItem {
 	private URL imageURL;
 	private String[] canciones;
 	private String[] tags;
+	private String wikiText;
 	
 	public String getArtista() {
 		return artista;
@@ -56,8 +60,17 @@ public class Disco extends HelperItem {
 	public String[] getTags() {
 		return tags;
 	}
+	public String[] getNFirstTags(int n){
+		return Arrays.copyOf(this.getTags(), n);
+	}
 	public void setTags(String[] tags) {
 		this.tags = tags;
+	}
+	public String getWikiText() {
+		return wikiText;
+	}
+	public void setWikiText(String wikiText) {
+		this.wikiText = wikiText;
 	}
 	
 	@Override

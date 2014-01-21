@@ -246,6 +246,12 @@ public class LastFMManager extends HelperManager {
 		return artista;
 	}
 	
+	public Artista getArtistBio(Artista artista){
+		Artist artist = Artist.getInfo(artista.getMbid(), user, apiKey);
+		artista.setBio(artist.getWikiText());
+		return artista;
+	}
+	
 	public Disco getAlbumTags(Disco disco){
 		Collection<Tag> tags = Album.getTopTags(disco.getArtista(), disco.getNombre(), apiKey);
 		String[] tagsNames = new String[tags.size()];
@@ -255,6 +261,12 @@ public class LastFMManager extends HelperManager {
 			i++;
 		}
 		disco.setTags(tagsNames);
+		return disco;
+	}
+	
+	public Disco getAlbumWikiText(Disco disco){
+		Album album = Album.getInfo(disco.getArtista(), disco.getMbid(), user, apiKey);
+		disco.setWikiText(album.getWikiText());
 		return disco;
 	}
 
@@ -343,9 +355,12 @@ public class LastFMManager extends HelperManager {
 		}
 		System.out.println("Tags de " + ((Artista)results[0]).getNombre() + ":");
 		results[0] = LastFMManager.getInstance().getArtistTags((Artista)results[0]);
-		String[] tags = ((Artista)results[0]).getTags();
+		String[] tags = ((Artista)results[0]).getNFirstTags(5);
 		for (int i = 0; i < tags.length; i++) {
 			System.out.println(tags[i]);
 		}
+		Artista artista = (Artista)results[0];
+		artista = LastFMManager.getInstance().getArtistBio(artista);
+		System.out.println("Biografía de " + artista.getNombre() + ":\n" + artista.getBio());		
 	}
 }

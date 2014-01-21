@@ -15,7 +15,12 @@ import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 
 import GUI.Helpers.Results.HelperResultsSection;
+import GUI.Helpers.Results.Items.HelperResultItem;
 import GUI.Helpers.Results.Items.Films.FilmDetailsView;
+import GUI.Helpers.Results.Items.Music.AlbumDetailsView;
+import GUI.Helpers.Results.Items.Music.ArtistDetailsView;
+import Model.Artista;
+import Model.Disco;
 import Model.FichaPelicula;
 import Model.HelperItem;
 
@@ -32,7 +37,7 @@ public class MultipartScrollableResultsContainer extends ResultsContainer{
 	
 	private HelperResultsSection parentView;
 	private HelperItem helperItem;
-	private FilmDetailsView filmDetailsPanel;
+	private HelperResultItem itemDetailsPanel;
 	
 	private JButton searchTorrentButton;
 	private JPanel resultsPanel;
@@ -66,7 +71,7 @@ public class MultipartScrollableResultsContainer extends ResultsContainer{
 		searchTorrentButton = new JButton("Buscar Torrent");
 		searchTorrentButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				filmDetailsPanel.searchItemTorrent();
+				itemDetailsPanel.searchItemTorrent();
 			}
 		});
 		GroupLayout gl_staticPane = new GroupLayout(staticPane);
@@ -119,9 +124,15 @@ public class MultipartScrollableResultsContainer extends ResultsContainer{
 	@Override
 	protected void showResults() {
 		System.out.println("Showing results");
-		filmDetailsPanel = new FilmDetailsView(mainFrame, parentView, helperItem);
-		filmDetailsPanel.setBackground(new Color(204, 255, 153));
-		resultsPanel.add(filmDetailsPanel);
+		if(this.helperItem.getClass() == FichaPelicula.class){
+			itemDetailsPanel = new FilmDetailsView(mainFrame, parentView, helperItem);
+		}else if(this.helperItem.getClass() == Artista.class){
+			itemDetailsPanel = new ArtistDetailsView(mainFrame, parentView, helperItem);
+		}else if(this.helperItem.getClass() == Disco.class){
+			itemDetailsPanel = new AlbumDetailsView(mainFrame, parentView, helperItem);
+		}
+		itemDetailsPanel.setBackground(new Color(204, 255, 153));
+		resultsPanel.add(itemDetailsPanel);
 		//resultsPanel.add(new JButton("ADFSASDFASDFASDF"));
 		resultsPanel.revalidate();
 		SwingUtilities.invokeLater(new Runnable(){

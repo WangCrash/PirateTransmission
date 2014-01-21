@@ -4,12 +4,15 @@ import javax.swing.JFrame;
 
 import GUI.Helpers.Results.HelperResultsSection;
 import GUI.Helpers.Results.Items.HelperResultItem;
+import Managers.Helpers.FilmAffinityBot;
+import Model.FichaPelicula;
 import Model.HelperItem;
+import Utils.UtilTools;
 
 @SuppressWarnings("serial")
-public abstract class MusicItemCell extends HelperResultItem{
+public abstract class MusicResultItem extends HelperResultItem{
 
-	public MusicItemCell(JFrame mainFrame, HelperResultsSection parentView,	HelperItem helperItem) {
+	public MusicResultItem(JFrame mainFrame, HelperResultsSection parentView,	HelperItem helperItem) {
 		super(mainFrame, parentView, helperItem);
 	}
 	
