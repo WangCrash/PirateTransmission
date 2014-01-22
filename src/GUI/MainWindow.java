@@ -20,6 +20,8 @@ import GUI.PirateBay.PiratebaySection;
 import Managers.ApplicationConfiguration;
 import Managers.PirateBayBot;
 import Managers.Helpers.FilmAffinityBot;
+import Managers.Helpers.HelperManager;
+import Managers.Helpers.LastFMManager;
 import Utils.UtilTools;
 
 import java.awt.Toolkit;
@@ -32,6 +34,7 @@ public class MainWindow extends JFrame {
 
 	private static final long serialVersionUID = -6836764944504173037L;
 	private static volatile MainWindow instance = null;
+	
 	private JPanel contentPane;
 	private JPanel piratebayPanel;
 	private JPanel helperRecommendations;
@@ -59,6 +62,7 @@ public class MainWindow extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					new PreApp().initializingApplication();
 					MainWindow frame = MainWindow.getInstance();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -79,22 +83,13 @@ public class MainWindow extends JFrame {
 				if(FilmAffinityBot.getInstance().isLogged()){
 					FilmAffinityBot.getInstance().terminateManager();
 				}
+				if(LastFMManager.getInstance().isLogged()){
+					LastFMManager.getInstance().logout();
+				}
 			}
 		});
-		
-		ApplicationConfiguration.getInstance().initManager();
+	
 		setIconImage(Toolkit.getDefaultToolkit().getImage(PirateTransmissionDemo.class.getResource("/images/Transmission-icon.png")));
-		//sustituir por un objeto helpermanager que apunte al helper guardado en la configuración
-		if(!FilmAffinityBot.getInstance().initManager()){
-			new UtilTools().showWarningDialog(this, "Error", "No se ha podido iniciar sesión en " + FilmAffinityBot.getInstance().getHelperName());
-		}
-		if(!ApplicationConfiguration.getInstance().getDefaultTorrentClient().initManager()){
-			String clientName = ApplicationConfiguration.getInstance().getDefaultTorrentClient().getTorrentClientName();
-			new UtilTools().showWarningDialog(this, "Error", "No se ha podido conectar con " + clientName);
-		}
-		if(!PirateBayBot.getInstance().initManager()){
-			new UtilTools().showWarningDialog(this, "Error", "No se ha podido conectar con PirateBay. Es posible que haya cambiado la dirección de su servidor");
-		}
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MainWindow.class.getResource("/images/Transmission-icon.png")));
 		setTitle("Pirate Transmission");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -190,5 +185,11 @@ public class MainWindow extends JFrame {
 	
 	public HelperResultsSection getHelperResultsSection(){
 		return this.helperResultsSection;
+	}
+	
+	public void HelperManagerWasChanged(HelperManager helper){
+		ApplicationConfiguration.getInstance().setCurrentHelperManager(helper);
+		this.helperSearcherSection.drawOptionsByHelper();
+		helperChooserSection.showRecommendations();
 	}
 }

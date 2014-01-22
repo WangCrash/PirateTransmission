@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import de.umass.lastfm.Album;
 import de.umass.lastfm.Artist;
@@ -25,7 +24,6 @@ import de.umass.lastfm.User;
 
 import Codification.Base64;
 import Connection.ConnectionManager;
-import Model.ArchivoTorrent;
 import Model.Artista;
 import Model.Disco;
 import Model.HelperItem;
@@ -68,8 +66,15 @@ public class LastFMManager extends HelperManager {
 
 	@Override
 	public boolean isLogged() {
-		// TODO Auto-generated method stub
-		return false;
+		return (session != null);
+	}
+	
+	public boolean logout(){
+		if(session == null){
+			return true;
+		}
+		session = null;
+		return true;
 	}
 	
 	public HelperItem[] getRecommendations() {
@@ -160,6 +165,25 @@ public class LastFMManager extends HelperManager {
 		return Library.addAlbum(album.getArtista(), album.getNombre(), session).isSuccessful();
 	}
 	
+	public boolean removeFromLibrary(HelperItem item){
+		if(item.getClass() == Artista.class){
+			return removeArtist((Artista)item);
+		}else if(item.getClass() == Disco.class){
+			return removeAlbum((Disco)item);
+		}
+		return false;
+	}
+	
+	public boolean removeArtist(Artista artista){
+		Result result = Library.removeArtist(artista.getNombre(), session);
+		return result.isSuccessful();
+	}
+	
+	public boolean removeAlbum(Disco disco){
+		Result result = Library.removeAlbum(disco.getArtista(), disco.getNombre(), session);
+		return result.isSuccessful();
+	}
+	
 	@Override
 	public HelperItem[] searchItem(String search, int option) {
 		switch (option) {
@@ -175,6 +199,7 @@ public class LastFMManager extends HelperManager {
 	}
 
 	private HelperItem[] searchAlbum(String search) {
+		Collection<Album> libraryAlbums = Library.getAllAlbums(user, apiKey);
 		Collection<Album> albumResults = Album.search(search, apiKey);
 		Disco[] results = new Disco[albumResults.size()];
 		int i = 0;
@@ -186,12 +211,14 @@ public class LastFMManager extends HelperManager {
 			results[i].setMbid(album.getMbid());
 			results[i].setNombre(album.getName());
 			results[i].setImageURL(album.getImageURL(ImageSize.MEDIUM));
+			results[i].setRated(isAlbumInLibrary(album, libraryAlbums));
 			i++;
 		}
 		return results;
 	}
 
 	private HelperItem[] searchArtist(String search) {
+		Collection<Artist> libraryArtists = Library.getAllArtists(user, apiKey);
 		Collection<Artist> artistResults = Artist.search(search, apiKey);
 		Artista[] results = new Artista[artistResults.size()];
 		int i = 0;
@@ -203,6 +230,7 @@ public class LastFMManager extends HelperManager {
 			results[i].setMbid(artist.getMbid());
 			results[i].setNombre(artist.getName());
 			results[i].setImageURL(artist.getImageURL(ImageSize.MEDIUM));
+			results[i].setRated(isArtistInLibrary(artist, libraryArtists));
 			i++;
 		}
 		return results;
@@ -215,6 +243,14 @@ public class LastFMManager extends HelperManager {
 		System.arraycopy(artistResults, 0, total, 0, artistResults.length);
 		System.arraycopy(albumsResults, 0, total, artistResults.length, albumsResults.length);
 		return total;
+	}
+	
+	private boolean isArtistInLibrary(Artist artist, Collection<Artist> libraryArtists){
+		return libraryArtists.contains(artist);
+	}
+	
+	private boolean isAlbumInLibrary(Album album, Collection<Album> libraryAlbums){
+		return libraryAlbums.contains(album);
 	}
 	
 	public Artista getSimilarArtists(Artista artista){
@@ -343,7 +379,7 @@ public class LastFMManager extends HelperManager {
 	}
 
 	@Override
-	public boolean isStared() {
+	public boolean isStarted() {
 		return isLogged();
 	}
 	

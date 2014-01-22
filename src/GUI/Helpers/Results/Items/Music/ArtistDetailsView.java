@@ -38,6 +38,7 @@ public class ArtistDetailsView extends MusicResultItem {
 	private JLabel titleLabel;
 	private JPanel tagsPanel;
 	private JLabel imageLabel;
+	private JButton rateButton;
 
 	public ArtistDetailsView(JFrame mainFrame, HelperResultsSection parentView, HelperItem helperItem) {
 		super(mainFrame, parentView, helperItem);
@@ -69,6 +70,7 @@ public class ArtistDetailsView extends MusicResultItem {
 		discographyScrollPane.setViewportView(discographyList);
 		
 		bioEditorPane = new JEditorPane();
+		bioEditorPane.setContentType("text/html");
 		bioScrollPane.setViewportView(bioEditorPane);
 		
 		JLabel lblNewLabel_1 = new JLabel("G\u00E9neros");
@@ -76,10 +78,16 @@ public class ArtistDetailsView extends MusicResultItem {
 		
 		tagsPanel = new JPanel();
 		
-		JButton rateButton = new JButton("Me gusta");
+		rateButton = new JButton("No me gusta");
+		rateButton.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		rateButton.setText(getArtista().isRated()?rateButton.getText():"Me Gusta");
 		rateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				rateItem();
+				if(getArtista().isRated()){
+					removeItem();
+				}else{
+					rateItem();
+				}
 			}
 		});
 		
@@ -90,15 +98,11 @@ public class ArtistDetailsView extends MusicResultItem {
 		tagsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.TRAILING)
+			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(10)
-					.addComponent(titleLabel, GroupLayout.PREFERRED_SIZE, 396, GroupLayout.PREFERRED_SIZE))
-				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
 					.addGap(23)
 					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addPreferredGap(ComponentPlacement.RELATED, 141, GroupLayout.PREFERRED_SIZE)
 							.addComponent(rateButton)
 							.addGap(134))
 						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
@@ -115,12 +119,14 @@ public class ArtistDetailsView extends MusicResultItem {
 							.addGroup(groupLayout.createSequentialGroup()
 								.addComponent(lblNewLabel)
 								.addGap(49)
-								.addComponent(discographyScrollPane, GroupLayout.PREFERRED_SIZE, 236, GroupLayout.PREFERRED_SIZE))))
-					.addContainerGap(31, Short.MAX_VALUE))
-				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+								.addComponent(discographyScrollPane, GroupLayout.PREFERRED_SIZE, 236, GroupLayout.PREFERRED_SIZE)))))
+				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(143)
-					.addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(143, Short.MAX_VALUE))
+					.addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(titleLabel, GroupLayout.DEFAULT_SIZE, 386, Short.MAX_VALUE)
+					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -185,9 +191,22 @@ public class ArtistDetailsView extends MusicResultItem {
 	@Override
 	public void rateItem() {
 		if(LastFMManager.getInstance().rateItem(getArtista())){
+			getArtista().setRated(true);
+			rateButton.setText("No me Gusta");
 			new UtilTools().showInfoOKDialog(mainFrame, "", "Añadido a tu biblioteca");
 		}else{
 			new UtilTools().showWarningDialog(mainFrame, "Error", "Ha ocurrido un error inesperado");
+		}
+	}
+	
+	@Override
+	public void removeItem(){
+		if(LastFMManager.getInstance().removeArtist(getArtista())){
+			getArtista().setRated(false);
+			rateButton.setText("Me Gusta");
+			new UtilTools().showInfoOKDialog(mainFrame, "", "Artista eliminado");
+		}else{
+			new UtilTools().showWarningDialog(mainFrame, "Error", "No se ha podido eliminar el artista");
 		}
 	}
 
@@ -215,6 +234,7 @@ public class ArtistDetailsView extends MusicResultItem {
 		String[] artistTags = getArtista().getNFirstTags(5);
 		for (int i = 0; i < artistTags.length; i++) {
 			JLabel tag = new JLabel(artistTags[i]);
+			tag.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			tagsPanel.add(tag);
 		}
 	}
@@ -286,8 +306,7 @@ public class ArtistDetailsView extends MusicResultItem {
 				ImageIcon image = new ImageIcon(getArtista().getImageURL());
 				imageLabel.setText("");
 				imageLabel.setBorder(null);
-				System.out.println("Ancho: " + (int)imageLabel.getSize().width + ", Alto:" + (int)imageLabel.getSize().getHeight());
-				imageLabel.setIcon(new UtilTools().getScaledImage(image.getImage(), imageLabel.getWidth(), imageLabel.getHeight()));
+				imageLabel.setIcon(new UtilTools().getScaledImage(image.getImage(), 72, 79));
 				SwingUtilities.invokeLater(new Runnable(){
 					public void run(){
 						revalidate();

@@ -61,7 +61,6 @@ public class SimpleScrollableResultsContainer extends ResultsContainer{
 		resultsPanel.setLayout(new GridLayout(0, 1, 1, 10));
 		setLayout(groupLayout);
 		
-		//testing();
 		showResults();
 	}
 

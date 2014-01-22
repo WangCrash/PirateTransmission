@@ -257,7 +257,7 @@ public class FilmAffinityBot extends HelperManager{
 	}
 
 	@Override
-	public boolean isStared() {
+	public boolean isStarted() {
 		return isLogged();
 	}
 }

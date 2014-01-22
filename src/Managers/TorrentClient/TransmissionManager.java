@@ -263,7 +263,7 @@ public class TransmissionManager extends TorrentClient{
 	}
 
 	@Override
-	public boolean isStared() {
+	public boolean isStarted() {
 		return logged;
 	}
 }

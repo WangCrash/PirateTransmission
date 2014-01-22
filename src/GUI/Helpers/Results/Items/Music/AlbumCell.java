@@ -4,7 +4,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import GUI.Helpers.Results.HelperResultsSection;
-import GUI.Helpers.Results.Container.ResultsContainer;
 import Managers.Helpers.LastFMManager;
 import Model.Disco;
 import Model.HelperItem;
@@ -25,6 +24,7 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+@SuppressWarnings("serial")
 public class AlbumCell extends MusicResultItem {
 	private Disco disco;
 	private JPanel tagsPanel;
@@ -38,9 +38,12 @@ public class AlbumCell extends MusicResultItem {
 
 	public AlbumCell(JFrame mainFrame, HelperResultsSection parentView, HelperItem item) {
 		super(mainFrame, parentView, item);
+		setDisco((Disco)item);
+		
 		setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		
 		searchTorrentButton = new JButton("Buscar Torrent");
+		searchTorrentButton.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		searchTorrentButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				searchItemTorrent();
@@ -48,6 +51,7 @@ public class AlbumCell extends MusicResultItem {
 		});
 		
 		showDetailsButton = new JButton("Ver Detalles");
+		showDetailsButton.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		showDetailsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				showItemDetails();
@@ -59,15 +63,21 @@ public class AlbumCell extends MusicResultItem {
 		imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		titleLabel = new JLabel("Title");
-		titleLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		titleLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
 		titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		tagsPanel = new JPanel();
 		
-		rateButton = new JButton("Me Gusta");
+		rateButton = new JButton("No me Gusta");
+		rateButton.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		rateButton.setText(getDisco().isRated()?rateButton.getText():"Me Gusta");
 		rateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				rateItem();
+				if(getDisco().isRated()){
+					removeItem();
+				}else{
+					rateItem();
+				}
 			}
 		});
 		
@@ -81,28 +91,29 @@ public class AlbumCell extends MusicResultItem {
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(88)
+							.addComponent(searchTorrentButton))
+						.addGroup(groupLayout.createSequentialGroup()
 							.addContainerGap()
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(titleLabel, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
+								.addComponent(titleLabel, GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
 								.addGroup(groupLayout.createSequentialGroup()
 									.addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
 									.addPreferredGap(ComponentPlacement.RELATED)
-									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-										.addComponent(tagsPanel, GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
-										.addComponent(artistLabel, GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
-										.addComponent(lblNewLabel)))))
-						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-							.addGap(88)
-							.addComponent(searchTorrentButton)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(showDetailsButton, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(rateButton, GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)))
+									.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+										.addComponent(artistLabel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
+										.addComponent(lblNewLabel, Alignment.LEADING)
+										.addComponent(tagsPanel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
+										.addGroup(groupLayout.createSequentialGroup()
+											.addGap(121)
+											.addComponent(showDetailsButton, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
+											.addPreferredGap(ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+											.addComponent(rateButton, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)))))))
 					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.TRAILING)
-				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(titleLabel)
 					.addGap(18)
@@ -112,12 +123,12 @@ public class AlbumCell extends MusicResultItem {
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(artistLabel)
 							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(tagsPanel, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+							.addComponent(tagsPanel, GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 								.addComponent(searchTorrentButton)
-								.addComponent(showDetailsButton)
-								.addComponent(rateButton))
+								.addComponent(rateButton)
+								.addComponent(showDetailsButton))
 							.addGap(12))
 						.addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE))
 					.addContainerGap())
@@ -158,6 +169,7 @@ public class AlbumCell extends MusicResultItem {
 		String[] albumTags = getDisco().getNFirstTags(5);
 		for (int i = 0; i < albumTags.length; i++) {
 			JLabel tag = new JLabel(albumTags[i]);
+			tag.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			tagsPanel.add(tag);
 		}
 	}
@@ -170,9 +182,22 @@ public class AlbumCell extends MusicResultItem {
 	@Override
 	public void rateItem() {
 		if(LastFMManager.getInstance().rateItem(getDisco())){
+			getDisco().setRated(true);
+			rateButton.setText("No me Gusta");
 			new UtilTools().showInfoOKDialog(mainFrame, "", "Añadido a tu biblioteca");
 		}else{
-			new UtilTools().showWarningDialog(mainFrame, "Error", "Ha ocurrido un error inesperado");
+			new UtilTools().showWarningDialog(mainFrame, "Error", "No ha sido posible añadir el álbum");
+		}
+	}
+	
+	@Override
+	public void removeItem(){
+		if(LastFMManager.getInstance().removeAlbum(disco)){
+			getDisco().setRated(false);
+			rateButton.setText("Me Gusta");
+			new UtilTools().showInfoOKDialog(mainFrame, "", "Álbum eliminado");
+		}else{
+			new UtilTools().showWarningDialog(mainFrame, "Error", "No se ha podido eliminar el álbum");
 		}
 	}
 

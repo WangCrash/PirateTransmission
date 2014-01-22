@@ -2,6 +2,10 @@ package Managers;
 
 import java.util.Map;
 
+import org.omg.CORBA.CurrentHelper;
+
+import Managers.Helpers.FilmAffinityBot;
+import Managers.Helpers.HelperManager;
 import Managers.TorrentClient.TorrentClient;
 import Managers.TorrentClient.TransmissionManager;
 import Managers.TorrentClient.microTorrentManager;
@@ -14,6 +18,7 @@ public class ApplicationConfiguration extends Manager{
 	private static ApplicationConfiguration instance = null;
 	
 	private TorrentClient defaultTorrentClient;
+	private HelperManager currentHelperManager;
 	
 	private ApplicationConfiguration(){
 		initManager();
@@ -23,6 +28,7 @@ public class ApplicationConfiguration extends Manager{
 	public boolean initManager() {
 		setDefaultTorrentClient(null);
 		setUpManager();
+		setCurrentHelperManager(FilmAffinityBot.getInstance());
 		return true;
 	}
 
@@ -64,8 +70,20 @@ public class ApplicationConfiguration extends Manager{
 	}
 
 	@Override
-	public boolean isStared() {
+	public boolean isStarted() {
 		return (instance != null);
+	}
+
+	public HelperManager getCurrentHelperManager() {
+		return currentHelperManager;
+	}
+
+	public void setCurrentHelperManager(HelperManager currentHelperManager) {
+		if(!currentHelperManager.isStarted()){
+			System.out.println("Nuevo helper iniciado");
+			currentHelperManager.initManager();
+		}
+		this.currentHelperManager = currentHelperManager;
 	}
 
 }

@@ -14,8 +14,10 @@ import javax.swing.border.BevelBorder;
 
 import GUI.LoadingView;
 import GUI.MainWindow;
+import Managers.ApplicationConfiguration;
 import Managers.Helpers.FilmAffinityBot;
 import Managers.Helpers.HelperManager;
+import Managers.Helpers.LastFMManager;
 import Model.HelperItem;
 import Utils.UtilTools;
 
@@ -36,8 +38,8 @@ public class HelperChooserSection extends JPanel implements Runnable {
 	private String[] comboModel;
 	private JComboBox helperChooserComboBox;
 	
-	private static String FILMS_COMBO_OPTION = "Películas";
-	private static String MUSIC_COMBO_OPTION = "Música";
+	public static String FILMS_COMBO_OPTION = "Películas";
+	public static String MUSIC_COMBO_OPTION = "Música";
 	private JButton getRecommendationsButton;
 	private JButton setUpFiltersButton;
 	private LoadingView loadingView;
@@ -62,9 +64,10 @@ public class HelperChooserSection extends JPanel implements Runnable {
 					helperManager = FilmAffinityBot.getInstance();
 					setUpFiltersButton.setEnabled(true);
 				}else{
-					//helperManager = LastFMMAnager.getinstance();
+					helperManager = LastFMManager.getInstance();
 					setUpFiltersButton.setEnabled(false);
 				}
+				mainFrame.HelperManagerWasChanged(helperManager);
 			}
 		});
 		

@@ -216,7 +216,7 @@ public class PirateBayBot extends Manager{
     }
 
 	@Override
-	public boolean isStared() {
+	public boolean isStarted() {
 		return initialized;
 	}
 }

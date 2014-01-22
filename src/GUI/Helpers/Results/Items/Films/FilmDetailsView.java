@@ -79,6 +79,8 @@ public class FilmDetailsView extends FilmResultItem implements Runnable{
 	
 	public FilmDetailsView(JFrame mainFrame, HelperResultsSection parentView, HelperItem helperItem) {
 		super(mainFrame, parentView, helperItem);
+		setFilm((FichaPelicula)helperItem);
+		
 		System.out.println("creado super");
 		setBackground(new Color(204, 255, 153));
 		

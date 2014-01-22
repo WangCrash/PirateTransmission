@@ -230,7 +230,7 @@ public class microTorrentManager extends TorrentClient{
 	}
 
 	@Override
-	public boolean isStared() {
+	public boolean isStarted() {
 		return logged;
 	}
 }

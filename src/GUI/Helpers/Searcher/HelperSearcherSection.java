@@ -14,6 +14,7 @@ import javax.swing.border.BevelBorder;
 
 import GUI.LoadingView;
 import GUI.MainWindow;
+import Managers.ApplicationConfiguration;
 import Managers.Helpers.FilmAffinityBot;
 import Managers.Helpers.HelperManager;
 import Model.HelperItem;
@@ -37,7 +38,6 @@ import java.awt.Font;
 public class HelperSearcherSection extends JPanel implements Runnable {
 	private static final long serialVersionUID = 9179013116749250575L;
 
-	private HelperManager helperManager;
 	private HelperItem[] results;
 	private int searchOption;
 	
@@ -101,8 +101,7 @@ public class HelperSearcherSection extends JPanel implements Runnable {
 		);
 		setLayout(groupLayout);
 		
-		//de momento por defecto se usa filmaffinity
-		setHelperManager(FilmAffinityBot.getInstance());
+		drawOptionsByHelper();
 	}
 	
 	private void showLoadingView() {
@@ -118,7 +117,7 @@ public class HelperSearcherSection extends JPanel implements Runnable {
 
 	@Override
 	public void run() {
-		results = helperManager.searchItem(searchField.getText().trim(), searchOption);
+		results = ApplicationConfiguration.getInstance().getCurrentHelperManager().searchItem(searchField.getText().trim(), searchOption);
 		System.out.println(results);
 		SwingUtilities.invokeLater(new Runnable() {
 		    public void run() {
@@ -131,7 +130,7 @@ public class HelperSearcherSection extends JPanel implements Runnable {
 	
 	private String getOptionName(int option){
 		String result = "";
-		for (Map.Entry<String, Integer> entry : helperManager.getSearchOptions().entrySet()){
+		for (Map.Entry<String, Integer> entry : ApplicationConfiguration.getInstance().getCurrentHelperManager().getSearchOptions().entrySet()){
 			if(entry.getValue() == option){
 				result = entry.getKey();
 			}
@@ -151,19 +150,19 @@ public class HelperSearcherSection extends JPanel implements Runnable {
 	}
 	
 	private void showConfigSearchView() {
-		SearchOptionsView searchOptionsView = new SearchOptionsView(mainFrame, this, "Opciones de búsqueda de película", helperManager.getSearchOptions(), searchOption);
+		HelperManager helper = ApplicationConfiguration.getInstance().getCurrentHelperManager();
+		SearchOptionsView searchOptionsView = new SearchOptionsView(mainFrame, this, "Opciones de búsqueda de película", helper.getSearchOptions(), searchOption);
 		searchOptionsView.setVisible(true);
 	}
 	
-	public void setHelperManager(HelperManager helperManager){
-		this.helperManager = helperManager;
-		setSearchOption(helperManager.getDefaultSearchOption());
+	public void drawOptionsByHelper(){
+		setSearchOption(ApplicationConfiguration.getInstance().getCurrentHelperManager().getDefaultSearchOption());
 		setTitle();
 	}
 	
 	public void setTitle() {
 		String title;
-		if(helperManager.getHelperName().equals(HelperManager.HELPERMANAGER_NAME_FILMS)){
+		if(ApplicationConfiguration.getInstance().getCurrentHelperManager().getHelperName().equals(HelperManager.HELPERMANAGER_NAME_FILMS)){
 			title = "Búsqueda de películas";
 		}else{
 			title = "Búsqueda de música";
