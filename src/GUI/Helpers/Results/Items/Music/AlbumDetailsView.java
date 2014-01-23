@@ -88,6 +88,7 @@ public class AlbumDetailsView extends MusicResultItem {
 		lblGnero.setFont(new Font("Tahoma", Font.BOLD, 12));
 		
 		tagsPanel = new JPanel();
+		tagsPanel.setBackground(new Color(204, 255, 153));
 		
 		imageLabel = new JLabel("");
 		imageLabel.setIcon(new ImageIcon(AlbumDetailsView.class.getResource("/javax/swing/plaf/basic/icons/image-delayed.png")));
@@ -102,31 +103,37 @@ public class AlbumDetailsView extends MusicResultItem {
 							.addContainerGap()
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 								.addGroup(groupLayout.createSequentialGroup()
-									.addComponent(lblGnero, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-									.addGap(35)
-									.addComponent(tagsPanel, GroupLayout.PREFERRED_SIZE, 294, GroupLayout.PREFERRED_SIZE))
-								.addGroup(groupLayout.createSequentialGroup()
 									.addComponent(lblArtista)
 									.addGap(39)
 									.addComponent(artistLabel, GroupLayout.PREFERRED_SIZE, 294, GroupLayout.PREFERRED_SIZE))
-								.addGroup(groupLayout.createSequentialGroup()
-									.addComponent(lblArtistasSimilares, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE)
-									.addGap(10)
-									.addComponent(songsScrollPane, GroupLayout.PREFERRED_SIZE, 294, GroupLayout.PREFERRED_SIZE))
-								.addGroup(groupLayout.createSequentialGroup()
-									.addGap(1)
-									.addComponent(lblBio, GroupLayout.PREFERRED_SIZE, 112, GroupLayout.PREFERRED_SIZE))
-								.addComponent(aboutAlbumScrollPane, GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE)))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(138)
-							.addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(150)
-							.addComponent(rateButton, GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
+								.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
+									.addGroup(groupLayout.createSequentialGroup()
+										.addComponent(lblArtistasSimilares, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE)
+										.addGap(10)
+										.addComponent(songsScrollPane))
+									.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+										.addComponent(lblGnero, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+										.addGap(35)
+										.addComponent(tagsPanel, GroupLayout.PREFERRED_SIZE, 312, GroupLayout.PREFERRED_SIZE))))
+							.addPreferredGap(ComponentPlacement.RELATED, 37, Short.MAX_VALUE))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addContainerGap()
-							.addComponent(titleLabel, GroupLayout.PREFERRED_SIZE, 375, GroupLayout.PREFERRED_SIZE)))
+							.addComponent(titleLabel, GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(lblBio, GroupLayout.PREFERRED_SIZE, 112, GroupLayout.PREFERRED_SIZE))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(aboutAlbumScrollPane, GroupLayout.PREFERRED_SIZE, 422, GroupLayout.PREFERRED_SIZE)))
 					.addContainerGap())
+				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+					.addContainerGap(168, Short.MAX_VALUE)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(12)
+							.addComponent(rateButton, GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE)))
+					.addGap(162))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -154,11 +161,11 @@ public class AlbumDetailsView extends MusicResultItem {
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(28)
 							.addComponent(songsScrollPane, GroupLayout.PREFERRED_SIZE, 76, GroupLayout.PREFERRED_SIZE)))
-					.addGap(68)
+					.addGap(28)
 					.addComponent(lblBio)
-					.addGap(11)
+					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(aboutAlbumScrollPane, GroupLayout.PREFERRED_SIZE, 141, GroupLayout.PREFERRED_SIZE)
-					.addGap(23))
+					.addContainerGap())
 		);
 		tagsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		setLayout(groupLayout);
@@ -171,7 +178,7 @@ public class AlbumDetailsView extends MusicResultItem {
 		titleLabel.setText(disco.getNombre());
 		artistLabel.setText(disco.getArtista());
 		if(disco.getTags() == null){
-			
+			getItemTags();
 		}else{
 			showAlbumTags();
 		}
@@ -225,7 +232,7 @@ public class AlbumDetailsView extends MusicResultItem {
 		}
 		String[] albumTags = getDisco().getNFirstTags(5);
 		for (int i = 0; i < albumTags.length; i++) {
-			JLabel tag = new JLabel(albumTags[i]);
+			JLabel tag = new JLabel("<HTML><U>" + albumTags[i] + "<U><HTML>");
 			tag.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			tagsPanel.add(tag);
 		}

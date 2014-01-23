@@ -168,7 +168,7 @@ public class AlbumCell extends MusicResultItem {
 		}
 		String[] albumTags = getDisco().getNFirstTags(5);
 		for (int i = 0; i < albumTags.length; i++) {
-			JLabel tag = new JLabel(albumTags[i]);
+			JLabel tag = new JLabel("<HTML><U>" + albumTags[i] + "<U><HTML>");
 			tag.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			tagsPanel.add(tag);
 		}

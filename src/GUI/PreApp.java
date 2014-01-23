@@ -30,7 +30,7 @@ public class PreApp {
 					message += "\n - No se ha podido iniciar sesión en LastFM";						
 				}
 				if(!message.isEmpty()){
-					new UtilTools().showWarningDialog(null, "Error", "Se encontraron los siguiente errores:");
+					new UtilTools().showWarningDialog(null, "Error", "Se encontraron los siguiente errores:" + message);
 				}
 				hideLoadingView();
 			}

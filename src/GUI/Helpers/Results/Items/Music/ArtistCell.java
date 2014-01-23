@@ -148,7 +148,7 @@ public class ArtistCell extends MusicResultItem {
 		}
 		String[] artistTags = getArtista().getNFirstTags(5);
 		for (int i = 0; i < artistTags.length; i++) {
-			JLabel tag = new JLabel(artistTags[i]);
+			JLabel tag = new JLabel("<HTML><U>" + artistTags[i] + "<U><HTML>");
 			tag.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			tagsPanel.add(tag);
 		}
