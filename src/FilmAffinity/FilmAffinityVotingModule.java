@@ -53,7 +53,8 @@ public class FilmAffinityVotingModule {
 				if(responseCode == 200){
 					JSONObject jsonResponse = new JSONObject(response.get("ResponseBody"));
 					System.out.println(jsonResponse.getInt("result"));
-					if(jsonResponse.getInt("result") == 0){
+					//if(jsonResponse.getInt("result") == 0){
+					if(jsonResponse.get("result") != null){
 						return true;
 					}
 				}
