@@ -18,19 +18,22 @@ public class PreApp {
 				
 				if(!ApplicationConfiguration.getInstance().getDefaultTorrentClient().initManager()){
 					String clientName = ApplicationConfiguration.getInstance().getDefaultTorrentClient().getTorrentClientName();
-					message += "\n - No se ha podido conectar con " + clientName + ".";
+					message += "No se ha podido conectar con " + clientName + ".";
 				}
-				if(!PirateBayBot.getInstance().initManager()){
-					message += "\n - No se ha podido conectar con PirateBay.";
+				PirateBayBot.getInstance().initManager();
+				if(LastFMManager.getInstance().initManager()){
+					Thread t = new Thread(new Runnable() {
+						@Override
+						public void run() {
+							LastFMManager.getInstance().getRecommendations();
+						}
+					});
+					t.start();
 				}
-				if(!LastFMManager.getInstance().initManager()){
-					message = "\n - No se ha podido iniciar sesión en Film Affinity";
-				}
-				if(!FilmAffinityBot.getInstance().initManager()){
-					message += "\n - No se ha podido iniciar sesión en LastFM";						
-				}
+				FilmAffinityBot.getInstance().initManager();
+				
 				if(!message.isEmpty()){
-					new UtilTools().showWarningDialog(null, "Error", "Se encontraron los siguiente errores:" + message);
+					new UtilTools().showWarningDialog(null, "Error", message);
 				}
 				hideLoadingView();
 			}

@@ -2,6 +2,8 @@ package Managers.Helpers;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -21,7 +23,6 @@ import de.umass.lastfm.Session;
 import de.umass.lastfm.Tag;
 import de.umass.lastfm.Track;
 import de.umass.lastfm.User;
-
 import Codification.Base64;
 import Connection.ConnectionManager;
 import Model.Artista;
@@ -199,7 +200,7 @@ public class LastFMManager extends HelperManager {
 	}
 
 	private HelperItem[] searchAlbum(String search) {
-		Collection<Album> libraryAlbums = Library.getAllAlbums(user, apiKey);
+		//Collection<Album> libraryAlbums = Library.getAllAlbums(user, apiKey);
 		Collection<Album> albumResults = Album.search(search, apiKey);
 		Disco[] results = new Disco[albumResults.size()];
 		int i = 0;
@@ -211,14 +212,14 @@ public class LastFMManager extends HelperManager {
 			results[i].setMbid(album.getMbid());
 			results[i].setNombre(album.getName());
 			results[i].setImageURL(album.getImageURL(ImageSize.MEDIUM));
-			results[i].setRated(isAlbumInLibrary(album, libraryAlbums));
+			//results[i].setRated(isAlbumInLibrary(album, libraryAlbums));
 			i++;
 		}
 		return results;
 	}
 
 	private HelperItem[] searchArtist(String search) {
-		Collection<Artist> libraryArtists = Library.getAllArtists(user, apiKey);
+		//Collection<Artist> libraryArtists = Library.getAllArtists(user, apiKey);
 		Collection<Artist> artistResults = Artist.search(search, apiKey);
 		Artista[] results = new Artista[artistResults.size()];
 		int i = 0;
@@ -230,7 +231,7 @@ public class LastFMManager extends HelperManager {
 			results[i].setMbid(artist.getMbid());
 			results[i].setNombre(artist.getName());
 			results[i].setImageURL(artist.getImageURL(ImageSize.MEDIUM));
-			results[i].setRated(isArtistInLibrary(artist, libraryArtists));
+			//results[i].setRated(isArtistInLibrary(artist, libraryArtists));
 			i++;
 		}
 		return results;
@@ -254,7 +255,7 @@ public class LastFMManager extends HelperManager {
 	}
 	
 	public Artista getSimilarArtists(Artista artista){
-		Collection<Artist> similarArtists = Artist.getSimilar(artista.getMbid(), 5, apiKey);
+		Collection<Artist> similarArtists = Artist.getSimilar(artista.getNombre(), 5, apiKey);
 		Artista[] similarArtistsArray = new Artista[similarArtists.size()];
 		int i = 0;
 		for (Artist artist : similarArtists) {
@@ -382,21 +383,28 @@ public class LastFMManager extends HelperManager {
 	public boolean isStarted() {
 		return isLogged();
 	}
+
+	@Override
+	public URL getSignUpURL() {
+		try {
+			return new URL("http://www.lastfm.es/join");
+		} catch (MalformedURLException e) {
+			return null;
+		}
+	}
+	
+	public void testing(){
+		PaginatedResult<Artist> results;
+		/*for (int i = 1; (results = Library.getArtists(user, i, apiKey)) != null; i++) {
+			for (Artist artist : results) {
+				System.out.println(artist);
+			}
+		}*/
+		//User.gett
+	}
 	
 	public static void main(String[] args){
 		LastFMManager.getInstance().initManager();
-		HelperItem[] results = LastFMManager.getInstance().searchItem("Los enemigos", LASTFM_ALL_SEARCH_OPTION);
-		for (int i = 0; i < results.length; i++) {
-			System.out.println(results[i]);
-		}
-		System.out.println("Tags de " + ((Artista)results[0]).getNombre() + ":");
-		results[0] = LastFMManager.getInstance().getArtistTags((Artista)results[0]);
-		String[] tags = ((Artista)results[0]).getNFirstTags(5);
-		for (int i = 0; i < tags.length; i++) {
-			System.out.println(tags[i]);
-		}
-		Artista artista = (Artista)results[0];
-		artista = LastFMManager.getInstance().getArtistBio(artista);
-		System.out.println("Biografía de " + artista.getNombre() + ":\n" + artista.getBio());		
+		LastFMManager.getInstance().testing();
 	}
 }

@@ -18,11 +18,9 @@ import GUI.Helpers.Results.HelperResultsSection;
 import GUI.Helpers.Searcher.HelperSearcherSection;
 import GUI.PirateBay.PiratebaySection;
 import Managers.ApplicationConfiguration;
-import Managers.PirateBayBot;
 import Managers.Helpers.FilmAffinityBot;
 import Managers.Helpers.HelperManager;
 import Managers.Helpers.LastFMManager;
-import Utils.UtilTools;
 
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;

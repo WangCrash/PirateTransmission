@@ -6,6 +6,7 @@ import java.util.Map;
 import Codification.Base64;
 import Managers.Manager;
 import Managers.Helpers.HelperManager;
+import Utils.UtilTools;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -13,6 +14,11 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JPasswordField;
+import javax.swing.JButton;
+import javax.swing.text.Utilities;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class SimpleSectionConfig extends ConfigurationSection {
 
@@ -23,6 +29,7 @@ public class SimpleSectionConfig extends ConfigurationSection {
 	
 	private String initialUser;
 	private String initialPassword;
+	private JButton registerButton;
 
 	/**
 	 * Create the panel.
@@ -40,6 +47,13 @@ public class SimpleSectionConfig extends ConfigurationSection {
 		
 		passwordField = new JPasswordField();
 		passwordField.setText(initialPassword);
+		
+		registerButton = new JButton("Registrarse");
+		registerButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				sendToSignUpPage();
+			}
+		});
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -53,11 +67,17 @@ public class SimpleSectionConfig extends ConfigurationSection {
 						.addComponent(passwordField)
 						.addComponent(userField, GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE))
 					.addContainerGap(89, Short.MAX_VALUE))
+				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+					.addContainerGap(186, Short.MAX_VALUE)
+					.addComponent(registerButton)
+					.addGap(177))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(107)
+					.addGap(55)
+					.addComponent(registerButton)
+					.addGap(29)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblNewLabel)
 						.addComponent(userField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
@@ -65,7 +85,7 @@ public class SimpleSectionConfig extends ConfigurationSection {
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblNewLabel_1)
 						.addComponent(passwordField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap(124, Short.MAX_VALUE))
+					.addContainerGap(112, Short.MAX_VALUE))
 		);
 		setLayout(groupLayout);
 
@@ -100,5 +120,9 @@ public class SimpleSectionConfig extends ConfigurationSection {
 			return super.isValidPassLength(password);
 		}
 		return true;
+	}
+	
+	private void sendToSignUpPage() {
+		new UtilTools().openURLInNavigator(((HelperManager)manager).getSignUpURL());
 	}
 }

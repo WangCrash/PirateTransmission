@@ -1,5 +1,6 @@
 package Managers.Helpers;
 
+import java.net.URL;
 import java.util.Map;
 
 import Managers.Manager;
@@ -27,5 +28,7 @@ public abstract class HelperManager extends Manager{
 	public abstract int getDefaultSearchOption();
 	
 	public abstract Map<String, Integer> getSearchOptions();
+	
+	public abstract URL getSignUpURL();
 	
 }

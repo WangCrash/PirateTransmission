@@ -260,4 +260,13 @@ public class FilmAffinityBot extends HelperManager{
 	public boolean isStarted() {
 		return isLogged();
 	}
+
+	@Override
+	public URL getSignUpURL() {
+		try {
+			return new URL("http://www.filmaffinity.com/es/register.php");
+		} catch (MalformedURLException e) {
+			return null;
+		}
+	}
 }
