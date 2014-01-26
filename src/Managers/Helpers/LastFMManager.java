@@ -2,6 +2,7 @@ package Managers.Helpers;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -25,6 +26,9 @@ import de.umass.lastfm.Track;
 import de.umass.lastfm.User;
 import Codification.Base64;
 import Connection.ConnectionManager;
+import Connection.SimpleConnectionManager;
+import JSON.JSONArray;
+import JSON.JSONObject;
 import Model.Artista;
 import Model.Disco;
 import Model.HelperItem;
@@ -217,6 +221,32 @@ public class LastFMManager extends HelperManager {
 		}
 		return results;
 	}
+	
+	private Artista[] getLibraryArtists(int page){
+		URL url;
+		try {
+			url = new URL("http://ws.audioscrobbler.com/2.0/?method=library.getartists&api_key=" + apiKey + "&user=" + user + "&page=" + page + "&format=json");
+		} catch (MalformedURLException e) {
+			return null;
+		}
+		
+		Map<String, String> response = new SimpleConnectionManager().sendGetRequest(url);
+		int responseCode;
+		try{
+			responseCode = Integer.parseInt(response.get(ConnectionManager.STATUS_CODE_RESPONSE_KEY));
+		}catch(NumberFormatException e){
+			return null;
+		}
+		if(responseCode == HttpURLConnection.HTTP_OK){
+			JSONObject libraryObject = new JSONObject(response.get(ConnectionManager.BODY_TEXT_RESPONSE_KEY));
+			//System.out.println("ARTISTS\n" + libraryObject.get("artists"));
+			JSONArray artists = libraryObject.getJSONObject("artists").getJSONArray("artist");
+			for (int i = 0; i < artists.length(); i++) {
+				System.out.println(artists.get(i));
+			}
+		}
+		return null;
+	}
 
 	private HelperItem[] searchArtist(String search) {
 		//Collection<Artist> libraryArtists = Library.getAllArtists(user, apiKey);
@@ -395,12 +425,7 @@ public class LastFMManager extends HelperManager {
 	
 	public void testing(){
 		PaginatedResult<Artist> results;
-		/*for (int i = 1; (results = Library.getArtists(user, i, apiKey)) != null; i++) {
-			for (Artist artist : results) {
-				System.out.println(artist);
-			}
-		}*/
-		//User.gett
+		getLibraryArtists(1);
 	}
 	
 	public static void main(String[] args){
