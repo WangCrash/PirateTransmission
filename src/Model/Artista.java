@@ -4,6 +4,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 
+import de.umass.lastfm.Artist;
+import de.umass.lastfm.ImageSize;
+
 public class Artista extends HelperItem {
 	private String mbid;
 	private String nombre;
@@ -12,6 +15,12 @@ public class Artista extends HelperItem {
 	private Artista[] similares;
 	private String[] tags;
 	private String bio;
+	
+	public Artista(Artist artist){
+		this.setMbid(artist.getMbid());
+		this.setNombre(artist.getName());
+		this.setImageURL(artist.getImageURL(ImageSize.LARGE));
+	}
 	
 	public void setNombre(String nombre){
 		this.nombre = nombre;
@@ -52,6 +61,10 @@ public class Artista extends HelperItem {
 		return tags;
 	}
 	public String[] getNFirstTags(int n){
+		int length = tags.length;
+		if(length < n){
+			n = length;
+		}
 		return Arrays.copyOf(this.getTags(), n);
 	}
 	public void setTags(String[] tags) {

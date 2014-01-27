@@ -101,4 +101,8 @@ public class HelperResultsSection extends JPanel {
 		resultsContainer = new MultipartScrollableResultsContainer(this.mainFrame, this, item, (items.length > 1));
 		rootPanel.add(resultsContainer);
 	}
+	
+	public void searchItem(String search, int option){
+		mainFrame.searchItem(search, option);
+	}
 }

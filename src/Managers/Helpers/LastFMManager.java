@@ -7,6 +7,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -105,10 +106,7 @@ public class LastFMManager extends HelperManager {
 			if(artist == null){
 				continue;
 			}
-			Artista artista = new Artista();
-			artista.setMbid(artist.getMbid());
-			artista.setNombre(artist.getName());
-			artista.setImageURL(artist.getImageURL(ImageSize.MEDIUM));
+			Artista artista = new Artista(artist);
 			artistas.add(artista);
 		}
 		return Arrays.copyOf(artistas.toArray(), artistas.size(), Artista[].class);
@@ -123,11 +121,7 @@ public class LastFMManager extends HelperManager {
 			if(album == null){
 				continue;
 			}
-			Disco disco = new Disco();
-			disco.setMbid(album.getMbid());
-			disco.setNombre(album.getName());
-			disco.setArtista(artista.getNombre());
-			disco.setImageURL(album.getImageURL(ImageSize.MEDIUM));
+			Disco disco = new Disco(album);
 			discografia.add(disco);
 		}
 		artista.setDiscografia(Arrays.copyOf(discografia.toArray(), discografia.size(), Disco[].class));
@@ -202,34 +196,22 @@ public class LastFMManager extends HelperManager {
 			return null;
 		}
 	}
-
-	private HelperItem[] searchAlbum(String search) {
-		//Collection<Album> libraryAlbums = Library.getAllAlbums(user, apiKey);
-		Collection<Album> albumResults = Album.search(search, apiKey);
-		Disco[] results = new Disco[albumResults.size()];
-		int i = 0;
-		for (Album album : albumResults) {
-			if(album == null){
-				continue;
-			}
-			results[i] = new Disco();
-			results[i].setMbid(album.getMbid());
-			results[i].setNombre(album.getName());
-			results[i].setImageURL(album.getImageURL(ImageSize.MEDIUM));
-			//results[i].setRated(isAlbumInLibrary(album, libraryAlbums));
-			i++;
-		}
-		return results;
+	
+	private List<String> getLibraryArtists(){
+		return getLibraryItems("http://ws.audioscrobbler.com/2.0/?method=library.getartists&api_key=" + apiKey + "&user=" + user, "artist");
 	}
 	
-	private Artista[] getLibraryArtists(int page){
+	private List<String> getLibraryAlbums(){
+		return getLibraryItems("http://ws.audioscrobbler.com/2.0/?method=library.getalbums&api_key=" + apiKey + "&user=" + user, "album");
+	}
+	
+	private List<String> getLibraryItems(String libraryUrlString, String type){
 		URL url;
 		try {
-			url = new URL("http://ws.audioscrobbler.com/2.0/?method=library.getartists&api_key=" + apiKey + "&user=" + user + "&page=" + page + "&format=json");
+			url = new URL(libraryUrlString + "&page=1&format=json");
 		} catch (MalformedURLException e) {
 			return null;
 		}
-		
 		Map<String, String> response = new SimpleConnectionManager().sendGetRequest(url);
 		int responseCode;
 		try{
@@ -237,19 +219,70 @@ public class LastFMManager extends HelperManager {
 		}catch(NumberFormatException e){
 			return null;
 		}
+		List<String> itemsNames = null;
 		if(responseCode == HttpURLConnection.HTTP_OK){
 			JSONObject libraryObject = new JSONObject(response.get(ConnectionManager.BODY_TEXT_RESPONSE_KEY));
-			//System.out.println("ARTISTS\n" + libraryObject.get("artists"));
-			JSONArray artists = libraryObject.getJSONObject("artists").getJSONArray("artist");
-			for (int i = 0; i < artists.length(); i++) {
-				System.out.println(artists.get(i));
+			System.out.println(libraryObject);
+			JSONObject attributes = libraryObject.getJSONObject(type + "s").getJSONObject("@attr");
+			int totalPages = attributes.getInt("totalPages");
+			itemsNames = new ArrayList<String>();
+			JSONArray items = libraryObject.getJSONObject(type + "s").getJSONArray(type);
+			itemsNames = getNamesFromJSON(itemsNames, items, type);
+			if(totalPages > 1){
+				itemsNames = getLibraryItemsRecursively(libraryUrlString, itemsNames, 2, totalPages, type);
 			}
 		}
-		return null;
+		return itemsNames;
+
+	}
+	
+	private List<String> getLibraryItemsRecursively(String libraryUrlString, List<String> itemsNames, int initPage, int totalPages, String type){
+		if(totalPages < initPage){
+			return itemsNames;
+		}
+		URL url;
+		try {
+			url = new URL(libraryUrlString + "&page=" + initPage + "&format=json");
+		} catch (MalformedURLException e) {
+			System.out.println("Malformed url: " + libraryUrlString + "&page=" + initPage + "&format=json");
+			return itemsNames;
+		}
+		
+		Map<String, String> response = new SimpleConnectionManager().sendGetRequest(url);
+		int responseCode;
+		try{
+			responseCode = Integer.parseInt(response.get(ConnectionManager.STATUS_CODE_RESPONSE_KEY));
+		}catch(NumberFormatException e){
+			return itemsNames;
+		}
+		if(responseCode == HttpURLConnection.HTTP_OK){
+			System.out.println("Page " + initPage);
+			JSONObject libraryObject = new JSONObject(response.get(ConnectionManager.BODY_TEXT_RESPONSE_KEY));
+			JSONArray itemsArray = libraryObject.getJSONObject(type + "s").getJSONArray(type);	
+			itemsNames = getLibraryItemsRecursively(libraryUrlString, getNamesFromJSON(itemsNames, itemsArray, type), initPage + 1, totalPages, type);
+		}
+		return itemsNames;
+	}
+	
+	private List<String> getNamesFromJSON(List<String> itemsNames, JSONArray itemsArray, String type){
+		if(itemsNames == null || itemsArray == null){
+			return null;
+		}
+		for (int i = 0; i < itemsArray.length(); i++) {
+			String item = itemsArray.getJSONObject(i).get("name").toString();
+			if(type.equals("album")){
+				JSONObject artist = itemsArray.getJSONObject(i).getJSONObject("artist");
+				if(artist != null){
+					item = artist.getString("name") + "||" + item;
+				}
+			}
+			itemsNames.add(item);
+		}
+		return itemsNames;
 	}
 
 	private HelperItem[] searchArtist(String search) {
-		//Collection<Artist> libraryArtists = Library.getAllArtists(user, apiKey);
+		List<String> libraryArtists = getLibraryArtists();
 		Collection<Artist> artistResults = Artist.search(search, apiKey);
 		Artista[] results = new Artista[artistResults.size()];
 		int i = 0;
@@ -257,11 +290,23 @@ public class LastFMManager extends HelperManager {
 			if(artist == null){
 				continue;
 			}
-			results[i] = new Artista();
-			results[i].setMbid(artist.getMbid());
-			results[i].setNombre(artist.getName());
-			results[i].setImageURL(artist.getImageURL(ImageSize.MEDIUM));
-			//results[i].setRated(isArtistInLibrary(artist, libraryArtists));
+			results[i] = new Artista(artist);
+			results[i].setRated(isArtistInLibrary(artist, libraryArtists));
+			i++;
+		}
+		return results;
+	}
+	
+	private HelperItem[] searchAlbum(String search) {
+		List<String> libraryAlbums = getLibraryAlbums();
+		Collection<Album> albumResults = Album.search(search, apiKey);
+		Disco[] results = new Disco[albumResults.size()];
+		int i = 0;
+		for (Album album : albumResults) {
+			if(album == null){
+				continue;
+			}
+			results[i] = new Disco(album);
 			i++;
 		}
 		return results;
@@ -276,12 +321,12 @@ public class LastFMManager extends HelperManager {
 		return total;
 	}
 	
-	private boolean isArtistInLibrary(Artist artist, Collection<Artist> libraryArtists){
-		return libraryArtists.contains(artist);
+	private boolean isArtistInLibrary(Artist artist, List<String> libraryArtists){
+		return libraryArtists.contains(artist.getName());
 	}
 	
-	private boolean isAlbumInLibrary(Album album, Collection<Album> libraryAlbums){
-		return libraryAlbums.contains(album);
+	private boolean isAlbumInLibrary(Album album, List<String> libraryAlbums){
+		return libraryAlbums.contains(album.getArtist() + "||" + album.getName());
 	}
 	
 	public Artista getSimilarArtists(Artista artista){
@@ -292,9 +337,7 @@ public class LastFMManager extends HelperManager {
 			if(artist == null){
 				continue;
 			}
-			similarArtistsArray[i] = new Artista();
-			similarArtistsArray[i].setMbid(artist.getMbid());
-			similarArtistsArray[i].setNombre(artist.getName());
+			similarArtistsArray[i] = new Artista(artist);
 			i++;
 		}
 		artista.setSimilares(similarArtistsArray);
@@ -424,8 +467,14 @@ public class LastFMManager extends HelperManager {
 	}
 	
 	public void testing(){
-		PaginatedResult<Artist> results;
-		getLibraryArtists(1);
+//		List<String> list = getLibraryArtists();
+//		for (String string : list) {
+//			System.out.println("Artist: " + string);
+//		}
+		List<String> list = getLibraryAlbums();
+		for (String string : list) {
+			System.out.println("Album: " + string);
+		}
 	}
 	
 	public static void main(String[] args){

@@ -181,6 +181,10 @@ public class MainWindow extends JFrame {
 		pirateBaySection.searchTorrent(search);
 	}
 	
+	public void searchItem(String search, int option){
+		helperSearcherSection.searchItem(search, option);
+	}
+	
 	public HelperResultsSection getHelperResultsSection(){
 		return this.helperResultsSection;
 	}

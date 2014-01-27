@@ -138,15 +138,21 @@ public class HelperSearcherSection extends JPanel implements Runnable {
 		return result;
 	}
 	
-	private void searchItem() {
-		/*if(!helperManager.isLogged()){
+	private void searchItem(){
+		HelperManager helperManager = ApplicationConfiguration.getInstance().getCurrentHelperManager();
+		if(!helperManager.isLogged()){
 			new UtilTools().showWarningDialog(mainFrame, "", "No se ha iniciado sesión en " + helperManager.getHelperName());
 			return;
-		}*/
-				
+		}
 		Thread t = new Thread(this);
 		t.start();
 		showLoadingView();
+	}
+	
+	public void searchItem(String search, int option) {
+		setSearchOption(option);
+		searchField.setText(search.trim());
+		searchItem();
 	}
 	
 	private void showConfigSearchView() {

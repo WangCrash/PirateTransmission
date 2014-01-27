@@ -30,6 +30,10 @@ import java.awt.Color;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.DropMode;
 import java.awt.SystemColor;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.border.BevelBorder;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 
 @SuppressWarnings("serial")
@@ -49,6 +53,7 @@ public class ArtistDetailsView extends MusicResultItem {
 		this.setArtista((Artista)helperItem);
 		
 		JPanel panel = new JPanel();
+		panel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, Color.DARK_GRAY, null, null, null));
 		panel.setBackground(SystemColor.menu);
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
@@ -105,6 +110,14 @@ public class ArtistDetailsView extends MusicResultItem {
 		discographyScrollPane.setViewportView(discographyList);
 		
 		similarsList = new JList<String>();
+		similarsList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if(arg0.getClickCount() == 2 && similarsList.getSelectedIndex() != -1){
+					searchSimilarArtist();
+				}
+			}
+		});
 		similarsScrollPane.setViewportView(similarsList);
 		
 		bioEditorPane = new JEditorPane();
@@ -309,7 +322,11 @@ public class ArtistDetailsView extends MusicResultItem {
 					public void run() {
 						String[] discog = new String[getArtista().getDiscografia().length];
 						for (int i = 0; i < discog.length; i++) {
-							discog[i] = getArtista().getDiscografia()[i].getNombre();
+							String albumName = getArtista().getDiscografia()[i].getNombre();
+							if(getArtista().getDiscografia()[i].getAño() != 0){
+								albumName += " (" + artista.getDiscografia()[i].getAño() + ")";
+							}
+							discog[i] = albumName;
 						}
 						discographyList.setListData(discog);
 					}
@@ -339,5 +356,10 @@ public class ArtistDetailsView extends MusicResultItem {
 			}
 		});
 		t.start();
+	}
+	
+	private void searchSimilarArtist() {
+		String search =	getArtista().getSimilares()[similarsList.getSelectedIndex()].getNombre();
+		parentView.searchItem(search, LastFMManager.LASTFM_ARTIST_SEARCH_OPTION);
 	}
 }
