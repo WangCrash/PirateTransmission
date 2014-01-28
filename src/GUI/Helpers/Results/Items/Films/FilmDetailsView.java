@@ -3,6 +3,9 @@ package GUI.Helpers.Results.Items.Films;
 import javax.swing.JPanel;
 
 import GUI.Helpers.Results.HelperResultsSection;
+import GUI.Helpers.Results.Items.Films.ReviewsTable.JTableButtonMouseListener;
+import GUI.Helpers.Results.Items.Films.ReviewsTable.JTableButtonRenderer;
+import GUI.Helpers.Results.Items.Films.ReviewsTable.ReviewsTableModel;
 import Managers.Helpers.FilmAffinityBot;
 import Model.FichaPelicula;
 import Model.HelperItem;
@@ -17,6 +20,7 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -51,6 +55,11 @@ import javax.swing.UIManager;
 import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+
 public class FilmDetailsView extends FilmResultItem implements Runnable{
 	private URL imageURL;
 	
@@ -64,7 +73,6 @@ public class FilmDetailsView extends FilmResultItem implements Runnable{
 	private JLabel imageLabel;
 	private JLabel yearLabel;
 	private JLabel titleLabel;
-	private JLabel directorLabel;
 	private JLabel yourMarkLabel;
 	private JTable reviewsTable;
 	private JPanel infoPanel;
@@ -76,6 +84,7 @@ public class FilmDetailsView extends FilmResultItem implements Runnable{
 	private JScrollPane reviewsScrollPane;
 	private JScrollPane sinopsisScrollPane;
 	private JButton rateButton;
+	private JPanel directorsPane;
 	
 	public FilmDetailsView(JFrame mainFrame, HelperResultsSection parentView, HelperItem helperItem) {
 		super(mainFrame, parentView, helperItem);
@@ -104,9 +113,6 @@ public class FilmDetailsView extends FilmResultItem implements Runnable{
 		
 		originalTitleLabel = new JLabel("Value");
 		originalTitleLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		
-		directorLabel = new JLabel("Value");
-		directorLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		
 		countryLabel = new JLabel("Value");
 		countryLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -241,79 +247,86 @@ public class FilmDetailsView extends FilmResultItem implements Runnable{
 		castingScrollPane.getVerticalScrollBar().setUnitIncrement(16);
 		
 		castingList = new JList<String>();
+		castingList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount() == 2 && castingList.getSelectedIndex() != -1){
+					searchActor();
+				}
+			}
+		});
 		castingScrollPane.setViewportView(castingList);
 		
 		prizesScrollPane = new JScrollPane();
 		
 		prizesList = new JList<String>();
 		prizesScrollPane.setViewportView(prizesList);
+		
+		directorsPane = new JPanel();
 		GroupLayout gl_infoPanel = new GroupLayout(infoPanel);
 		gl_infoPanel.setHorizontalGroup(
 			gl_infoPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_infoPanel.createSequentialGroup()
+					.addGap(4)
+					.addComponent(titleLabel, GroupLayout.PREFERRED_SIZE, 398, GroupLayout.PREFERRED_SIZE))
+				.addGroup(gl_infoPanel.createSequentialGroup()
 					.addGroup(gl_infoPanel.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_infoPanel.createSequentialGroup()
-							.addGap(4)
-							.addComponent(titleLabel, GroupLayout.PREFERRED_SIZE, 398, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_infoPanel.createSequentialGroup()
 							.addGap(8)
 							.addGroup(gl_infoPanel.createParallelGroup(Alignment.LEADING)
 								.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblNewLabel_3, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)
-								.addGroup(gl_infoPanel.createSequentialGroup()
-									.addGap(1)
-									.addComponent(lblNewLabel_4, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE))
-								.addComponent(lblNewLabel_5, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE))
-							.addGap(10)
+								.addComponent(lblNewLabel_3, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE))
+							.addGap(11)
+							.addComponent(originalTitleLabel, GroupLayout.PREFERRED_SIZE, 176, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_infoPanel.createSequentialGroup()
+							.addContainerGap()
 							.addGroup(gl_infoPanel.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_infoPanel.createSequentialGroup()
-									.addGap(1)
-									.addComponent(originalTitleLabel, GroupLayout.PREFERRED_SIZE, 176, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_infoPanel.createSequentialGroup()
-									.addGap(1)
-									.addComponent(directorLabel, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE))
+								.addComponent(lblNewLabel_5, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblNewLabel_4, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+							.addGroup(gl_infoPanel.createParallelGroup(Alignment.LEADING)
 								.addComponent(yearLabel, GroupLayout.PREFERRED_SIZE, 148, GroupLayout.PREFERRED_SIZE)
 								.addComponent(countryLabel, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE))
+							.addGap(24)))
+					.addGap(11)
+					.addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE))
+				.addGroup(gl_infoPanel.createSequentialGroup()
+					.addGap(13)
+					.addComponent(lblNewLabel_7, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
+					.addGap(35)
+					.addComponent(prizesScrollPane, GroupLayout.PREFERRED_SIZE, 285, GroupLayout.PREFERRED_SIZE))
+				.addGroup(gl_infoPanel.createSequentialGroup()
+					.addGap(11)
+					.addComponent(lblCrticas, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)
+					.addGap(28)
+					.addComponent(reviewsScrollPane, GroupLayout.PREFERRED_SIZE, 287, GroupLayout.PREFERRED_SIZE))
+				.addGroup(gl_infoPanel.createSequentialGroup()
+					.addGroup(gl_infoPanel.createParallelGroup(Alignment.LEADING, false)
+						.addGroup(gl_infoPanel.createSequentialGroup()
 							.addGap(11)
-							.addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE))
+							.addComponent(lblNewLabel_6, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)
+							.addGap(29)
+							.addComponent(castingScrollPane, GroupLayout.PREFERRED_SIZE, 212, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_infoPanel.createSequentialGroup()
+							.addGap(10)
+							.addComponent(lblSinopsis, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)
+							.addGap(30)
+							.addGroup(gl_infoPanel.createParallelGroup(Alignment.LEADING)
+								.addComponent(directorsPane, GroupLayout.PREFERRED_SIZE, 184, GroupLayout.PREFERRED_SIZE)
+								.addComponent(sinopsisScrollPane, GroupLayout.PREFERRED_SIZE, 212, GroupLayout.PREFERRED_SIZE))))
+					.addGap(27)
+					.addGroup(gl_infoPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(panel, GroupLayout.PREFERRED_SIZE, 77, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_infoPanel.createSequentialGroup()
 							.addGap(13)
-							.addComponent(lblNewLabel_7, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
-							.addGap(35)
-							.addComponent(prizesScrollPane, GroupLayout.PREFERRED_SIZE, 285, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_infoPanel.createSequentialGroup()
-							.addGap(11)
-							.addComponent(lblCrticas, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)
-							.addGap(28)
-							.addComponent(reviewsScrollPane, GroupLayout.PREFERRED_SIZE, 287, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_infoPanel.createSequentialGroup()
-							.addGroup(gl_infoPanel.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_infoPanel.createSequentialGroup()
-									.addGap(10)
-									.addComponent(lblSinopsis, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)
-									.addGap(30)
-									.addComponent(sinopsisScrollPane, GroupLayout.PREFERRED_SIZE, 212, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_infoPanel.createSequentialGroup()
-									.addGap(11)
-									.addComponent(lblNewLabel_6, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)
-									.addGap(29)
-									.addComponent(castingScrollPane, GroupLayout.PREFERRED_SIZE, 212, GroupLayout.PREFERRED_SIZE)))
-							.addPreferredGap(ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
-							.addGroup(gl_infoPanel.createParallelGroup(Alignment.LEADING)
-								.addComponent(panel, GroupLayout.PREFERRED_SIZE, 77, GroupLayout.PREFERRED_SIZE)
-								.addGroup(gl_infoPanel.createSequentialGroup()
-									.addGap(13)
-									.addComponent(yourMarkLabel))
-								.addComponent(usersMarkFrame, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(rateButton, GroupLayout.PREFERRED_SIZE, 77, GroupLayout.PREFERRED_SIZE))
-							.addGap(7)))
-					.addGap(2))
+							.addComponent(yourMarkLabel))
+						.addComponent(usersMarkFrame, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(rateButton, GroupLayout.PREFERRED_SIZE, 77, GroupLayout.PREFERRED_SIZE)))
 				.addGroup(gl_infoPanel.createSequentialGroup()
 					.addGap(9)
 					.addComponent(lblNewLabel_9, GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE)
 					.addGap(34)
-					.addComponent(twinSoulsMarkFrame, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(194, Short.MAX_VALUE))
+					.addComponent(twinSoulsMarkFrame, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 		);
 		gl_infoPanel.setVerticalGroup(
 			gl_infoPanel.createParallelGroup(Alignment.LEADING)
@@ -323,22 +336,25 @@ public class FilmDetailsView extends FilmResultItem implements Runnable{
 						.addGroup(gl_infoPanel.createSequentialGroup()
 							.addGap(27)
 							.addGroup(gl_infoPanel.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)
+								.addComponent(originalTitleLabel))
+							.addGroup(gl_infoPanel.createParallelGroup(Alignment.LEADING)
 								.addGroup(gl_infoPanel.createSequentialGroup()
-									.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)
-									.addGap(17)
+									.addGap(16)
 									.addComponent(lblNewLabel_3)
-									.addGap(17)
-									.addComponent(lblNewLabel_4)
-									.addGap(20)
-									.addComponent(lblNewLabel_5))
+									.addGap(1))
 								.addGroup(gl_infoPanel.createSequentialGroup()
-									.addComponent(originalTitleLabel)
-									.addGap(18)
-									.addComponent(directorLabel)
-									.addGap(14)
-									.addComponent(countryLabel)
-									.addGap(21)
-									.addComponent(yearLabel))))
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(directorsPane, GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
+									.addPreferredGap(ComponentPlacement.RELATED)))
+							.addGroup(gl_infoPanel.createParallelGroup(Alignment.BASELINE)
+								.addComponent(countryLabel)
+								.addComponent(lblNewLabel_4))
+							.addGap(20)
+							.addGroup(gl_infoPanel.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblNewLabel_5)
+								.addComponent(yearLabel))
+							.addGap(15))
 						.addGroup(gl_infoPanel.createSequentialGroup()
 							.addGap(11)
 							.addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 166, GroupLayout.PREFERRED_SIZE)))
@@ -381,6 +397,7 @@ public class FilmDetailsView extends FilmResultItem implements Runnable{
 						.addComponent(twinSoulsMarkFrame, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE))
 					.addGap(45))
 		);
+		directorsPane.setLayout(new GridLayout(0, 2, 0, 0));
 		infoPanel.setLayout(gl_infoPanel);
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
@@ -428,10 +445,23 @@ public class FilmDetailsView extends FilmResultItem implements Runnable{
 		originalTitleLabel.setText(film.getTituloOriginal());
 		tools.setToolTipText(originalTitleLabel, film.getTituloOriginal());
 		
-		sinopsisTextPane.setText(film.getSinopsis());
+		for (int i = 0; i < film.getDirector().length; i++) {
+			JLabel directorLabel = new JLabel("<HTML><U>" + film.getDirector()[i] + "<U><HTML>");
+			directorLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			directorLabel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					JLabel tag = (JLabel)e.getSource();
+					if(e.getClickCount() == 1){
+						searchDirector(tag.getText());
+					}
+				}
+			});
+			directorLabel.setFont(new Font("Tahoma", Font.PLAIN, 11));
+			directorsPane.add(directorLabel);
+		}
 		
-		directorLabel.setText(arrayToString(film.getDirector()));
-		tools.setToolTipText(directorLabel, arrayToString(film.getDirector()));
+		sinopsisTextPane.setText(film.getSinopsis());
 		
 		if(film.getReparto() != null){
 			castingList.setListData(film.getReparto());
@@ -444,7 +474,10 @@ public class FilmDetailsView extends FilmResultItem implements Runnable{
 			prizesScrollPane.setEnabled(false);
 		}
 		if(film.getCriticas() != null){
-			reviewsTable.setModel(new ReviewsTableModel(this.getFilm()));	
+			reviewsTable.setModel(new ReviewsTableModel(mainFrame, this.getFilm()));
+	        reviewsTable.getColumnModel().getColumn(2).setCellRenderer(new JTableButtonRenderer());
+	        reviewsTable.addMouseListener(new JTableButtonMouseListener(reviewsTable));
+	        
 			int tableWidth = reviewsTable.getWidth() - 2;
 			reviewsTable.setRowHeight(35);
 			reviewsTable.getColumnModel().getColumn(0).setWidth(tableWidth * 50 / 100);
@@ -498,5 +531,16 @@ public class FilmDetailsView extends FilmResultItem implements Runnable{
 		usersMarkFrame.setVisible(flag);
 		usersMarkLabel.setText(film.getNotaUsuario());
 		usersMarkLabel.setVisible(flag);
+	}
+	
+	private void searchDirector(String director) {
+		director = director.replaceAll("<HTML>", "");
+		String search = director.replaceAll("<U>", "");
+		parentView.searchItem(search, FilmAffinityBot.FILMAFFINITY_DIRECTOR_SEARCH_OPTION);
+	}
+	
+	private void searchActor() {
+		String search = getFilm().getReparto()[castingList.getSelectedIndex()];
+		parentView.searchItem(search, FilmAffinityBot.FILMAFFINITY_CAST_SEARCH_OPTION);
 	}
 }

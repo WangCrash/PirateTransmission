@@ -31,7 +31,7 @@ public class FichaPelicula extends HelperItem{
 	private String sinopsis;
 	private String[] premios;
 	private Map<String, String[]> criticas;
-	private String valoracion;
+	private String valoracionFA;
 	private String notaUsuario;
 	private String notaAlmasGemelas;
 	
@@ -163,10 +163,10 @@ public class FichaPelicula extends HelperItem{
 	}
 	
 	public String getValoracion() {
-		return valoracion;
+		return valoracionFA;
 	}
 	public void setValoracion(String valoracion) {
-		this.valoracion = valoracion;
+		this.valoracionFA = valoracion;
 	}
 	public String getNotaUsuario() {
 		return notaUsuario;
@@ -259,7 +259,7 @@ public class FichaPelicula extends HelperItem{
 				result += "Críticas: \n" + listaCriticas + "\n";
 			}
 		}
-		if(this.valoracion != null){
+		if(this.valoracionFA != null){
 			result += "Nota: " + this.getValoracion() + "\n";
 		}
 		if(this.notaUsuario != null){

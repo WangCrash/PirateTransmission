@@ -47,6 +47,7 @@ public class LastFMManager extends HelperManager {
 	public static final int LASTFM_ALL_SEARCH_OPTION = 0;
 	public static final int LASTFM_ARTIST_SEARCH_OPTION = 1;
 	public static final int LASTFM_ALBUM_SEARCH_OPTION = 2;
+	public static final int LASTFM_TAG_SEARCH_OPTION = 3;
 	
 	private final static String USER_AGENT = ConnectionManager.USER_AGENT;
 	private final String apiKey = "e316b14648cb44a93d18b79712dd0fa9";
@@ -60,6 +61,9 @@ public class LastFMManager extends HelperManager {
 	
 	private List<String> libraryArtists;
 	private List<String> libraryAlbums;
+	
+	private Thread daemon;
+	private long minutesToReCheck;
 	
 	private LastFMManager(){
 		user = "";
@@ -87,6 +91,7 @@ public class LastFMManager extends HelperManager {
 		if(session == null){
 			return true;
 		}
+		stopDaemon();
 		session = null;
 		return true;
 	}
@@ -200,11 +205,85 @@ public class LastFMManager extends HelperManager {
 			return searchArtist(search);
 		case LASTFM_ALBUM_SEARCH_OPTION:
 			return searchAlbum(search);
+		case LASTFM_TAG_SEARCH_OPTION:
+			return searchTag(search);
 		default:
 			return null;
 		}
 	}
 	
+	private HelperItem[] searchArtist(String search) {
+		Collection<Artist> artistResults = Artist.search(search, apiKey);
+		Artista[] results = new Artista[artistResults.size()];
+		int i = 0;
+		for (Artist artist : artistResults) {
+			if(artist == null){
+				continue;
+			}
+			results[i] = new Artista(artist);
+			results[i].setRated(isArtistInLibrary(artist, libraryArtists));
+			i++;
+		}
+		return results;
+	}
+	
+	private HelperItem[] searchAlbum(String search) {
+		Collection<Album> albumResults = Album.search(search, apiKey);
+		Disco[] results = new Disco[albumResults.size()];
+		int i = 0;
+		for (Album album : albumResults) {
+			if(album == null){
+				continue;
+			}
+			results[i] = new Disco(album);
+			results[i].setRated(isAlbumInLibrary(album, libraryAlbums));
+			i++;
+		}
+		return results;
+	}
+
+	private HelperItem[] searchAll(String search) {
+		HelperItem[] artistResults = searchArtist(search);
+		HelperItem[] albumsResults = searchAlbum(search);
+		HelperItem[] total = new HelperItem[artistResults.length + albumsResults.length];
+		System.arraycopy(artistResults, 0, total, 0, artistResults.length);
+		System.arraycopy(albumsResults, 0, total, artistResults.length, albumsResults.length);
+		return total;
+	}
+	
+	private boolean isArtistInLibrary(Artist artist, List<String> libraryArtists){
+		if(libraryArtists == null){
+			return false;
+		}
+		synchronized (libraryArtists) {
+			return libraryArtists.contains(artist.getName());
+		}
+	}
+	
+	private boolean isAlbumInLibrary(Album album, List<String> libraryAlbums){
+		if(libraryAlbums == null){
+			return false;
+		}
+		synchronized (libraryAlbums) {
+			return libraryAlbums.contains(album.getArtist() + "||" + album.getName());
+		}
+	}
+	
+	private HelperItem[] searchTag(String search) {
+		Collection<Artist> tagResults = Tag.getTopArtists(search, apiKey);
+		Artista[] results = new Artista[tagResults.size()];
+		int i = 0;
+		for (Artist artist : tagResults) {
+			if(artist == null){
+				continue;
+			}
+			results[i] = new Artista(artist);
+			results[i].setRated(isArtistInLibrary(artist, libraryAlbums));
+			i++;
+		}
+		return results;
+	}
+
 	private List<String> getLibraryArtists(){
 		return getLibraryItems("http://ws.audioscrobbler.com/2.0/?method=library.getartists&api_key=" + apiKey + "&user=" + user, "artist");
 	}
@@ -288,63 +367,6 @@ public class LastFMManager extends HelperManager {
 		}
 		return itemsNames;
 	}
-
-	private HelperItem[] searchArtist(String search) {
-		Collection<Artist> artistResults = Artist.search(search, apiKey);
-		Artista[] results = new Artista[artistResults.size()];
-		int i = 0;
-		for (Artist artist : artistResults) {
-			if(artist == null){
-				continue;
-			}
-			results[i] = new Artista(artist);
-			results[i].setRated(isArtistInLibrary(artist, libraryArtists));
-			i++;
-		}
-		return results;
-	}
-	
-	private HelperItem[] searchAlbum(String search) {
-		Collection<Album> albumResults = Album.search(search, apiKey);
-		Disco[] results = new Disco[albumResults.size()];
-		int i = 0;
-		for (Album album : albumResults) {
-			if(album == null){
-				continue;
-			}
-			results[i] = new Disco(album);
-			results[i].setRated(isAlbumInLibrary(album, libraryAlbums));
-			i++;
-		}
-		return results;
-	}
-
-	private HelperItem[] searchAll(String search) {
-		HelperItem[] artistResults = searchArtist(search);
-		HelperItem[] albumsResults = searchAlbum(search);
-		HelperItem[] total = new HelperItem[artistResults.length + albumsResults.length];
-		System.arraycopy(artistResults, 0, total, 0, artistResults.length);
-		System.arraycopy(albumsResults, 0, total, artistResults.length, albumsResults.length);
-		return total;
-	}
-	
-	private boolean isArtistInLibrary(Artist artist, List<String> libraryArtists){
-		if(libraryArtists == null){
-			return false;
-		}
-		synchronized (libraryArtists) {
-			return libraryArtists.contains(artist.getName());
-		}
-	}
-	
-	private boolean isAlbumInLibrary(Album album, List<String> libraryAlbums){
-		if(libraryAlbums == null){
-			return false;
-		}
-		synchronized (libraryAlbums) {
-			return libraryAlbums.contains(album.getArtist() + "||" + album.getName());
-		}
-	}
 	
 	public Artista getSimilarArtists(Artista artista){
 		Collection<Artist> similarArtists = Artist.getSimilar(artista.getNombre(), 5, apiKey);
@@ -421,6 +443,7 @@ public class LastFMManager extends HelperManager {
 		setUpManager();
 		Caller.getInstance().setUserAgent(USER_AGENT);
 		initSession();
+		minutesToReCheck = 10 * 60 * 1000;
 		watchForLibraryDaemon();
 		return (session != null);
 	}
@@ -496,7 +519,7 @@ public class LastFMManager extends HelperManager {
 	}
 	
 	private void watchForLibraryDaemon(){
-		Thread t = new Thread(new Runnable() {
+		daemon = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				System.out.println("iniciando proceso...");
@@ -516,29 +539,26 @@ public class LastFMManager extends HelperManager {
 						DateFormat df = new SimpleDateFormat("HH:mm:ss");
 						Date today = Calendar.getInstance().getTime();        
 						String reportDate = df.format(today);
-						System.out.println("Report Date: " + reportDate);
 						System.out.println("[" +  reportDate + "]: durmiendo...");
-						Thread.sleep(10 * 360 * 1000);
+						Thread.sleep(minutesToReCheck);
 					} catch (InterruptedException e) {
+						System.out.println("Interrupted!!!!");
 						return;
 					}
 					System.out.println("repitiendo proceso...");
 				}
 			}
 		});
-		t.start();
+		daemon.start();
+	}
+	
+	private void stopDaemon(){
+		if(daemon != null){
+			daemon.interrupt();
+		}
 	}
 	
 	public static void main(String[] args){
 		LastFMManager.getInstance().initManager();
-		LastFMManager.getInstance().getRecommendations();
-		Date start = new Date();
-		LastFMManager.getInstance().searchAll("tom petty");
-		Date end = new Date();
-		System.out.println(end.getTime() - start.getTime() + " milisegundos");
-		DateFormat df = new SimpleDateFormat("HH:mm:ss");
-		Date today = Calendar.getInstance().getTime();        
-		String reportDate = df.format(today);
-		System.out.println("Report Date: " + reportDate);
 	}
 }

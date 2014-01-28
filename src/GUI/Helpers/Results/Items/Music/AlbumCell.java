@@ -10,7 +10,10 @@ import Model.HelperItem;
 import Utils.UtilTools;
 
 import javax.swing.border.LineBorder;
+
 import java.awt.Color;
+import java.awt.Cursor;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
@@ -23,6 +26,8 @@ import javax.swing.SwingUtilities;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 @SuppressWarnings("serial")
 public class AlbumCell extends MusicResultItem {
@@ -85,6 +90,15 @@ public class AlbumCell extends MusicResultItem {
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
 		
 		artistLabel = new JLabel("New label");
+		artistLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount() == 1){
+					searchArtist();
+				}
+			}
+		});
+		artistLabel.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -103,12 +117,13 @@ public class AlbumCell extends MusicResultItem {
 									.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 										.addComponent(artistLabel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
 										.addComponent(lblNewLabel, Alignment.LEADING)
-										.addComponent(tagsPanel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
-										.addGroup(groupLayout.createSequentialGroup()
-											.addGap(121)
-											.addComponent(showDetailsButton, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
-											.addPreferredGap(ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
-											.addComponent(rateButton, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)))))))
+										.addGroup(Alignment.LEADING, groupLayout.createParallelGroup(Alignment.TRAILING, false)
+											.addComponent(tagsPanel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+											.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+												.addGap(109)
+												.addComponent(showDetailsButton, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
+												.addPreferredGap(ComponentPlacement.RELATED)
+												.addComponent(rateButton, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE))))))))
 					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
@@ -123,12 +138,12 @@ public class AlbumCell extends MusicResultItem {
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(artistLabel)
 							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(tagsPanel, GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+							.addComponent(tagsPanel, GroupLayout.DEFAULT_SIZE, 13, Short.MAX_VALUE)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 								.addComponent(searchTorrentButton)
-								.addComponent(rateButton)
-								.addComponent(showDetailsButton))
+								.addComponent(showDetailsButton)
+								.addComponent(rateButton))
 							.addGap(12))
 						.addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE))
 					.addContainerGap())
@@ -140,7 +155,8 @@ public class AlbumCell extends MusicResultItem {
 	private void initLabels() {
 		getArtistImage();
 		titleLabel.setText(getDisco().getNombre());
-		artistLabel.setText(getDisco().getArtista());
+		artistLabel.setText("<HTML><U>" + getDisco().getArtista() + "<U><HTML>");
+		artistLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		getItemTags();
 	}
 
@@ -169,6 +185,16 @@ public class AlbumCell extends MusicResultItem {
 		String[] albumTags = getDisco().getNFirstTags(5);
 		for (int i = 0; i < albumTags.length; i++) {
 			JLabel tag = new JLabel("<HTML><U>" + albumTags[i] + "<U><HTML>");
+			tag.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			tag.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					JLabel tag = (JLabel)e.getSource();
+					if(e.getClickCount() == 1){
+						searchTag(tag.getText());
+					}
+				}
+			});
 			tag.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			tagsPanel.add(tag);
 		}
@@ -235,5 +261,16 @@ public class AlbumCell extends MusicResultItem {
 			}
 		});
 		t.start();
+	}
+	private void searchArtist() {
+		String search = getDisco().getArtista();
+		parentView.searchItem(search, LastFMManager.LASTFM_ARTIST_SEARCH_OPTION);		
+	}
+	
+	private void searchTag(String tag){
+		tag = tag.replaceAll("<HTML>", "");
+		tag = tag.replaceAll("<U>", "");
+		String search = tag;
+		parentView.searchItem(search, LastFMManager.LASTFM_TAG_SEARCH_OPTION);
 	}
 }

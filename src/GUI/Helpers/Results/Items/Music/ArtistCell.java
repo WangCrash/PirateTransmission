@@ -10,7 +10,10 @@ import Model.HelperItem;
 import Utils.UtilTools;
 
 import javax.swing.border.LineBorder;
+
 import java.awt.Color;
+import java.awt.Cursor;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
@@ -23,6 +26,9 @@ import javax.swing.SwingUtilities;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 @SuppressWarnings("serial")
 public class ArtistCell extends MusicResultItem {
@@ -83,7 +89,7 @@ public class ArtistCell extends MusicResultItem {
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(titleLabel, GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
+						.addComponent(titleLabel, GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
@@ -94,20 +100,22 @@ public class ArtistCell extends MusicResultItem {
 									.addComponent(showDetailsButton, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
 									.addPreferredGap(ComponentPlacement.RELATED)
 									.addComponent(rateButton, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE))
-								.addComponent(tagsPanel, GroupLayout.DEFAULT_SIZE, 338, Short.MAX_VALUE))))
+								.addComponent(tagsPanel, GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE))
+							.addGap(12)))
 					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.TRAILING)
-				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(titleLabel)
 					.addGap(18)
 					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 						.addComponent(imageLabel, GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(tagsPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGap(18)
+							.addComponent(tagsPanel, GroupLayout.DEFAULT_SIZE, 20, Short.MAX_VALUE)
+							.addGap(18)
 							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 								.addComponent(searchTorrentButton)
 								.addComponent(showDetailsButton)
@@ -149,6 +157,16 @@ public class ArtistCell extends MusicResultItem {
 		String[] artistTags = getArtista().getNFirstTags(5);
 		for (int i = 0; i < artistTags.length; i++) {
 			JLabel tag = new JLabel("<HTML><U>" + artistTags[i] + "<U><HTML>");
+			tag.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			tag.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					JLabel tag = (JLabel)e.getSource();
+					if(e.getClickCount() == 1){
+						searchTag(tag.getText());
+					}
+				}
+			});
 			tag.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			tagsPanel.add(tag);
 		}
@@ -215,5 +233,12 @@ public class ArtistCell extends MusicResultItem {
 			}
 		});
 		t.start();
+	}
+	
+	private void searchTag(String tag){
+		tag = tag.replaceAll("<HTML>", "");
+		tag = tag.replaceAll("<U>", "");
+		String search = tag;
+		parentView.searchItem(search, LastFMManager.LASTFM_TAG_SEARCH_OPTION);
 	}
 }

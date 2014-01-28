@@ -1,4 +1,4 @@
-package GUI.Helpers.Results.Items.Films;
+package GUI.Helpers.Results.Items.Films.ReviewsTable;
 
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -11,6 +11,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.CellRendererPane;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.table.AbstractTableModel;
 
@@ -21,9 +22,10 @@ public class ReviewsTableModel extends AbstractTableModel implements ActionListe
 	private FichaPelicula film;
 	private String[] columns;
 	private String[] authors;
+	private static final Class<?>[] COLUMN_TYPES = new Class<?>[] {Integer.class, ImageIcon.class, JButton.class};
 	private ButtonGroup buttons;
 	
-	public ReviewsTableModel(FichaPelicula film){
+	public ReviewsTableModel(JFrame mainFrame, FichaPelicula film){
 		super();
 		this.film = film;
 		columns = new String[]{"Autor", "Valoración", ""};
@@ -52,11 +54,8 @@ public class ReviewsTableModel extends AbstractTableModel implements ActionListe
 	}
 	
 	@Override
-	public Class getColumnClass(int column){
-		if(column == 2){
-			return JButton.class;
-		}
-		return this.getValueAt(0, column).getClass();
+	public Class<?> getColumnClass(int column){
+		return COLUMN_TYPES[column];
 	}
 
 	@Override
@@ -89,7 +88,7 @@ public class ReviewsTableModel extends AbstractTableModel implements ActionListe
 			System.out.println("image added");
 			return tools.getScaledImage(image.getImage(), 30, 30);
 		case 2:
-			JButton button = new JButton("Leer");
+			JButton button = new ReviewsTableButton("Leer", author);
 			button.addActionListener(this);
 			buttons.add(button);
 			return button;
@@ -100,7 +99,8 @@ public class ReviewsTableModel extends AbstractTableModel implements ActionListe
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("botón leer presionado");
+		ReviewsTableButton button = (ReviewsTableButton)e.getSource();
+		System.out.println(film.getCritica(button.getReviewsKey()));
 	}
 
 }

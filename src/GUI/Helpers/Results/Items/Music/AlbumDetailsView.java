@@ -7,7 +7,6 @@ import GUI.Helpers.Results.HelperResultsSection;
 import Managers.Helpers.LastFMManager;
 import Model.Disco;
 import Model.HelperItem;
-
 import Utils.UtilTools;
 
 import javax.swing.GroupLayout;
@@ -15,18 +14,29 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
+
+import java.awt.Cursor;
 import java.awt.Font;
+
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JList;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import javax.swing.border.LineBorder;
+
 import java.awt.Color;
+
 import javax.swing.ImageIcon;
+
+import java.awt.SystemColor;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 
 @SuppressWarnings("serial")
@@ -62,6 +72,14 @@ public class AlbumDetailsView extends MusicResultItem {
 		lblArtista.setFont(new Font("Tahoma", Font.BOLD, 12));
 		
 		artistLabel = new JLabel("artista");
+		artistLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount() == 1){
+					searchArtist();
+				}
+			}
+		});
 		artistLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		
 		songsList = new JList<String>();
@@ -88,7 +106,7 @@ public class AlbumDetailsView extends MusicResultItem {
 		lblGnero.setFont(new Font("Tahoma", Font.BOLD, 12));
 		
 		tagsPanel = new JPanel();
-		tagsPanel.setBackground(new Color(204, 255, 153));
+		tagsPanel.setBackground(SystemColor.menu);
 		
 		imageLabel = new JLabel("");
 		imageLabel.setIcon(new ImageIcon(AlbumDetailsView.class.getResource("/javax/swing/plaf/basic/icons/image-delayed.png")));
@@ -176,7 +194,8 @@ public class AlbumDetailsView extends MusicResultItem {
 		Disco disco = getDisco();
 		getAlbumImage();
 		titleLabel.setText(disco.getNombre());
-		artistLabel.setText(disco.getArtista());
+		artistLabel.setText("<HTML><U>" + disco.getArtista() + "<U><HTML>");
+		artistLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		if(disco.getTags() == null){
 			getItemTags();
 		}else{
@@ -233,6 +252,16 @@ public class AlbumDetailsView extends MusicResultItem {
 		String[] albumTags = getDisco().getNFirstTags(5);
 		for (int i = 0; i < albumTags.length; i++) {
 			JLabel tag = new JLabel("<HTML><U>" + albumTags[i] + "<U><HTML>");
+			tag.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			tag.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					JLabel tag = (JLabel)e.getSource();
+					if(e.getClickCount() == 1){
+						searchTag(tag.getText());
+					}
+				}
+			});
 			tag.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			tagsPanel.add(tag);
 		}
@@ -315,5 +344,17 @@ public class AlbumDetailsView extends MusicResultItem {
 			}
 		});
 		t.start();
+	}
+	
+	private void searchArtist() {
+		String search = getDisco().getArtista();
+		parentView.searchItem(search, LastFMManager.LASTFM_ARTIST_SEARCH_OPTION);		
+	}
+	
+	private void searchTag(String tag){
+		tag = tag.replaceAll("<HTML>", "");
+		tag = tag.replaceAll("<U>", "");
+		String search = tag;
+		parentView.searchItem(search, LastFMManager.LASTFM_TAG_SEARCH_OPTION);
 	}
 }

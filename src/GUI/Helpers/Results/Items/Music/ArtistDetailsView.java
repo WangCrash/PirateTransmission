@@ -6,7 +6,6 @@ import javax.swing.SwingUtilities;
 import GUI.Helpers.Results.HelperResultsSection;
 import Managers.Helpers.LastFMManager;
 import Model.HelperItem;
-
 import Model.Artista;
 import Utils.UtilTools;
 
@@ -15,23 +14,35 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
+
+import java.awt.Cursor;
 import java.awt.Font;
+
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JList;
 import javax.swing.SwingConstants;
 import javax.swing.JPanel;
+
 import java.awt.FlowLayout;
+
 import javax.swing.JButton;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import javax.swing.ImageIcon;
 import javax.swing.border.LineBorder;
+
 import java.awt.Color;
+
 import javax.swing.ScrollPaneConstants;
 import javax.swing.DropMode;
+
 import java.awt.SystemColor;
+
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -107,6 +118,14 @@ public class ArtistDetailsView extends MusicResultItem {
 		imageLabel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		
 		discographyList = new JList<String>();
+		discographyList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if(arg0.getClickCount() == 2 && discographyList.getSelectedIndex() != -1){
+					searchAlbum();
+				}
+			}
+		});
 		discographyScrollPane.setViewportView(discographyList);
 		
 		similarsList = new JList<String>();
@@ -137,26 +156,26 @@ public class ArtistDetailsView extends MusicResultItem {
 					.addGap(13)
 					.addComponent(label_3)
 					.addGap(67)
-					.addComponent(tagsPanel, GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
+					.addComponent(tagsPanel, GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
 					.addGap(17))
 				.addGroup(gl_panel.createSequentialGroup()
 					.addGap(13)
 					.addComponent(label_2, GroupLayout.PREFERRED_SIZE, 112, GroupLayout.PREFERRED_SIZE)
 					.addGap(4)
-					.addComponent(similarsScrollPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addComponent(similarsScrollPane)
 					.addGap(17))
 				.addGroup(gl_panel.createSequentialGroup()
 					.addGap(13)
 					.addComponent(label_4)
 					.addGap(49)
-					.addComponent(discographyScrollPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addComponent(discographyScrollPane)
 					.addGap(17))
 				.addGroup(gl_panel.createSequentialGroup()
 					.addGap(13)
 					.addComponent(label_1, GroupLayout.PREFERRED_SIZE, 101, GroupLayout.PREFERRED_SIZE))
 				.addGroup(gl_panel.createSequentialGroup()
 					.addGap(13)
-					.addComponent(bioScrollPane, GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
+					.addComponent(bioScrollPane, GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
 					.addGap(17))
 				.addGroup(gl_panel.createSequentialGroup()
 					.addGap(142)
@@ -183,15 +202,16 @@ public class ArtistDetailsView extends MusicResultItem {
 						.addGroup(gl_panel.createSequentialGroup()
 							.addGap(1)
 							.addComponent(label_2))
-						.addComponent(similarsScrollPane, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE))
+						.addComponent(similarsScrollPane, GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE))
 					.addGap(18)
 					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
 						.addComponent(label_4)
-						.addComponent(discographyScrollPane, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE))
+						.addComponent(discographyScrollPane, GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE))
 					.addGap(27)
 					.addComponent(label_1)
 					.addGap(6)
-					.addComponent(bioScrollPane, GroupLayout.PREFERRED_SIZE, 140, GroupLayout.PREFERRED_SIZE))
+					.addComponent(bioScrollPane, GroupLayout.PREFERRED_SIZE, 140, GroupLayout.PREFERRED_SIZE)
+					.addGap(34))
 		);
 		panel.setLayout(gl_panel);
 		setLayout(groupLayout);
@@ -271,6 +291,16 @@ public class ArtistDetailsView extends MusicResultItem {
 		String[] artistTags = getArtista().getNFirstTags(5);
 		for (int i = 0; i < artistTags.length; i++) {
 			JLabel tag = new JLabel("<HTML><U>" + artistTags[i] + "<U><HTML>");
+			tag.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			tag.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					JLabel tag = (JLabel)e.getSource();
+					if(e.getClickCount() == 1){
+						searchTag(tag.getText());
+					}
+				}
+			});
 			tag.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			tagsPanel.add(tag);
 		}
@@ -362,5 +392,17 @@ public class ArtistDetailsView extends MusicResultItem {
 	private void searchSimilarArtist() {
 		String search =	getArtista().getSimilares()[similarsList.getSelectedIndex()].getNombre();
 		parentView.searchItem(search, LastFMManager.LASTFM_ARTIST_SEARCH_OPTION);
+	}
+	
+	private void searchAlbum(){
+		String search = getArtista().getNombre() + " " + getArtista().getDiscografia()[discographyList.getSelectedIndex()].getNombre();
+		parentView.searchItem(search, LastFMManager.LASTFM_ALBUM_SEARCH_OPTION);
+	}
+	
+	private void searchTag(String tag){
+		tag = tag.replaceAll("<HTML>", "");
+		tag = tag.replaceAll("<U>", "");
+		String search = tag;
+		parentView.searchItem(search, LastFMManager.LASTFM_TAG_SEARCH_OPTION);
 	}
 }

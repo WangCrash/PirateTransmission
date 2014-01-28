@@ -53,6 +53,12 @@ public class RateMovieView extends JDialog {
 		this.mainFrame = rootFrame;
 		this.parentView = parentView;
 		this.film = film;
+		if((film.getDataUcd() == null) || film.getDataUcd().isEmpty()){
+			this.film = FilmAffinityBot.getInstance().fillFichaPelicula(film);
+			if(this.film == null){
+				new UtilTools().showWarningDialog(mainFrame, "Error","Puede que no estés conectado");
+			}
+		}
 		
 		setUndecorated(true);
 		setBounds(100, 100, 450, 300);
@@ -82,7 +88,6 @@ public class RateMovieView extends JDialog {
 		titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		rateField = new JTextField();
-		rateField.setText((film.getNotaUsuario() == null) || (film.getNotaUsuario().equals("-1"))?"":film.getNotaUsuario());
 		rateField.setHorizontalAlignment(SwingConstants.CENTER);
 		rateField.setFont(new Font("Tahoma", Font.PLAIN, 50));
 		rateField.setColumns(2);
@@ -110,6 +115,11 @@ public class RateMovieView extends JDialog {
 					.addContainerGap(40, Short.MAX_VALUE))
 		);
 		panel.setLayout(gl_panel);
+		String rateText = "";
+		if((this.film.getNotaUsuario() != null) && (!this.film.getNotaUsuario().equals(FilmAffinityBot.FILMAFFINITY_FILM_NOT_WATCHED))){
+			rateText = this.film.getNotaUsuario();
+		}
+		rateField.setText(rateText);
 		contentPanel.setLayout(gl_contentPanel);
 		{
 			JPanel buttonPane = new JPanel();
