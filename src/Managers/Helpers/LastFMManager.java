@@ -5,10 +5,13 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,10 +58,15 @@ public class LastFMManager extends HelperManager {
 	private String user;
 	private String password;
 	
+	private List<String> libraryArtists;
+	private List<String> libraryAlbums;
+	
 	private LastFMManager(){
 		user = "";
 		password = "";
 		token = "";
+		libraryArtists = null;
+		libraryAlbums = null;
 	}
 	
 	public static LastFMManager getInstance(){
@@ -282,7 +290,6 @@ public class LastFMManager extends HelperManager {
 	}
 
 	private HelperItem[] searchArtist(String search) {
-		List<String> libraryArtists = getLibraryArtists();
 		Collection<Artist> artistResults = Artist.search(search, apiKey);
 		Artista[] results = new Artista[artistResults.size()];
 		int i = 0;
@@ -298,7 +305,6 @@ public class LastFMManager extends HelperManager {
 	}
 	
 	private HelperItem[] searchAlbum(String search) {
-		List<String> libraryAlbums = getLibraryAlbums();
 		Collection<Album> albumResults = Album.search(search, apiKey);
 		Disco[] results = new Disco[albumResults.size()];
 		int i = 0;
@@ -307,6 +313,7 @@ public class LastFMManager extends HelperManager {
 				continue;
 			}
 			results[i] = new Disco(album);
+			results[i].setRated(isAlbumInLibrary(album, libraryAlbums));
 			i++;
 		}
 		return results;
@@ -322,11 +329,21 @@ public class LastFMManager extends HelperManager {
 	}
 	
 	private boolean isArtistInLibrary(Artist artist, List<String> libraryArtists){
-		return libraryArtists.contains(artist.getName());
+		if(libraryArtists == null){
+			return false;
+		}
+		synchronized (libraryArtists) {
+			return libraryArtists.contains(artist.getName());
+		}
 	}
 	
 	private boolean isAlbumInLibrary(Album album, List<String> libraryAlbums){
-		return libraryAlbums.contains(album.getArtist() + "||" + album.getName());
+		if(libraryAlbums == null){
+			return false;
+		}
+		synchronized (libraryAlbums) {
+			return libraryAlbums.contains(album.getArtist() + "||" + album.getName());
+		}
 	}
 	
 	public Artista getSimilarArtists(Artista artista){
@@ -404,6 +421,7 @@ public class LastFMManager extends HelperManager {
 		setUpManager();
 		Caller.getInstance().setUserAgent(USER_AGENT);
 		initSession();
+		watchForLibraryDaemon();
 		return (session != null);
 	}
 
@@ -477,8 +495,50 @@ public class LastFMManager extends HelperManager {
 		}
 	}
 	
+	private void watchForLibraryDaemon(){
+		Thread t = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				System.out.println("iniciando proceso...");
+				while(true){
+					Date start = new Date();
+					List<String> artists = getLibraryArtists();
+					Date end = new Date();
+					System.out.println("artistas de la coleccion en: " + (end.getTime() - start.getTime()));
+					synchronized (artists) {
+						libraryArtists = artists;
+					}
+					List<String> albums = getLibraryAlbums();
+					synchronized (albums) {
+						libraryAlbums = albums;
+					}
+					try {
+						DateFormat df = new SimpleDateFormat("HH:mm:ss");
+						Date today = Calendar.getInstance().getTime();        
+						String reportDate = df.format(today);
+						System.out.println("Report Date: " + reportDate);
+						System.out.println("[" +  reportDate + "]: durmiendo...");
+						Thread.sleep(10 * 360 * 1000);
+					} catch (InterruptedException e) {
+						return;
+					}
+					System.out.println("repitiendo proceso...");
+				}
+			}
+		});
+		t.start();
+	}
+	
 	public static void main(String[] args){
 		LastFMManager.getInstance().initManager();
-		LastFMManager.getInstance().testing();
+		LastFMManager.getInstance().getRecommendations();
+		Date start = new Date();
+		LastFMManager.getInstance().searchAll("tom petty");
+		Date end = new Date();
+		System.out.println(end.getTime() - start.getTime() + " milisegundos");
+		DateFormat df = new SimpleDateFormat("HH:mm:ss");
+		Date today = Calendar.getInstance().getTime();        
+		String reportDate = df.format(today);
+		System.out.println("Report Date: " + reportDate);
 	}
 }
