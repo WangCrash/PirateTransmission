@@ -21,5 +21,8 @@ public abstract class ResultsContainer extends JPanel{
 	public void setResults(HelperItem[] items){
 		this.items = items;
 	}
-	protected abstract void showResults();	
+	protected abstract void showResults();
+	
+	public abstract void setScrollPosition(int verticalValue);
+	public abstract int getScrollValue();
 }

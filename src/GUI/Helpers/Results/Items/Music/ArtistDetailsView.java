@@ -53,7 +53,7 @@ public class ArtistDetailsView extends MusicResultItem {
 		this.setArtista((Artista)helperItem);
 		
 		JPanel panel = new JPanel();
-		panel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, Color.DARK_GRAY, null, null, null));
+		panel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, new Color(64, 64, 64), null, null, null));
 		panel.setBackground(SystemColor.menu);
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
@@ -90,7 +90,7 @@ public class ArtistDetailsView extends MusicResultItem {
 		label_3.setFont(new Font("Tahoma", Font.BOLD, 12));
 		
 		tagsPanel = new JPanel();
-		tagsPanel.setBackground(new Color(204, 255, 153));
+		tagsPanel.setBackground(SystemColor.menu);
 		tagsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		JScrollPane bioScrollPane = new JScrollPane();
@@ -131,36 +131,37 @@ public class ArtistDetailsView extends MusicResultItem {
 					.addGap(6)
 					.addComponent(titleLabel, GroupLayout.PREFERRED_SIZE, 392, GroupLayout.PREFERRED_SIZE))
 				.addGroup(gl_panel.createSequentialGroup()
-					.addGap(105)
-					.addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 207, GroupLayout.PREFERRED_SIZE))
-				.addGroup(gl_panel.createSequentialGroup()
 					.addGap(169)
 					.addComponent(rateButton))
 				.addGroup(gl_panel.createSequentialGroup()
 					.addGap(13)
 					.addComponent(label_3)
 					.addGap(67)
-					.addComponent(tagsPanel, GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
+					.addComponent(tagsPanel, GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
 					.addGap(17))
 				.addGroup(gl_panel.createSequentialGroup()
 					.addGap(13)
 					.addComponent(label_2, GroupLayout.PREFERRED_SIZE, 112, GroupLayout.PREFERRED_SIZE)
 					.addGap(4)
-					.addComponent(similarsScrollPane)
+					.addComponent(similarsScrollPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addGap(17))
 				.addGroup(gl_panel.createSequentialGroup()
 					.addGap(13)
 					.addComponent(label_4)
 					.addGap(49)
-					.addComponent(discographyScrollPane)
+					.addComponent(discographyScrollPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addGap(17))
 				.addGroup(gl_panel.createSequentialGroup()
 					.addGap(13)
 					.addComponent(label_1, GroupLayout.PREFERRED_SIZE, 101, GroupLayout.PREFERRED_SIZE))
 				.addGroup(gl_panel.createSequentialGroup()
 					.addGap(13)
-					.addComponent(bioScrollPane, GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
+					.addComponent(bioScrollPane, GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
 					.addGap(17))
+				.addGroup(gl_panel.createSequentialGroup()
+					.addGap(142)
+					.addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(134, Short.MAX_VALUE))
 		);
 		gl_panel.setVerticalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
@@ -347,7 +348,7 @@ public class ArtistDetailsView extends MusicResultItem {
 				ImageIcon image = new ImageIcon(getArtista().getImageURL());
 				imageLabel.setText("");
 				//imageLabel.setBorder(null);
-				imageLabel.setIcon(new UtilTools().getScaledImage(image.getImage(), 230, 170));
+				imageLabel.setIcon(new UtilTools().getScaledImage(image.getImage(), 140, 170));
 				SwingUtilities.invokeLater(new Runnable(){
 					public void run(){
 						revalidate();

@@ -27,6 +27,7 @@ import Model.HelperItem;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
+import java.awt.Rectangle;
 import java.awt.SystemColor;
 
 import javax.swing.ImageIcon;
@@ -145,5 +146,14 @@ public class MultipartScrollableResultsContainer extends ResultsContainer{
 	public void goBack(){
 		System.out.println("GOING BACK");
 		parentView.showResults();
+	}
+
+	@Override
+	public void setScrollPosition(int verticalValue) {
+	}
+
+	@Override
+	public int getScrollValue(){
+		return 0;
 	}
 }

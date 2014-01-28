@@ -8,6 +8,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.SwingUtilities;
 
 import java.awt.Color;
+import java.awt.Rectangle;
 
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
@@ -32,6 +33,7 @@ public class SimpleScrollableResultsContainer extends ResultsContainer{
 	private static final long serialVersionUID = 8817672622988670420L;
 	
 	private JPanel resultsPanel;
+	private JScrollPane scrollPane;
 
 	/**
 	 * Create the panel.
@@ -40,7 +42,7 @@ public class SimpleScrollableResultsContainer extends ResultsContainer{
 		super(mainFrame, items);
 		this.parentView = parentView;
 		
-		JScrollPane scrollPane = new JScrollPane();
+		scrollPane = new JScrollPane();
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		//scrollPane.;
@@ -99,5 +101,16 @@ public class SimpleScrollableResultsContainer extends ResultsContainer{
 	
 	public JPanel getContentPanel() {
 		return resultsPanel;
+	}
+
+	@Override
+	public void setScrollPosition(int verticalValue) {
+		Rectangle visible = scrollPane.getViewport().getVisibleRect();
+		scrollPane.getViewport().scrollRectToVisible(new Rectangle(visible.x, verticalValue, visible.width, visible.height));
+	}
+
+	@Override
+	public int getScrollValue() {
+		return scrollPane.getVerticalScrollBar().getValue();
 	}
 }

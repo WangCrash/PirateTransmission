@@ -3,8 +3,10 @@ package GUI.Helpers.Results;
 import javax.swing.JPanel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.JScrollBar;
 
 import java.awt.Color;
+import java.awt.Rectangle;
 
 import GUI.MainWindow;
 import GUI.Helpers.Results.Container.MultipartScrollableResultsContainer;
@@ -26,6 +28,7 @@ public class HelperResultsSection extends JPanel {
 	private JPanel rootPanel;
 	private ResultsContainer resultsContainer;
 	private HelperItem[] items;
+	private int resultsScrollValue;
 
 	/**
 	 * Create the panel.
@@ -80,6 +83,10 @@ public class HelperResultsSection extends JPanel {
 	
 	public void showResults(){
 		showResults(this.items);
+		if(resultsScrollValue != 0){
+			System.out.println("setting scroll position to " + resultsScrollValue);
+			resultsContainer.setScrollPosition(resultsScrollValue);
+		}
 	}
 	
 	public void showItemDetails(HelperItem item){
@@ -91,6 +98,7 @@ public class HelperResultsSection extends JPanel {
 			System.out.println("no hay items");
 			return;
 		}
+		resultsScrollValue = resultsContainer.getScrollValue();
 		if(rootPanel.getComponentCount() > 0){
 			rootPanel.removeAll();
 		}
