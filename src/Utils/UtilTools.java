@@ -129,7 +129,7 @@ public class UtilTools {
 			chain = chain.substring(1);
 		}
 		if(chain.endsWith("\"")){
-			chain = chain.substring(0, chain.length());
+			chain = chain.substring(0, chain.length() - 1);
 		}
 		return chain;
 	}

@@ -24,6 +24,7 @@ public class ReviewsTableModel extends AbstractTableModel implements ActionListe
 	private String[] authors;
 	private static final Class<?>[] COLUMN_TYPES = new Class<?>[] {Integer.class, ImageIcon.class, JButton.class};
 	private ButtonGroup buttons;
+	private JFrame mainFrame;
 	
 	public ReviewsTableModel(JFrame mainFrame, FichaPelicula film){
 		super();
@@ -31,6 +32,7 @@ public class ReviewsTableModel extends AbstractTableModel implements ActionListe
 		columns = new String[]{"Autor", "Valoración", ""};
 		authors = film.getCriticas().keySet().toArray(new String[0]);
 		buttons = new ButtonGroup();
+		this.mainFrame = mainFrame;
 	}
 	
 	@Override
@@ -82,7 +84,7 @@ public class ReviewsTableModel extends AbstractTableModel implements ActionListe
 				image = new ImageIcon(getClass().getResource("/images/emoticons/angry.png"));
 				break;
 			default:
-				System.out.println("valoracion no determinada");
+				System.out.println("valoración no determinada");
 				return null;
 			}
 			System.out.println("image added");
@@ -100,7 +102,10 @@ public class ReviewsTableModel extends AbstractTableModel implements ActionListe
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		ReviewsTableButton button = (ReviewsTableButton)e.getSource();
-		System.out.println(film.getCritica(button.getReviewsKey()));
+		System.out.println(film.getCriticas());
+		
+		ReviewDialog reviewDialog = new ReviewDialog(mainFrame, button.getReviewsKey(), film.getCritica(button.getReviewsKey()));
+		reviewDialog.setVisible(true);
 	}
 
 }

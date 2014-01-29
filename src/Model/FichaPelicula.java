@@ -159,7 +159,7 @@ public class FichaPelicula extends HelperItem{
 		}else if(valoracion.equals("crítica neutra")){
 			return FICHAPELICULA_CRITICA_NEUTRA;
 		}
-		return -1;
+		return FICHAPELICULA_CRITICA_NO_DETERMINADA;
 	}
 	
 	public String getValoracion() {

@@ -126,7 +126,7 @@ public class FilmAffinitySearcherModule {
 		if(responseCode == HttpURLConnection.HTTP_OK){
 			ArrayList<FichaPelicula> lista = new ArrayList<FichaPelicula>();
 			lista = extractFilmsArray(responseText, lista);
-			lista = extractNotes(responseText, lista);
+			lista = extractMarks(responseText, lista);
 			result = Arrays.copyOf(lista.toArray(), lista.size(), FichaPelicula[].class);
 		}
 		
@@ -323,7 +323,7 @@ public class FilmAffinitySearcherModule {
 		return lista;
 	}
 	
-	private ArrayList<FichaPelicula> extractNotes(String html, ArrayList<FichaPelicula> lista) {
+	private ArrayList<FichaPelicula> extractMarks(String html, ArrayList<FichaPelicula> lista) {
 		String filmsNotesRegex = "<span class=\"wrat\">(.*?)</span>";
 		Pattern p = Pattern.compile(filmsNotesRegex);
 		Matcher m = p.matcher(html);
@@ -336,6 +336,7 @@ public class FilmAffinitySearcherModule {
 		return lista;
 	}
 	
+	//extrae toda la información de la ficha
 	private FichaPelicula extractFilmInfo(String html){
 		String contentRegex = "<table id=\"main-content-table\">(.*?)</table>";
 		Pattern p = Pattern.compile(contentRegex);
@@ -406,6 +407,7 @@ public class FilmAffinitySearcherModule {
 		return ficha;
 	}
 	
+	//extrae la información alojada en el panel central de la página (la información contenida en la etiqueta movie-info)
 	private FichaPelicula extractFilmData(String content, FichaPelicula ficha){
 		System.out.println(content);
 		String dataFrameRegex = "<dl class=\"movie-info\">(.*?)</dl>";
@@ -445,13 +447,22 @@ public class FilmAffinitySearcherModule {
 		m = p.matcher(content);
 		if(m.find()){
 			String awardsFrame = m.group(1);
-			
-			String awardsRegex = "<div.*?>\\s*?<a href.*?>(.*?)</a>(.*?)</div>";
+			//String awardsRegex = "<div(.*?>\\s*?<a href.*?>(.*?)</a>(.*?))</div>";
+			String awardsRegex = "<div\\s*?class=\".*?margin-bottom\">(.*?):(.*?)</div>";
 			p = Pattern.compile(awardsRegex);
 			m = p.matcher(awardsFrame);
 			ArrayList<String> list = new ArrayList<String>();
 			while(m.find()){
-				String year = m.group(1);
+				//System.out.println("GROUP 1: " + m.group(1));
+				if(m.group(1).contains("show-all-awards")){
+					continue;
+				}
+				String year = m.group(1).trim();
+				if(m.group(1).contains("href=")){
+					year = year.replaceAll("<a href=\".*?\">", "");
+					year = year.replaceAll("</a>", "");
+					year = year.trim();
+				}
 				String award = m.group(2).trim();
 				list.add(year + award);
 			}
@@ -463,27 +474,28 @@ public class FilmAffinitySearcherModule {
 		m = p.matcher(content);
 		if(m.find()){
 			String reviewsFrame = m.group(1);
-			System.out.println(reviewsFrame);
+			System.out.println("REVIEWS FRAME: " + reviewsFrame);
 			
-			String reviewsRegex = "<li\\s*?>\\s*?<div class=\"pro-review\">.*?<div>\\s*?(.*?)\\s*?</div>.*?<div class=\"pro-crit-med\">\\s*?(.*?)\\s*?</div>\\s*?</div>\\s*?</li>";
+			//String reviewsRegex = "<li\\s*?>\\s*?<div class=\"pro-review\">.*?<div>\\s*?(.*?)\\s*?</div>.*?<div class=\"pro-crit-med\">\\s*?(.*?)\\s*?</div>\\s*?</div>\\s*?</li>";
+			String reviewsRegex = "<li\\s*?>.*?<div>(.*?)</div>.*?<div class=\"pro-crit-med\">(.*?)</div>\\s*?</li>";
 			p = Pattern.compile(reviewsRegex);
 			m = p.matcher(reviewsFrame);
 			Map<String, String[]> criticas = new HashMap<String, String[]>();
 			while(m.find()){
-				String review = m.group(1).trim();
-				review = new UtilTools().quitQuotes(review);
+				String[] reviewAndCalibration = new String[2];
+				String review = m.group(1);
+				review = review.replaceAll("&nbsp;<img alt=\"external-link\".*?>", "");
+				review = new UtilTools().quitQuotes(review.trim());
+				reviewAndCalibration[0] = review;
 				
 				String authorAndCalibrationContent = m.group(2);
-				String calibrationRegex = "(.*?)<img.*?title='(.*?)'.*?>";
-				Pattern subP = Pattern.compile(calibrationRegex);
-				Matcher subM = subP.matcher(authorAndCalibrationContent);
-				String[] reviewAndCalibration = new String[2];
-				String author = "";
-				reviewAndCalibration[0] = review;
-				if(subM.find()){
-					author = subM.group(1);
-					reviewAndCalibration[1] = new UtilTools().escapeHtmlSpecialChars(subM.group(2));
-				}
+				String author = authorAndCalibrationContent.replaceAll("<img.*?>\\s*?</div>", "");
+				author = author.trim();
+				
+				String faCalibration = authorAndCalibrationContent.replaceAll(".*?title='", "");
+				faCalibration = faCalibration.replaceAll("'\\s*?src=.*?</div>", "");
+				reviewAndCalibration[1] = new UtilTools().escapeHtmlSpecialChars(faCalibration.trim());
+				
 				criticas.put(author, reviewAndCalibration);
 			}
 			ficha.setCriticas(criticas);
@@ -556,22 +568,7 @@ public class FilmAffinitySearcherModule {
 		URL url = new URL("http://127.0.0.1:8081");
 		System.out.println(url);
 		Map<String, String> response = cm.sendRequest(url, ConnectionManager.METHOD_POST, true, false, false);
-		//"http://www.filmaffinity.com/es/search.php?stype=title&stext=batman"
-		/*Map<String, String> filters = new HashMap<String, String>();
-		filters.put("genre", "BE");
-		filters.put("limit", "50");
-		filters.put("fromyear", "1980");
-		filters.put("toyear", "2020");*/
-		//FichaPelicula[] result = f.lookForRecommendations(filters);
-		ArrayList<FichaPelicula> lista = new ArrayList<FichaPelicula>();
-		lista = f.extractFilmsArray(response.get(ConnectionManager.BODY_TEXT_RESPONSE_KEY), lista);
-		//FichaPelicula result = f.getFilmDetails(new URL("http://localhost:8080"));
-		if(lista == null){
-			System.out.println("RESULTS IS NULL");
-			return;
-		}
-		for (int i = 0; i < lista.size(); i++) {
-			System.out.println(lista.get(i));
-		}
+		FichaPelicula ficha = f.extractFilmInfo(response.get(ConnectionManager.BODY_TEXT_RESPONSE_KEY));
+		System.out.println(ficha);
 	}
 }

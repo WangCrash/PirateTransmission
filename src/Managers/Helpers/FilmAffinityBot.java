@@ -269,4 +269,12 @@ public class FilmAffinityBot extends HelperManager{
 			return null;
 		}
 	}
+	
+	public static void main(String[] args){
+		FilmAffinityBot.getInstance().initManager(true);
+		FichaPelicula[] films = FilmAffinityBot.getInstance().searchItem("Capitán phillips", FILMAFFINITY_TITLE_SEARCH_OPTION);
+		for (int i = 0; i < films.length; i++) {
+			System.out.println(films[0]);
+		}
+	}
 }

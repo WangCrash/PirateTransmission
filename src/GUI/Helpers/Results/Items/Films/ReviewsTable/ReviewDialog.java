@@ -2,6 +2,8 @@ package GUI.Helpers.Results.Items.Films.ReviewsTable;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.Point;
+import java.awt.Rectangle;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -16,24 +18,36 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
 
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.border.BevelBorder;
+import java.awt.Color;
 
 public class ReviewDialog extends JDialog {
 	
 	private final JPanel contentPanel = new JPanel();
 	private JLabel authorLabel;
 	private JTextPane reviewTextPane;
+	private JScrollPane scrollPane;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			ReviewDialog dialog = new ReviewDialog(null, "", "");
+			String feotuchini = "";
+			for (int i = 0; i < 30; i++) {
+				feotuchini += "asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf\n";
+			}
+			ReviewDialog dialog = new ReviewDialog(null, "", feotuchini);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -45,14 +59,15 @@ public class ReviewDialog extends JDialog {
 	 * Create the dialog.
 	 */
 	public ReviewDialog(JFrame mainFrame, String author, String review) {
+		super(mainFrame, true);
 		setUndecorated(true);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ReviewDialog.class.getResource("/images/Transmission-icon.png")));
 		setBounds(100, 100, 450, 200);
 		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPanel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, Color.DARK_GRAY, null, null, null));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		
-		JScrollPane scrollPane = new JScrollPane();
+		scrollPane = new JScrollPane();
 		
 		authorLabel = new JLabel("New label");
 		authorLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
@@ -60,10 +75,10 @@ public class ReviewDialog extends JDialog {
 		GroupLayout gl_contentPanel = new GroupLayout(contentPanel);
 		gl_contentPanel.setHorizontalGroup(
 			gl_contentPanel.createParallelGroup(Alignment.LEADING)
-				.addComponent(authorLabel, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
+				.addComponent(authorLabel, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
 				.addGroup(gl_contentPanel.createSequentialGroup()
-					.addGap(21)
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 399, GroupLayout.PREFERRED_SIZE)
+					.addGap(10)
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 420, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap())
 		);
 		gl_contentPanel.setVerticalGroup(
@@ -77,6 +92,8 @@ public class ReviewDialog extends JDialog {
 		);
 		
 		reviewTextPane = new JTextPane();
+		reviewTextPane.setContentType("text/html");
+		reviewTextPane.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		scrollPane.setViewportView(reviewTextPane);
 		contentPanel.setLayout(gl_contentPanel);
 		{
@@ -85,6 +102,11 @@ public class ReviewDialog extends JDialog {
 			buttonPane.setLayout(new GridLayout(0, 1, 0, 0));
 			{
 				JButton okButton = new JButton("OK");
+				okButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						close();
+					}
+				});
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
@@ -96,12 +118,19 @@ public class ReviewDialog extends JDialog {
 	private void initLabels(String author, String review) {
 		authorLabel.setText(author);
 		reviewTextPane.setText(review);
+		reviewTextPane.setEditable(false);
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				Point p = scrollPane.getViewport().getViewPosition();
+				p.y = 0;
+				scrollPane.getViewport().setViewPosition(p);
+			}
+		});
 	}
 
-	public JLabel getAuthorLabel() {
-		return authorLabel;
-	}
-	public JTextPane getReviewTextPane() {
-		return reviewTextPane;
+	private void close() {
+		this.setVisible(false);
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 }

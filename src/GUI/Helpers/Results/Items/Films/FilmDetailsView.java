@@ -1,10 +1,12 @@
 package GUI.Helpers.Results.Items.Films;
 
+import javax.sound.sampled.ReverbType;
 import javax.swing.JPanel;
 
 import GUI.Helpers.Results.HelperResultsSection;
 import GUI.Helpers.Results.Items.Films.ReviewsTable.JTableButtonMouseListener;
 import GUI.Helpers.Results.Items.Films.ReviewsTable.JTableButtonRenderer;
+import GUI.Helpers.Results.Items.Films.ReviewsTable.ReviewDialog;
 import GUI.Helpers.Results.Items.Films.ReviewsTable.ReviewsTableModel;
 import Managers.Helpers.FilmAffinityBot;
 import Model.FichaPelicula;
@@ -24,6 +26,7 @@ import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.RenderingHints;
 
 import javax.swing.ImageIcon;
@@ -50,6 +53,7 @@ import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.UIManager;
 import javax.swing.JTextPane;
@@ -233,14 +237,43 @@ public class FilmDetailsView extends FilmResultItem implements Runnable{
 		
 		reviewsScrollPane = new JScrollPane();
 		
-		reviewsTable = new JTable();
+		reviewsTable = new JTable(){
+			@Override
+			 public String getToolTipText(MouseEvent e) {
+			        String tip = null;
+			        Point p = e.getPoint();
+			        int rowIndex = rowAtPoint(p);
+			        int colIndex = columnAtPoint(p);
+			        int realColumnIndex = convertColumnIndexToModel(colIndex);
+
+			        if (realColumnIndex == 0) { //Sport column
+			            tip = getValueAt(rowIndex, colIndex).toString();
+
+			        }// else { //another column
+//			            //You can omit this part if you know you don't 
+//			            //have any renderers that supply their own tool 
+//			            //tips.
+//			            tip = super.getToolTipText(e);
+//			        }
+			        return tip;
+			    }
+		};
 		reviewsScrollPane.setViewportView(reviewsTable);
 		reviewsTable.setBorder(new BevelBorder(BevelBorder.RAISED, Color.DARK_GRAY, null, null, null));
 		
 		sinopsisTextPane = new JTextPane();
+		sinopsisTextPane.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if(arg0.getClickCount() == 2){
+					showSinopsisOnDialog();
+				}
+			}
+		});
 		sinopsisTextPane.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		sinopsisTextPane.setText("lorem ipsum escatigae no taliratae guanto male son sonambilare");
 		sinopsisTextPane.setEditable(false);
+		sinopsisTextPane.setToolTipText("Doble click para agrandar");
 		sinopsisScrollPane.setViewportView(sinopsisTextPane);
 		
 		castingScrollPane = new JScrollPane();
@@ -478,11 +511,14 @@ public class FilmDetailsView extends FilmResultItem implements Runnable{
 	        reviewsTable.getColumnModel().getColumn(2).setCellRenderer(new JTableButtonRenderer());
 	        reviewsTable.addMouseListener(new JTableButtonMouseListener(reviewsTable));
 	        
-			int tableWidth = reviewsTable.getWidth() - 2;
+	        DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
+	        leftRenderer.setHorizontalAlignment(JLabel.LEFT);
+	        reviewsTable.getColumnModel().getColumn(0).setCellRenderer(leftRenderer);
+	        
 			reviewsTable.setRowHeight(35);
-			reviewsTable.getColumnModel().getColumn(0).setWidth(tableWidth * 50 / 100);
-			reviewsTable.getColumnModel().getColumn(1).setWidth(tableWidth * 30 / 100); 
-			reviewsTable.getColumnModel().getColumn(2).setWidth(tableWidth * 20 / 100);
+			reviewsTable.getColumnModel().getColumn(0).setPreferredWidth(100);
+			reviewsTable.getColumnModel().getColumn(1).setPreferredWidth(10); 
+			reviewsTable.getColumnModel().getColumn(2).setPreferredWidth(40);
 		}else{
 			reviewsScrollPane.setEnabled(false);
 		}
@@ -542,5 +578,10 @@ public class FilmDetailsView extends FilmResultItem implements Runnable{
 	private void searchActor() {
 		String search = getFilm().getReparto()[castingList.getSelectedIndex()];
 		parentView.searchItem(search, FilmAffinityBot.FILMAFFINITY_CAST_SEARCH_OPTION);
+	}
+	
+	private void showSinopsisOnDialog() {
+		ReviewDialog reviewDialog = new ReviewDialog(mainFrame, "Sinopsis", getFilm().getSinopsis());
+		reviewDialog.setVisible(true);
 	}
 }
