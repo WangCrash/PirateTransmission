@@ -154,7 +154,8 @@ public class SearchOptionsView extends JDialog implements ActionListener{
 		
 		makeButtonsList(selectedButton);
 		
-		this.setLocationRelativeTo(mainFrame);
+		//this.setLocationRelativeTo(mainFrame);
+		this.setLocationRelativeTo(parentView.getConfigSearchButton());
 	}
 
 	private void makeButtonsList(int selectedButton) {

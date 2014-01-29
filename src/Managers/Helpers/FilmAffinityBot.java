@@ -158,39 +158,7 @@ public class FilmAffinityBot extends HelperManager{
 		FilmAffinitySearcherModule fasm = new FilmAffinitySearcherModule(urlBase, logged, cm);
 		return fasm.lookForRecommendations(filters);
 	}
-	
-	/*public FichaPelicula[] getRecommendations(int genre, int fromYear, int toYear, int limit){
-		if(!logged){
-			return null;
-		}
-		FilmAffinitySearcherModule fasm = new FilmAffinitySearcherModule(urlBase, logged, cm);
-		Map <String, String> filters = new HashMap<String, String>();
-		
-		String genreKey = fasm.getGenreKey(genre);
-		if(genreKey == null){
-			return null;
-		}
-		filters.put(FilmAffinitySearcherModule.FASM_FILTERS_GENRE_KEY, genreKey);
-		
-		String limitString = "20";
-		if(limit != -1){
-			limitString = String.valueOf(limit);
-		}
-		filters.put(FilmAffinitySearcherModule.FASM_FILTERS_LIMIT_KEY, limitString);
-		
-		String fromYearString = "";
-		if(fromYear != -1){
-			fromYearString = String.valueOf(fromYear);
-		}
-		filters.put(FilmAffinitySearcherModule.FASM_FILTERS_FROM_YEAR_KEY, fromYearString);
-		
-		String toYearString = "";
-		if(toYear != -1){
-			toYearString = String.valueOf(toYear);
-		}
-		filters.put(FilmAffinitySearcherModule.FASM_FILTERS_TO_YEAR_KEY, toYearString);
-		return fasm.lookForRecommendations(filters);
-	}*/
+
 	
 	public FichaPelicula[] searchItem(String search, int option){
 		return new FilmAffinitySearcherModule(urlBase, logged, cm).searchFilm(search, option);

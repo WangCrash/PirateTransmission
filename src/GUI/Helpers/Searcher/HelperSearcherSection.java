@@ -184,4 +184,7 @@ public class HelperSearcherSection extends JPanel implements Runnable {
 		this.searchOption = searchOption;
 		setTitle();
 	}
+	public JButton getConfigSearchButton() {
+		return configSearchButton;
+	}
 }
