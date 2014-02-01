@@ -178,7 +178,14 @@ public class MainWindow extends JFrame {
 	}
 	
 	public void searchTorrent(String search){
-		pirateBaySection.searchTorrent(search);
+		Thread t = new Thread(new TorrentSearchThread(search) {
+			
+			@Override
+			public void run() {
+				pirateBaySection.searchTorrent(this.getSearch());
+			}
+		});
+		t.start();
 	}
 	
 	public void searchItem(String search, int option){
