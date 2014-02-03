@@ -444,7 +444,9 @@ public class LastFMManager extends HelperManager {
 		Caller.getInstance().setUserAgent(USER_AGENT);
 		initSession();
 		minutesToReCheck = 10 * 60 * 1000;
-		watchForLibraryDaemon();
+		if(session != null){
+			watchForLibraryDaemon();
+		}
 		return (session != null);
 	}
 

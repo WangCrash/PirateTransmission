@@ -60,8 +60,10 @@ public class PirateBayBot extends Manager{
 		Map<String, String> response = new SimpleConnectionManager().sendGetRequest(url, null, null);
 		String responseCode = response.get("ResponseCode");
 		if(responseCode.equals("200")){
+			System.out.println("Response code: 200");
 			initialized = true;
-		}else if(responseCode.equals("301")){
+		}else if(responseCode.equals("301") || (responseCode.equals("302"))){
+			System.out.println("Response code: 301");
 			urlBase = response.get("Location");
 			if(urlBase.startsWith("http:")){
 				urlBase = urlBase.replace("http:", "");
@@ -70,6 +72,8 @@ public class PirateBayBot extends Manager{
 				urlBase = urlBase.substring(0, urlBase.length() - 1);
 			}
 			initialized = true;
+		}else{
+			System.out.println("Response code: " + responseCode);
 		}
 		System.out.println("PirateBay: " + urlBase);
 		return initialized;
@@ -218,5 +222,9 @@ public class PirateBayBot extends Manager{
 	@Override
 	public boolean isStarted() {
 		return initialized;
+	}
+	
+	public static void main(String[] args){
+		PirateBayBot.getInstance().initManager();
 	}
 }
