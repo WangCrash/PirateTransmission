@@ -105,7 +105,6 @@ public class HelperResultsSection extends JPanel {
 		if(item.getClass() == FichaPelicula.class){
 			item = FilmAffinityBot.getInstance().fillFichaPelicula((FichaPelicula)item);
 		}
-		System.out.println("multipart results container");
 		resultsContainer = new MultipartScrollableResultsContainer(this.mainFrame, this, item, (items.length > 1));
 		rootPanel.add(resultsContainer);
 	}

@@ -266,7 +266,9 @@ public class FilmDetailsView extends FilmResultItem implements Runnable{
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				if(arg0.getClickCount() == 2){
-					showSinopsisOnDialog();
+					if(!sinopsisTextPane.getText().isEmpty()){
+						showSinopsisOnDialog();
+					}
 				}
 			}
 		});
@@ -533,7 +535,7 @@ public class FilmDetailsView extends FilmResultItem implements Runnable{
 		boolean userLogged = FilmAffinityBot.getInstance().isLogged();
 		yourMarkLabel.setVisible(userLogged);
 		usersMarkFrame.setVisible(userLogged);
-		usersMarkLabel.setText(!userLogged || (film.getNotaUsuario().equals("-1"))?"":film.getNotaUsuario());
+		usersMarkLabel.setText(!userLogged || film.getNotaUsuario() == null || (film.getNotaUsuario().equals("-1"))?"":film.getNotaUsuario());
 		usersMarkLabel.setVisible(userLogged);
 		twinSoulsMarkFrame.setVisible(userLogged);
 		twinSoulsMarkLabel.setText(film.getNotaAlmasGemelas());

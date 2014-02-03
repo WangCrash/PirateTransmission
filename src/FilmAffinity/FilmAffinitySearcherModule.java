@@ -70,7 +70,11 @@ public class FilmAffinitySearcherModule {
 		} catch (MalformedURLException e) {
 			return film;
 		}
-		return getFilmDetails(urlFilm);
+		FichaPelicula result = getFilmDetails(urlFilm);
+		if(result == null){
+			return film;
+		}
+		return result;
 	}
 	
 	public FichaPelicula[] lookForRecommendations(Map<String, String> filters){
@@ -191,12 +195,13 @@ public class FilmAffinitySearcherModule {
 		Map<String, String> response = cm.sendRequest(filmDetailsUrl, ConnectionManager.METHOD_GET, true, false, true);
 		int responseCode;
 		try{
-			responseCode = Integer.parseInt(response.get("ResponseCode"));
+			responseCode = Integer.parseInt(response.get(ConnectionManager.STATUS_CODE_RESPONSE_KEY));
 		}catch(NumberFormatException e){
+			System.out.println("error with response code: " + response.get("ResponseCode"));
 			return null;
 		}
 		if(responseCode == HttpURLConnection.HTTP_OK){
-			FichaPelicula pelicula = extractFilmInfo(response.get("ResponseBody"));
+			FichaPelicula pelicula = extractFilmInfo(response.get(ConnectionManager.BODY_TEXT_RESPONSE_KEY));
 			if(pelicula != null){
 				pelicula.setFilmDetailsUrl(filmDetailsUrl.getPath());
 			}
@@ -338,6 +343,7 @@ public class FilmAffinitySearcherModule {
 	
 	//extrae toda la información de la ficha
 	private FichaPelicula extractFilmInfo(String html){
+		System.out.println("HTML: \n" + html);
 		String contentRegex = "<table id=\"main-content-table\">(.*?)</table>";
 		Pattern p = Pattern.compile(contentRegex);
 		Matcher m = p.matcher(html);
@@ -345,6 +351,7 @@ public class FilmAffinitySearcherModule {
 		if(m.find()){
 			content = m.group(1);
 		}else{
+			System.out.println("NO ENCUENTRA LA TABLA DE CONTENIDO");
 			return null;
 		}
 		
@@ -564,11 +571,11 @@ public class FilmAffinitySearcherModule {
 	
 	public static void main(String[] args) throws MalformedURLException{
 		ConnectionManager cm = new ConnectionManager();
-		FilmAffinitySearcherModule f = new FilmAffinitySearcherModule("127.0.0.1:8081", true, cm);
-		URL url = new URL("http://127.0.0.1:8081");
+		FilmAffinitySearcherModule f = new FilmAffinitySearcherModule("www.filmaffinity.es", true, cm);
+		/*URL url = new URL("http://127.0.0.1:8081");
 		System.out.println(url);
-		Map<String, String> response = cm.sendRequest(url, ConnectionManager.METHOD_POST, true, false, false);
-		FichaPelicula ficha = f.extractFilmInfo(response.get(ConnectionManager.BODY_TEXT_RESPONSE_KEY));
-		System.out.println(ficha);
+		Map<String, String> response = cm.sendRequest(url, ConnectionManager.METHOD_POST, true, false, false);*/
+		//FichaPelicula ficha = f.extractFilmInfo(response.get(ConnectionManager.BODY_TEXT_RESPONSE_KEY));
+		//System.out.println(ficha);
 	}
 }
