@@ -13,6 +13,7 @@ public class FichaPelicula extends HelperItem{
 	public static final int FICHAPELICULA_CRITICA_NEGATIVA = 2;
 	public static final int FICHAPELICULA_CRITICA_NO_DETERMINADA = -1;
 	
+	private Long id;
 	private String dataUcd;
 	private String imageUrl;
 	private String filmDetailsUrl;
@@ -35,6 +36,12 @@ public class FichaPelicula extends HelperItem{
 	private String notaUsuario;
 	private String notaAlmasGemelas;
 	
+	public Long getId() {
+		return id;
+	}
+	private void setId(Long id) {
+		this.id = id;
+	}
 	public String getDataUcd() {
 		return dataUcd;
 	}
