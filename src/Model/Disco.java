@@ -21,6 +21,10 @@ public class Disco extends HelperItem {
 	private String[] tags;
 	private String wikiText;
 	
+	public Disco(){
+		
+	}
+	
 	public Disco(Album album){
 		this.setMbid(album.getMbid());
 		this.setNombre(album.getName());
@@ -59,6 +63,9 @@ public class Disco extends HelperItem {
 	}
 	public URL getImageURL() {
 		return imageURL;
+	}
+	public void setImageURL(URL imageURL){
+		this.imageURL = imageURL;
 	}
 	public void setImageURL(String imageURLString) {
 		try {
@@ -102,6 +109,37 @@ public class Disco extends HelperItem {
 	
 	@Override
 	public String toString(){
-		return "Disco: " + this.getNombre();
+		String result = "Disco: " + getNombre() + "\n";
+		if(getMbid() != null){
+			result += "Mbid" + getMbid() + "\n"; 
+		}
+		if(getImageURL() != null){
+			result += "Image: " + getImageURL() + "\n";
+		}
+		if(getArtista() != null){
+			result += "Artista: " + getArtista() + "\n";
+		}
+		if(getAño() != 0){
+			result += "Año: " + getAño() + "\n";
+		}
+		if(getTags() != null){
+			String tags = "";
+			for (int i = 0; i < getTags().length; i++) {
+				tags += getTags()[i] + ", ";
+			}
+			tags = tags.substring(0, tags.length() - 2);
+			result += "Tags: " + tags + "\n";
+		}
+		return result;
+	}
+	
+	@Override
+	public boolean getIsRated() {
+		return isRated;
+	}
+
+	@Override
+	public void setIsRated(boolean isRated) {
+		this.isRated = isRated;
 	}
 }

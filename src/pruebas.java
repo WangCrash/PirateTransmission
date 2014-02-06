@@ -19,6 +19,9 @@ import org.h2.tools.RunScript;
 import org.h2.tools.Server;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
+import org.hibernate.proxy.HibernateProxy;
+
+import de.umass.lastfm.Artist;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -27,8 +30,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import Managers.Helpers.FilmAffinityBot;
-import Model.Event;
+import Model.Artista;
+import Model.Disco;
+import Model.Transmission;
 import Model.FichaPelicula;
+import Model.HelperItem;
 
 
 public class pruebas {
@@ -135,10 +141,10 @@ public class pruebas {
 		return true;
 	}
 	
-	private void createAndStoreEvent(Session session, String title, Date theDate) {
-        Event theEvent = new Event();
-        theEvent.setTitle(title);
-        theEvent.setDate(theDate);
+	private void createAndStoreEvent(Session session, String itemType, Date theDate) {
+        Transmission theEvent = new Transmission();
+        theEvent.setTipoItem(itemType);
+        theEvent.setFecha(theDate);
         session.save(theEvent);
     }
 	
@@ -153,47 +159,83 @@ public class pruebas {
 		//HibernateUtil.getSessionFactory().close();
 	}
 	
-	public void saveObjectWithHibernate(String title, Date date){
+	public Transmission saveObjectWithHibernate(String itemType, Date date, HelperItem item){
 		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 		session.beginTransaction();
 		
-		Event event = new Event();
-		event.setTitle(title);
-		event.setDate(date);
-		session.save(event);
+		Transmission t = new Transmission();
+		t.setTipoItem(itemType);
+		t.setFecha(date);
+		t.setHelperItem(item);
+		session.save(item);
+		session.save(t);
+		
+		session.getTransaction().commit();
+		
+		return t;
+	}
+	
+	public void deleteObjectWithHibernate(Transmission event){
+		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		session.beginTransaction();
+		
+		HelperItem helperItem = event.getHelperItem();
+		session.delete(event);
+		session.delete(helperItem);		
 		
 		session.getTransaction().commit();
 	}
 	
-	public void updateObjectWithHibernate(Event event){
+	public void updateObjectWithHibernate(Transmission event){
 		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 		session.beginTransaction();
 		
 		session.update(event);
 		
-		session.getTransaction().commit();
+		//session.getTransaction().commit();
 	}
 	
-	public List<Event> listObjectsFromDB(){
-		List<Event> events = listEvents();
-		System.out.println("A PUNTO DE MOSTRAR TODOS LOS OBJETOS");
-        for (int i = 0; i < events.size(); i++) {
-            Event theEvent = (Event) events.get(i);
-            System.out.println(
-                    "Event: " + theEvent.getTitle() + " Time: " + theEvent.getDate()
-            );
-        }
-        System.out.println("TODOS LOS OBJETOS MOSTRADOS");
-        return events;
+	public void listAllObjectsFromDB(){
+		List<Transmission> objects = listTransmissions();
+		for (Transmission listEvent : objects) {
+			System.out.println("ITEM: ");
+			if(listEvent.getHelperItem().getClass() == FichaPelicula.class){
+				FichaPelicula eventFilm = (FichaPelicula)listEvent.getHelperItem();
+				System.out.println(eventFilm);
+			}else if(listEvent.getHelperItem().getClass() == Artista.class){
+				Artista eventArtist = (Artista)listEvent.getHelperItem();
+				System.out.println(eventArtist);
+			}else if(listEvent.getHelperItem().getClass() == Disco.class){
+				Disco eventAlbum = (Disco)listEvent.getHelperItem();
+				System.out.println(eventAlbum);
+			}
+		}
 	}
 	
-	private List<Event> listEvents() {
+	private List<Transmission> listTransmissions() {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
-        List<Event> result = session.createQuery("from Event").list();
+        List<Transmission> result = session.createQuery("from Transmission").list();
+        for (Transmission t : result) {
+			t.setHelperItem(initializeAndUnproxy(t.getHelperItem()));
+		}
         session.getTransaction().commit();
         return result;
     }
+	
+	private static <T> T initializeAndUnproxy(T entity) {
+	    if (entity == null) {
+	        throw new 
+	           NullPointerException("Entity passed for initialization is null");
+	    }
+
+	    Hibernate.initialize(entity);
+	    if (entity instanceof HibernateProxy) {
+	        entity = (T) ((HibernateProxy) entity).getHibernateLazyInitializer()
+	                .getImplementation();
+	    }
+	    return entity;
+	}
 	
 	public List<FichaPelicula> listFilmsFromDB(){
 		List<FichaPelicula> films = listFilms();
@@ -214,7 +256,7 @@ public class pruebas {
         return result;
 	}
 	
-	public void saveFilm(FichaPelicula film){
+	public void saveItem(HelperItem film){
 		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 		session.beginTransaction();
 		
@@ -236,31 +278,54 @@ public class pruebas {
 		conn.close();
 		//Thread.sleep(10000);
 		//p.saveObjectsWithHibernate();
-		//p.saveObjectWithHibernate("The fucking event", new Date());
 		
+		FichaPelicula film = new FichaPelicula();
+		film.setDataUcd("1141234lñkfañlkjfasdfasdfasdf");
+		film.setImageUrl("image url");
+		film.setFilmDetailsUrl("film details url");
+		film.setTitulo("titulo");
+		film.setTituloOriginal("titulo original");
+		film.setAño("el año");
+		film.setDuracion("uyy lo que duraaaa");
+		film.setPais("er pais");
+		String[] directores = new String[]{"director 1", "director 2" , "director 3"};
+		film.setDirector(directores);
+		film.setGuion("guion");
+		film.setSinopsis("que güena esta la prota");
+		
+		Transmission peli = p.saveObjectWithHibernate("una peliculita bonita", new Date(), film);
+		
+		Artista artista = new Artista();
+		artista.setMbid("asdfasdfasfd");
+		artista.setImageURL("http://www.image.com");
+		artista.setNombre("The testing band");
+		artista.setTags(new String[]{"tag 1", "tag 2", "tag 3"});
+		
+		Transmission artistilla = p.saveObjectWithHibernate("un artistita", new Date(), artista);
+		
+		Disco album = new Disco();
+		album.setMbid("asdfasdfasdf");
+		album.setImageURL("otra imagen que no va a valer");
+		album.setNombre("A Fucking Test Album");
+		album.setArtista("The testing band");
+		album.setAño(1995);
+		album.setTags(new String[]{"tag 4", "tag 5", "tag 6"});
+		
+		Transmission disquito = p.saveObjectWithHibernate("un disquito", new Date(), album);
+		
+		System.out.println("Deleting peli");
+		p.deleteObjectWithHibernate(peli);
+		
+		p.listAllObjectsFromDB();
+		
+		System.out.println("PELIS");
+		p.listFilmsFromDB();
 //		List<Event> lista = p.listObjectsFromDB();
 //		Event event = lista.get(lista.size() - 1);
 //		event.setTitle("The great fucking event");
 //		p.updateObjectWithHibernate(event);
 		
-		//p.listObjectsFromDB();
-		
-//		FichaPelicula film = new FichaPelicula();
-//		film.setDataUcd("1141234lñkfañlkjfasdfasdfasdf");
-//		film.setImageUrl("image url");
-//		film.setFilmDetailsUrl("film details url");
-//		film.setTitulo("titulo");
-//		film.setTituloOriginal("titulo original");
-//		film.setAño("el año");
-//		film.setDuracion("uyy lo que duraaaa");
-//		film.setPais("er pais");
-//		String[] directores = new String[]{"director 1", "director 2" , "director 3"};
-//		film.setDirector(directores);
-//		film.setGuion("guion");
-//		film.setSinopsis("que güena esta la prota");
-//		p.saveFilm(film);
-		
-		p.listFilmsFromDB();
+		//p.listFilmsFromDB();
 		
 		HibernateUtil.getSessionFactory().close();
 	}

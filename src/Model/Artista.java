@@ -16,6 +16,9 @@ public class Artista extends HelperItem {
 	private String[] tags;
 	private String bio;
 	
+	public Artista(){	
+	}
+	
 	public Artista(Artist artist){
 		this.setMbid(artist.getMbid());
 		this.setNombre(artist.getName());
@@ -36,6 +39,9 @@ public class Artista extends HelperItem {
 	}
 	public URL getImageURL() {
 		return imageURL;
+	}
+	public void setImageURL(URL imageURL){
+		this.imageURL = imageURL;
 	}
 	public void setImageURL(String imageURLString) {
 		try {
@@ -79,6 +85,31 @@ public class Artista extends HelperItem {
 
 	@Override
 	public String toString(){
-		return "Artista: " + getNombre();
+		String result = "Artista: " + getNombre() + "\n";
+		if(getMbid() != null){
+			result += "Mbid: " + getMbid() + "\n";
+		}
+		if(getImageURL() != null){
+			result += "image: " + getImageURL() + "\n";
+		}
+		if(getTags() != null){
+			String tags = "";
+			for (int i = 0; i < getTags().length; i++) {
+				tags += getTags()[i] + ", ";
+			}
+			tags = tags.substring(0, tags.length() - 2);
+			result += "Tags: " + tags + "\n";
+		}
+		return result;
+	}
+
+	@Override
+	public boolean getIsRated() {
+		return isRated;
+	}
+
+	@Override
+	public void setIsRated(boolean isRated) {
+		this.isRated = isRated;
 	}
 }

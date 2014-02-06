@@ -1,0 +1,47 @@
+﻿<?xml version="1.0"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="Model">
+
+	<class name="HelperItem" table="HELPER_ITEM">
+		<id name="id" type="long" column="ITEM_ID">
+			<generator class="sequence"/>
+		</id>
+		<property name="isRated" />
+		
+		<joined-subclass name="FichaPelicula" table="FILM">
+			<key column="ITEM_ID"/>
+			<property name="dataUcd" />
+			<property name="imageUrl" />
+			<property name="filmDetailsUrl" />
+			<property name="titulo" />
+			<property name="tituloOriginal" />
+			<property name="año" />
+			<property name="duracion" />
+			<property name="pais" />
+			<property name="director" />
+			<property name="guion" />
+			<property name="sinopsis" />
+		</joined-subclass>
+		<joined-subclass name="Artista" table="ARTIST">
+			<key column="ITEM_ID"/>
+			<property name="mbid" />
+			<property name="imageURL" />
+			<property name="nombre" />
+			<property name="tags" />
+		</joined-subclass>
+		<joined-subclass name="Disco" table="ALBUM">
+			<key column="ITEM_ID"/>
+			<property name="mbid" />
+			<property name="imageURL" />
+			<property name="artista" />
+			<property name="nombre" />
+			<property name="año" />
+			<property name="tags" />
+		</joined-subclass>
+	</class>
+	
+</hibernate-mapping>

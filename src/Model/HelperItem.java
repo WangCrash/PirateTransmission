@@ -1,17 +1,22 @@
 package Model;
 
 public abstract class HelperItem {
+	protected long id;
 	protected boolean isRated;
 	
 	public HelperItem(){
 		isRated = false;
 	}
 
-	public boolean isRated() {
-		return isRated;
+	public long getId() {
+		return id;
 	}
 
-	public void setRated(boolean isRated) {
-		this.isRated = isRated;
+	protected void setId(long id) {
+		this.id = id;
 	}
+
+	public abstract boolean getIsRated();
+
+	public abstract void setIsRated(boolean isRated);
 }

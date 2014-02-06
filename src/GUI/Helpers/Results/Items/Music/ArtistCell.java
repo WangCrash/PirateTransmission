@@ -73,10 +73,10 @@ public class ArtistCell extends MusicResultItem {
 		
 		rateButton = new JButton("No me Gusta");
 		rateButton.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		rateButton.setText(getArtista().isRated()?rateButton.getText():"Me Gusta");
+		rateButton.setText(getArtista().getIsRated()?rateButton.getText():"Me Gusta");
 		rateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(getArtista().isRated()){
+				if(getArtista().getIsRated()){
 					removeItem();
 				}else{
 					rateItem();
@@ -179,7 +179,7 @@ public class ArtistCell extends MusicResultItem {
 	@Override
 	public void rateItem() {
 		if(LastFMManager.getInstance().rateItem(getArtista())){
-			getArtista().setRated(true);
+			getArtista().setIsRated(true);
 			rateButton.setText("No me Gusta");
 			new UtilTools().showInfoOKDialog(mainFrame, "", "Añadido a tu biblioteca");
 		}else{
@@ -190,7 +190,7 @@ public class ArtistCell extends MusicResultItem {
 	@Override
 	public void removeItem(){
 		if(LastFMManager.getInstance().removeArtist(getArtista())){
-			getArtista().setRated(false);
+			getArtista().setIsRated(false);
 			rateButton.setText("Me Gusta");
 			new UtilTools().showInfoOKDialog(mainFrame, "", "Artista eliminado");
 		}else{

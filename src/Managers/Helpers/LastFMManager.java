@@ -221,7 +221,7 @@ public class LastFMManager extends HelperManager {
 				continue;
 			}
 			results[i] = new Artista(artist);
-			results[i].setRated(isArtistInLibrary(artist, libraryArtists));
+			results[i].setIsRated(isArtistInLibrary(artist, libraryArtists));
 			i++;
 		}
 		return results;
@@ -236,7 +236,7 @@ public class LastFMManager extends HelperManager {
 				continue;
 			}
 			results[i] = new Disco(album);
-			results[i].setRated(isAlbumInLibrary(album, libraryAlbums));
+			results[i].setIsRated(isAlbumInLibrary(album, libraryAlbums));
 			i++;
 		}
 		return results;
@@ -278,7 +278,7 @@ public class LastFMManager extends HelperManager {
 				continue;
 			}
 			results[i] = new Artista(artist);
-			results[i].setRated(isArtistInLibrary(artist, libraryAlbums));
+			results[i].setIsRated(isArtistInLibrary(artist, libraryAlbums));
 			i++;
 		}
 		return results;

@@ -75,10 +75,10 @@ public class AlbumCell extends MusicResultItem {
 		
 		rateButton = new JButton("No me Gusta");
 		rateButton.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		rateButton.setText(getDisco().isRated()?rateButton.getText():"Me Gusta");
+		rateButton.setText(getDisco().getIsRated()?rateButton.getText():"Me Gusta");
 		rateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(getDisco().isRated()){
+				if(getDisco().getIsRated()){
 					removeItem();
 				}else{
 					rateItem();
@@ -208,7 +208,7 @@ public class AlbumCell extends MusicResultItem {
 	@Override
 	public void rateItem() {
 		if(LastFMManager.getInstance().rateItem(getDisco())){
-			getDisco().setRated(true);
+			getDisco().setIsRated(true);
 			rateButton.setText("No me Gusta");
 			new UtilTools().showInfoOKDialog(mainFrame, "", "Añadido a tu biblioteca");
 		}else{
@@ -219,7 +219,7 @@ public class AlbumCell extends MusicResultItem {
 	@Override
 	public void removeItem(){
 		if(LastFMManager.getInstance().removeAlbum(disco)){
-			getDisco().setRated(false);
+			getDisco().setIsRated(false);
 			rateButton.setText("Me Gusta");
 			new UtilTools().showInfoOKDialog(mainFrame, "", "Álbum eliminado");
 		}else{

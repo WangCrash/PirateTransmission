@@ -29,10 +29,10 @@
         <property name="show_sql">true</property>
 
         <!-- Drop and re-create the database schema on startup -->
-        <property name="hbm2ddl.auto">update</property>
+        <property name="hbm2ddl.auto">create</property>
 
-        <mapping resource="Model\Event.hbm.xml"/>
-		<mapping resource="Model\FichaPelicula.hbm.xml"/>
+		<mapping resource="Model\HelperItem.hbm.xml"/>
+        <mapping resource="Model\Transmission.hbm.xml"/>
 
     </session-factory>
 

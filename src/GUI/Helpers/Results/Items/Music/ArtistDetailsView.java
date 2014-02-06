@@ -248,7 +248,7 @@ public class ArtistDetailsView extends MusicResultItem {
 	@Override
 	public void rateItem() {
 		if(LastFMManager.getInstance().rateItem(getArtista())){
-			getArtista().setRated(true);
+			getArtista().setIsRated(true);
 			rateButton.setText("No me Gusta");
 			new UtilTools().showInfoOKDialog(mainFrame, "", "Añadido a tu biblioteca");
 		}else{
@@ -259,7 +259,7 @@ public class ArtistDetailsView extends MusicResultItem {
 	@Override
 	public void removeItem(){
 		if(LastFMManager.getInstance().removeArtist(getArtista())){
-			getArtista().setRated(false);
+			getArtista().setIsRated(false);
 			rateButton.setText("Me Gusta");
 			new UtilTools().showInfoOKDialog(mainFrame, "", "Artista eliminado");
 		}else{

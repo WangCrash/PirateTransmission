@@ -2,6 +2,8 @@ package Model;
 
 import java.util.Map;
 
+import Managers.Helpers.FilmAffinityBot;
+
 public class FichaPelicula extends HelperItem{
 	public static final String MAP_KEY_PREMIOS_AÑO = "año";
 	public static final String MAP_KEY_PREMIOS_PREMIO = "premio";
@@ -13,7 +15,6 @@ public class FichaPelicula extends HelperItem{
 	public static final int FICHAPELICULA_CRITICA_NEGATIVA = 2;
 	public static final int FICHAPELICULA_CRITICA_NO_DETERMINADA = -1;
 	
-	private Long id;
 	private String dataUcd;
 	private String imageUrl;
 	private String filmDetailsUrl;
@@ -35,13 +36,7 @@ public class FichaPelicula extends HelperItem{
 	private String valoracionFA;
 	private String notaUsuario;
 	private String notaAlmasGemelas;
-	
-	public Long getId() {
-		return id;
-	}
-	private void setId(Long id) {
-		this.id = id;
-	}
+
 	public String getDataUcd() {
 		return dataUcd;
 	}
@@ -276,5 +271,19 @@ public class FichaPelicula extends HelperItem{
 			result += "Tus almas gemelas le ponen un " + this.getNotaAlmasGemelas() + " a esta película\n";
 		}
 		return result;
+	}
+	
+	@Override
+	public boolean getIsRated() {
+		if(notaUsuario == null || notaUsuario.isEmpty() || notaUsuario.equals(FilmAffinityBot.FILMAFFINITY_FILM_NOT_WATCHED)){
+			return false;
+		}else{
+			return true;
+		}
+	}
+
+	@Override
+	public void setIsRated(boolean isRated) {
+		this.isRated = isRated;
 	}
 }
