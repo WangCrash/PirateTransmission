@@ -3,10 +3,8 @@ package GUI.Helpers.Results;
 import javax.swing.JPanel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.JScrollBar;
 
 import java.awt.Color;
-import java.awt.Rectangle;
 
 import GUI.MainWindow;
 import GUI.Helpers.Results.Container.MultipartScrollableResultsContainer;
@@ -54,8 +52,8 @@ public class HelperResultsSection extends JPanel {
 		setLayout(groupLayout);
 	}
 
-	public void searchTorrent(String search){
-		this.mainFrame.searchTorrent(search);
+	public void searchTorrent(String search, HelperItem item){
+		this.mainFrame.searchTorrent(search, item);
 	}
 	
 	public void showResults(HelperItem[] items){

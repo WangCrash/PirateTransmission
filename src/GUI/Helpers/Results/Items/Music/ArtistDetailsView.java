@@ -242,7 +242,7 @@ public class ArtistDetailsView extends MusicResultItem {
 
 	@Override
 	public void searchItemTorrent() {
-		this.parentView.searchTorrent(getArtista().getNombre());
+		this.parentView.searchTorrent(getArtista().getNombre(), getArtista());
 	}
 
 	@Override

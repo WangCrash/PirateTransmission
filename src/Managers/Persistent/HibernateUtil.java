@@ -1,9 +1,19 @@
+package Managers.Persistent;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 public class HibernateUtil {
 
-    private static final SessionFactory sessionFactory = buildSessionFactory();
+    private static SessionFactory sessionFactory = null;
+    
+    private static SessionFactory getInstance(){
+    	synchronized (HibernateUtil.class) {
+    		if(sessionFactory == null){
+    			sessionFactory = buildSessionFactory();
+    		}
+		}
+    	return sessionFactory;
+    }
 
     @SuppressWarnings("deprecation")
 	private static SessionFactory buildSessionFactory() {
@@ -18,6 +28,6 @@ public class HibernateUtil {
     }
 
     public static SessionFactory getSessionFactory() {
-        return sessionFactory;
+        return getInstance();
     }
 }

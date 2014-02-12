@@ -18,13 +18,13 @@
 			<property name="imageUrl" />
 			<property name="filmDetailsUrl" />
 			<property name="titulo" />
-			<property name="tituloOriginal" />
+			<!-- <property name="tituloOriginal" />
 			<property name="año" />
 			<property name="duracion" />
 			<property name="pais" />
 			<property name="director" />
 			<property name="guion" />
-			<property name="sinopsis" />
+			<property name="sinopsis" /> -->
 		</joined-subclass>
 		<joined-subclass name="Artista" table="ARTIST">
 			<key column="ITEM_ID"/>

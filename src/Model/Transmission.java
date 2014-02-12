@@ -25,11 +25,16 @@ package Model;
 import java.util.Date;
 
 public class Transmission {
+	public final static String TRANSMISSION_TYPE_FILM = "Película";
+	public final static String TRANSMISSION_TYPE_ARTIST = "Artista";
+	public final static String TRANSMISSION_TYPE_ALBUM = "Disco";
+	
 	private Long id;
 
 	private String tipoItem;
 	private Date fecha;
 	private HelperItem helperItem;
+	private boolean rated;
 
 	public Transmission() {
 		// this form used by Hibernate
@@ -71,5 +76,21 @@ public class Transmission {
 
 	public void setHelperItem(HelperItem helperItem) {
 		this.helperItem = helperItem;
+	}
+
+	public boolean getRated() {
+		return rated;
+	}
+
+	public void setRated(boolean rated) {
+		this.rated = rated;
+	}
+	
+	public String toString(){
+		String result = "id: " + getId() + "\n";
+		result += "tipo: " + getTipoItem() + "\n";
+		result += "fecha: " + getFecha() + "\n";
+		result += "rated: " + getRated() + "\n";
+		return result;
 	}
 }

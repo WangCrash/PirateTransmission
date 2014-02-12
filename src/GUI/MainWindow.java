@@ -17,10 +17,14 @@ import GUI.Helpers.Chooser.HelperChooserSection;
 import GUI.Helpers.Results.HelperResultsSection;
 import GUI.Helpers.Searcher.HelperSearcherSection;
 import GUI.PirateBay.PiratebaySection;
+import GUI.Transmissions.TransmissionsView;
 import Managers.ApplicationConfiguration;
 import Managers.Helpers.FilmAffinityBot;
 import Managers.Helpers.HelperManager;
 import Managers.Helpers.LastFMManager;
+import Managers.Persistent.PersistentDataManager;
+import Model.FichaPelicula;
+import Model.HelperItem;
 
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
@@ -43,6 +47,8 @@ public class MainWindow extends JFrame {
 	private HelperChooserSection helperChooserSection;
 	private HelperSearcherSection helperSearcherSection;
 	private HelperResultsSection helperResultsSection;
+	private JMenu mnTransmissions;
+	private JMenuItem mntmVerTransmissions;
 	
 	public static MainWindow getInstance(){
 		synchronized (FilmAffinityBot.class) {
@@ -84,6 +90,9 @@ public class MainWindow extends JFrame {
 				if(LastFMManager.getInstance().isLogged()){
 					LastFMManager.getInstance().logout();
 				}
+				if(PersistentDataManager.getInstance().isStarted()){
+					PersistentDataManager.getInstance().finalizeManager();
+				}
 			}
 		});
 	
@@ -106,6 +115,17 @@ public class MainWindow extends JFrame {
 			}
 		});
 		mnAplicacin.add(mntmConfiguracin);
+		
+		mnTransmissions = new JMenu("Transmissions");
+		menuBar.add(mnTransmissions);
+		
+		mntmVerTransmissions = new JMenuItem("Ver Transmissions");
+		mntmVerTransmissions.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				openTransmissionsView();
+			}
+		});
+		mnTransmissions.add(mntmVerTransmissions);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -177,15 +197,37 @@ public class MainWindow extends JFrame {
 		configView.setVisible(true);
 	}
 	
-	public void searchTorrent(String search){
-		Thread t = new Thread(new TorrentSearchThread(search) {
+	private void openTransmissionsView() {
+		TransmissionsView transmissionsView = new TransmissionsView(this);
+		transmissionsView.setVisible(true);
+	}
+	
+	public void searchTorrent(String search, HelperItem item){
+		Thread searchTorrentThread = new Thread(new OneArgumentRunnableObject(search) {
 			
 			@Override
 			public void run() {
-				pirateBaySection.searchTorrent(this.getSearch());
+				pirateBaySection.searchTorrent((String)this.getArgument());
 			}
 		});
-		t.start();
+		searchTorrentThread.start();
+		
+		Thread makeItemPersistentThread = new Thread(new OneArgumentRunnableObject(item) {
+			
+			@Override
+			public void run() {
+				HelperItem item = (HelperItem)this.getArgument();
+				if(item.getClass() == FichaPelicula.class){
+					FichaPelicula film = (FichaPelicula)item;
+					if(film.getDataUcd() == null || film.getDataUcd().isEmpty()){
+						film = FilmAffinityBot.getInstance().fillFichaPelicula(film);
+						item = film;
+					}
+				}
+				PersistentDataManager.getInstance().addTransmission(item);
+			}
+		});
+		makeItemPersistentThread.start();
 	}
 	
 	public void searchItem(String search, int option){

@@ -216,7 +216,7 @@ public class PirateBayBot extends Manager{
             }
         }
         System.out.println("Resultados: " + count);
-        return Arrays.copyOf(lista.toArray(), lista.toArray().length, ArchivoTorrent[].class);
+        return Arrays.copyOf(lista.toArray(), lista.size(), ArchivoTorrent[].class);
     }
 
 	@Override

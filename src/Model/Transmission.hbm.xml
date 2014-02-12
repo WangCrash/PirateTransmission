@@ -28,6 +28,7 @@
 		<property name="fecha" type="timestamp" column="TRANSMISSION_DATE" />
 		<property name="tipoItem" />
 		<many-to-one name="helperItem" column="TRANSMISSION_ITEM" not-null="true"/>
+		<property name="rated" />
 	</class>
 
 </hibernate-mapping>

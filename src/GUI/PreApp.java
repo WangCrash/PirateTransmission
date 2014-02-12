@@ -4,6 +4,7 @@ import Managers.ApplicationConfiguration;
 import Managers.PirateBayBot;
 import Managers.Helpers.FilmAffinityBot;
 import Managers.Helpers.LastFMManager;
+import Managers.Persistent.PersistentDataManager;
 import Utils.UtilTools;
 
 public class PreApp {
@@ -30,7 +31,14 @@ public class PreApp {
 					});
 					t.start();
 				}
-				FilmAffinityBot.getInstance().initManager();
+				
+				if(!FilmAffinityBot.getInstance().initManager()){
+					System.err.println("FILMAFFINITYBOT not initialized");
+				}
+				
+				if(!PersistentDataManager.getInstance().initManager()){
+					System.err.println("PERSISTENDDATAMANAGER not initialized");
+				}
 				
 				if(!message.isEmpty()){
 					new UtilTools().showWarningDialog(null, "Error", message);

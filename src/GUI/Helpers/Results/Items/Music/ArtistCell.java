@@ -173,7 +173,7 @@ public class ArtistCell extends MusicResultItem {
 
 	@Override
 	public void searchItemTorrent() {
-		parentView.searchTorrent(getArtista().getNombre());
+		parentView.searchTorrent(getArtista().getNombre(), getArtista());
 	}
 
 	@Override

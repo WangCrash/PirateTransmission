@@ -10,7 +10,7 @@ import Model.HelperItem;
 import Utils.UtilTools;
 
 @SuppressWarnings("serial")
-public abstract class FilmResultItem extends HelperResultItem{
+public abstract class FilmResultItem extends HelperResultItem implements RateFilm{
 	private FichaPelicula film;
 	
 	public FilmResultItem(JFrame mainFrame, HelperResultsSection parentView, HelperItem helperItem){
@@ -36,7 +36,7 @@ public abstract class FilmResultItem extends HelperResultItem{
 		}else{
 			search = new UtilTools().killFilmAffinityWords(ficha.getTitulo());
 		}
-		this.parentView.searchTorrent(search);
+		this.parentView.searchTorrent(search, getFilm());
 	}
 	
 	public void setFilm(FichaPelicula film){
@@ -47,6 +47,4 @@ public abstract class FilmResultItem extends HelperResultItem{
 	public FichaPelicula getFilm(){
 		return this.film;
 	}
-	
-	public abstract void filmSuccesfullyRated(FichaPelicula film);
 }

@@ -278,7 +278,7 @@ public class AlbumDetailsView extends MusicResultItem {
 
 	@Override
 	public void searchItemTorrent() {		
-		parentView.searchTorrent(getDisco().getArtista() + " " + getDisco().getNombre());
+		parentView.searchTorrent(getDisco().getArtista() + " " + getDisco().getNombre(), getDisco());
 	}
 	
 	@Override

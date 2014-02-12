@@ -30,6 +30,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import Managers.Helpers.FilmAffinityBot;
+import Managers.Persistent.HibernateUtil;
+import Managers.Persistent.PersistentDataManager;
 import Model.Artista;
 import Model.Disco;
 import Model.Transmission;
@@ -266,18 +268,10 @@ public class pruebas {
 	}
 	
 	public static void main(String[] args) throws Exception{
-		pruebas p = new pruebas();
-		Connection conn = p.connectWithDataBase();
-		/*if(!p.isDBBuilt(conn)){
-			if(!p.buildDB(conn)){
-				return;
-			}else{
-				System.out.println("DB succesfully created");
-			}
-		}*/
-		conn.close();
-		//Thread.sleep(10000);
-		//p.saveObjectsWithHibernate();
+		if(!PersistentDataManager.getInstance().initManager()){
+			System.out.println("PERSISTENT MANAGER NO INICIADO");
+			return;
+		}
 		
 		FichaPelicula film = new FichaPelicula();
 		film.setDataUcd("1141234lñkfañlkjfasdfasdfasdf");
@@ -293,7 +287,7 @@ public class pruebas {
 		film.setGuion("guion");
 		film.setSinopsis("que güena esta la prota");
 		
-		Transmission peli = p.saveObjectWithHibernate("una peliculita bonita", new Date(), film);
+		//Transmission peli = PersistentDataManager.getInstance().addTransmission(film);//p.saveObjectWithHibernate("una peliculita bonita", new Date(), film);
 		
 		Artista artista = new Artista();
 		artista.setMbid("asdfasdfasfd");
@@ -301,7 +295,7 @@ public class pruebas {
 		artista.setNombre("The testing band");
 		artista.setTags(new String[]{"tag 1", "tag 2", "tag 3"});
 		
-		Transmission artistilla = p.saveObjectWithHibernate("un artistita", new Date(), artista);
+		//Transmission artistilla = PersistentDataManager.getInstance().addTransmission(artista);//p.saveObjectWithHibernate("un artistita", new Date(), artista);
 		
 		Disco album = new Disco();
 		album.setMbid("asdfasdfasdf");
@@ -311,15 +305,15 @@ public class pruebas {
 		album.setAño(1995);
 		album.setTags(new String[]{"tag 4", "tag 5", "tag 6"});
 		
-		Transmission disquito = p.saveObjectWithHibernate("un disquito", new Date(), album);
+		//Transmission disquito = PersistentDataManager.getInstance().addTransmission(album);//p.saveObjectWithHibernate("un disquito", new Date(), album);
 		
 		System.out.println("Deleting peli");
-		p.deleteObjectWithHibernate(peli);
+		//PersistentDataManager.getInstance().deleteTransmission(peli);
 		
-		p.listAllObjectsFromDB();
+		PersistentDataManager.getInstance().listPersistentObjects();
 		
-		System.out.println("PELIS");
-		p.listFilmsFromDB();
+		//System.out.println("PELIS");
+		//p.listFilmsFromDB();
 //		List<Event> lista = p.listObjectsFromDB();
 //		Event event = lista.get(lista.size() - 1);
 //		event.setTitle("The great fucking event");
@@ -327,6 +321,6 @@ public class pruebas {
 		
 		//p.listFilmsFromDB();
 		
-		HibernateUtil.getSessionFactory().close();
+		PersistentDataManager.getInstance().finalizeManager();
 	}
 }
