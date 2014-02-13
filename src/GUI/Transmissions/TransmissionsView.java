@@ -21,8 +21,9 @@ import java.awt.SystemColor;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 
-import Managers.Persistent.FilmTransmissionCell;
 import Managers.Persistent.PersistentDataManager;
+import Model.Artista;
+import Model.Disco;
 import Model.FichaPelicula;
 import Model.HelperItem;
 import Model.Transmission;
@@ -76,7 +77,7 @@ public class TransmissionsView extends JDialog {
 		cellsPanel = new JPanel();
 		cellsPanel.setBackground(new Color(204, 255, 153));
 		scrollPane.setViewportView(cellsPanel);
-		cellsPanel.setLayout(new GridLayout(0, 1, 0, 40));
+		cellsPanel.setLayout(new GridLayout(0, 1, 0, 5));
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setBorder(new LineBorder(new Color(240, 240, 240), 4));
@@ -108,13 +109,15 @@ public class TransmissionsView extends JDialog {
 		Transmission[] transmissions = PersistentDataManager.getInstance().listPersistentObjects();
 		if(transmissions == null){
 			new UtilTools().showWarningDialog(mainFrame, "Error", "No se ha podido recuperar la lista de transmissions");
-		}else if(transmissions.length == 0){
-			new UtilTools().showInfoOKDialog(mainFrame, "", "No hay transmissions");
-		}else{
+		}else if(transmissions.length > 0){
 			for (int i = 0; i < transmissions.length; i++) {
 				HelperItem item = transmissions[i].getHelperItem();
 				if(item.getClass() == FichaPelicula.class){
 					cellsPanel.add(new FilmTransmissionCell(mainFrame, this, transmissions[i]));
+				}else if(item.getClass() == Artista.class){
+					//cellsPanel.add(new ArtistTransmissionCell(mainFrame, this, transmissions[i]));
+				}else if(item.getClass() == Disco.class){
+					cellsPanel.add(new AlbumTransmissionCell(mainFrame, this, transmissions[i]));
 				}
 			}
 			

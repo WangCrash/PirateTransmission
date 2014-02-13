@@ -1,4 +1,4 @@
-package Managers.Persistent;
+package GUI.Transmissions;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -7,10 +7,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import GUI.OneArgumentRunnableObject;
-import GUI.Helpers.Results.Items.Films.RateFilm;
-import GUI.Helpers.Results.Items.Films.RateMovieView;
-import GUI.Transmissions.TransmissionCell;
-import GUI.Transmissions.TransmissionsView;
+import GUI.Helpers.Results.Items.Films.Rating.RateFilm;
+import GUI.Helpers.Results.Items.Films.Rating.RateMovieView;
 import Model.FichaPelicula;
 import Model.Transmission;
 import Utils.UtilTools;
@@ -26,13 +24,12 @@ public class FilmTransmissionCell extends TransmissionCell implements RateFilm{
 		super(mainFrame, parentView, transmission);
 		getRatingImageLabel().setIcon(new ImageIcon(FilmTransmissionCell.class.getResource("/images/transmission-rated.png")));
 		this.film = (FichaPelicula)transmission.getHelperItem();
-		getCustomButton().setText("Votar");
 		initLabels();
 	}
 
 	@Override
 	protected void initLabels() {
-		super.getItemTypeLabel().setText("Película/Serie/Documental");
+		super.getItemTypeLabel().setText("PELÍCULA/SERIE/DOCUMENTAL");
 		super.getTitleLabel().setText(film.getTitulo());
 		if(film.getImageUrl() != null && !film.getImageUrl().isEmpty()){
 			Thread itemImageThread = new Thread(new OneArgumentRunnableObject(film.getImageUrl()) {
@@ -47,17 +44,6 @@ public class FilmTransmissionCell extends TransmissionCell implements RateFilm{
 		super.getDateLabel().setText(transmission.getFecha().toString());
 		super.getCustomButton().setText("Votar");
 		setAppropiateRatingImage();
-	}
-	
-	private void setAppropiateRatingImage() {
-		ImageIcon ratingImage;
-		if(transmission.getRated()){
-			ratingImage = new ImageIcon(getClass().getResource("/images/transmission-rated.png"));
-		}else{
-			ratingImage = new ImageIcon(getClass().getResource("/images/transmission-not-rated.png"));
-		}
-		super.getRatingImageLabel().setIcon(new UtilTools().getScaledImage(ratingImage.getImage(), 40, 40));
-		//super.getRatingImageLabel().setBackground(this.getBackground());
 	}
 
 	private void getItemImage(String imageURLString) {

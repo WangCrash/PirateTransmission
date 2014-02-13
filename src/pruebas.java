@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 import org.h2.command.dml.RunScriptCommand;
 import org.h2.tools.RunScript;
@@ -273,41 +274,41 @@ public class pruebas {
 			return;
 		}
 		
-		FichaPelicula film = new FichaPelicula();
-		film.setDataUcd("1141234lñkfañlkjfasdfasdfasdf");
-		film.setImageUrl("image url");
-		film.setFilmDetailsUrl("film details url");
-		film.setTitulo("titulo");
-		film.setTituloOriginal("titulo original");
-		film.setAño("el año");
-		film.setDuracion("uyy lo que duraaaa");
-		film.setPais("er pais");
-		String[] directores = new String[]{"director 1", "director 2" , "director 3"};
-		film.setDirector(directores);
-		film.setGuion("guion");
-		film.setSinopsis("que güena esta la prota");
+//		FichaPelicula film = new FichaPelicula();
+//		film.setDataUcd("1141234lñkfañlkjfasdfasdfasdf");
+//		film.setImageUrl("image url");
+//		film.setFilmDetailsUrl("film details url");
+//		film.setTitulo("titulo");
+//		film.setTituloOriginal("titulo original");
+//		film.setAño("el año");
+//		film.setDuracion("uyy lo que duraaaa");
+//		film.setPais("er pais");
+//		String[] directores = new String[]{"director 1", "director 2" , "director 3"};
+//		film.setDirector(directores);
+//		film.setGuion("guion");
+//		film.setSinopsis("que güena esta la prota");
 		
 		//Transmission peli = PersistentDataManager.getInstance().addTransmission(film);//p.saveObjectWithHibernate("una peliculita bonita", new Date(), film);
 		
-		Artista artista = new Artista();
-		artista.setMbid("asdfasdfasfd");
-		artista.setImageURL("http://www.image.com");
-		artista.setNombre("The testing band");
-		artista.setTags(new String[]{"tag 1", "tag 2", "tag 3"});
+//		Artista artista = new Artista();
+//		artista.setMbid("asdfasdfasfd");
+//		artista.setImageURL("http://www.image.com");
+//		artista.setNombre("The testing band");
+//		artista.setTags(new String[]{"tag 1", "tag 2", "tag 3"});
 		
 		//Transmission artistilla = PersistentDataManager.getInstance().addTransmission(artista);//p.saveObjectWithHibernate("un artistita", new Date(), artista);
 		
-		Disco album = new Disco();
-		album.setMbid("asdfasdfasdf");
-		album.setImageURL("otra imagen que no va a valer");
-		album.setNombre("A Fucking Test Album");
-		album.setArtista("The testing band");
-		album.setAño(1995);
-		album.setTags(new String[]{"tag 4", "tag 5", "tag 6"});
+//		Disco album = new Disco();
+//		album.setMbid("asdfasdfasdf");
+//		album.setImageURL("otra imagen que no va a valer");
+//		album.setNombre("A Fucking Test Album");
+//		album.setArtista("The testing band");
+//		album.setAño(1995);
+//		album.setTags(new String[]{"tag 4", "tag 5", "tag 6"});
 		
 		//Transmission disquito = PersistentDataManager.getInstance().addTransmission(album);//p.saveObjectWithHibernate("un disquito", new Date(), album);
 		
-		System.out.println("Deleting peli");
+		//System.out.println("Deleting peli");
 		//PersistentDataManager.getInstance().deleteTransmission(peli);
 		
 		PersistentDataManager.getInstance().listPersistentObjects();
@@ -322,5 +323,7 @@ public class pruebas {
 		//p.listFilmsFromDB();
 		
 		PersistentDataManager.getInstance().finalizeManager();
+		
+		//Preferences.userRoot().node(pruebas.class.getName());
 	}
 }

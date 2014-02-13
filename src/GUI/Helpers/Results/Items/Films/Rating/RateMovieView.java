@@ -1,4 +1,4 @@
-package GUI.Helpers.Results.Items.Films;
+package GUI.Helpers.Results.Items.Films.Rating;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;

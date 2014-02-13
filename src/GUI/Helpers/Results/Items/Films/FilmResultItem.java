@@ -4,6 +4,8 @@ import javax.swing.JFrame;
 
 import GUI.Helpers.Results.HelperResultsSection;
 import GUI.Helpers.Results.Items.HelperResultItem;
+import GUI.Helpers.Results.Items.Films.Rating.RateFilm;
+import GUI.Helpers.Results.Items.Films.Rating.RateMovieView;
 import Managers.Helpers.FilmAffinityBot;
 import Model.FichaPelicula;
 import Model.HelperItem;
