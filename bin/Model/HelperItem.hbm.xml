@@ -18,6 +18,7 @@
 			<property name="imageUrl" />
 			<property name="filmDetailsUrl" />
 			<property name="titulo" />
+			<property name="notaUsuario" />
 			<!-- <property name="tituloOriginal" />
 			<property name="año" />
 			<property name="duracion" />
@@ -31,7 +32,7 @@
 			<property name="mbid" />
 			<property name="imageURL" />
 			<property name="nombre" />
-			<property name="tags" />
+			<!-- <property name="tags" /> -->
 		</joined-subclass>
 		<joined-subclass name="Disco" table="ALBUM">
 			<key column="ITEM_ID"/>
@@ -40,7 +41,7 @@
 			<property name="artista" />
 			<property name="nombre" />
 			<property name="año" />
-			<property name="tags" />
+			<!-- <property name="tags" /> -->
 		</joined-subclass>
 	</class>
 	

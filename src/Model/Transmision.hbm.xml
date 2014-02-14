@@ -21,7 +21,7 @@
 
 <hibernate-mapping package="Model">
 
-	<class name="Transmission" table="TRANSMISSION">
+	<class name="Transmision" table="TRANSMISSION">
 		<id name="id" column="TRANSMISSION_ID">
 			<generator class="increment" />
 		</id>

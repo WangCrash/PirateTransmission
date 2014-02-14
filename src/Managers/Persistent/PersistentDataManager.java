@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Hibernate;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.proxy.HibernateProxy;
 
@@ -13,10 +14,14 @@ import Model.Artista;
 import Model.Disco;
 import Model.FichaPelicula;
 import Model.HelperItem;
-import Model.Transmission;
+import Model.Transmision;
 
 public class PersistentDataManager extends Manager{
+	private final int FICHAPELICULA_ITEM_TYPE = 0;
+	private final int ARTISTA_ITEM_TYPE = 1;
+	private final int ALBUM_ITEM_TYPE = 2;
 	private static PersistentDataManager instance = null;
+	
 	
 	private boolean initialized;
 	
@@ -54,13 +59,13 @@ public class PersistentDataManager extends Manager{
 		
 	}
 	
-	public Transmission[] listPersistentObjects(){
+	public Transmision[] listPersistentObjects(){
 		if(!initialized){
 			return null;
 		}
 		
-		List<Transmission> objects = listTransmissions();
-		for (Transmission transmission : objects) {
+		List<Transmision> objects = listTransmissions();
+		for (Transmision transmission : objects) {
 			System.out.println("ITEM: ");
 			System.out.println(transmission);
 			if(transmission.getHelperItem().getClass() == FichaPelicula.class){
@@ -74,14 +79,14 @@ public class PersistentDataManager extends Manager{
 				System.out.println(eventAlbum);
 			}
 		}
-		return Arrays.copyOf(objects.toArray(), objects.size(), Transmission[].class);
+		return Arrays.copyOf(objects.toArray(), objects.size(), Transmision[].class);
 	}
 	
-	private List<Transmission> listTransmissions() {
+	private List<Transmision> listTransmissions() {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
-        List<Transmission> result = session.createQuery("from Transmission").list();
-        for (Transmission t : result) {
+        List<Transmision> result = session.createQuery("from Transmision order by fecha desc").list();
+        for (Transmision t : result) {
 			t.setHelperItem(initializeAndUnproxy(t.getHelperItem()));
 		}
         session.getTransaction().commit();
@@ -107,17 +112,30 @@ public class PersistentDataManager extends Manager{
 		}
 		
 		try{
+			String itemType = "";
+			boolean alreadyExists = false;
+			if(item.getClass() == FichaPelicula.class){
+				FichaPelicula film = (FichaPelicula)item;
+				alreadyExists = itemAlreadyExists(film.getTitulo(), FICHAPELICULA_ITEM_TYPE);
+				itemType = Transmision.TRANSMISSION_TYPE_FILM;
+			}else if(item.getClass() == Artista.class){
+				Artista artist = (Artista)item;
+				alreadyExists = itemAlreadyExists(artist.getNombre(), ARTISTA_ITEM_TYPE);
+				itemType = Transmision.TRANSMISSION_TYPE_ARTIST;
+			}else if(item.getClass() == Disco.class){
+				Disco album = (Disco)item;
+				alreadyExists = itemAlreadyExists(album.getNombre(), album.getArtista(), ALBUM_ITEM_TYPE);
+				itemType = Transmision.TRANSMISSION_TYPE_ALBUM;
+			}
+			if(alreadyExists){
+				return true;
+			}
+			
 			Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 			session.beginTransaction();
 			
-			Transmission t = new Transmission();
-			if(item.getClass() == FichaPelicula.class){
-				t.setTipoItem(Transmission.TRANSMISSION_TYPE_FILM);
-			}else if(item.getClass() == Artista.class){
-				t.setTipoItem(Transmission.TRANSMISSION_TYPE_ARTIST);
-			}else if(item.getClass() == Disco.class){
-				t.setTipoItem(Transmission.TRANSMISSION_TYPE_ALBUM);
-			}
+			Transmision t = new Transmision();
+			t.setTipoItem(itemType);
 			t.setFecha(new Date());
 			t.setHelperItem(item);
 			t.setRated(false);
@@ -132,7 +150,58 @@ public class PersistentDataManager extends Manager{
 		}
 	}
 	
-	public boolean deleteTransmission(Transmission t){
+	private boolean itemAlreadyExists(String name, int itemType){
+		return itemAlreadyExists(name, null, itemType);
+	}
+	
+	private boolean itemAlreadyExists(String name, String secondName,int itemType){
+		try{
+			boolean result = false;
+			Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+			session.beginTransaction();
+			
+			String query;
+			switch (itemType) {
+			case FICHAPELICULA_ITEM_TYPE:	
+				query = "select titulo from FichaPelicula where titulo like '" + name + "'";
+				break;
+			case ARTISTA_ITEM_TYPE:
+				query = "select nombre from Artista where nombre like '" + name + "'";
+				break;
+			case ALBUM_ITEM_TYPE:
+				query = "select artista from Disco where nombre like '" + name + "'";
+				break;
+			default:
+				query = "";
+				break;
+			}
+			
+			System.out.println("QUERY: " + query);
+			Query matches = session.createQuery(query);
+			System.out.println("RESULT: " + matches);
+			
+			switch (itemType) {
+			case FICHAPELICULA_ITEM_TYPE:
+			case ARTISTA_ITEM_TYPE:
+				result = matches.list().contains(name);
+				break;
+			case ALBUM_ITEM_TYPE:
+				result = matches.list().contains(secondName);
+				break;
+			default:
+				break;
+			}
+			
+			session.getTransaction().commit();
+			
+			return result;
+		}catch(Exception exc){
+			exc.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean deleteTransmission(Transmision t){
 		if(!initialized){
 			return false;
 		}
@@ -152,7 +221,7 @@ public class PersistentDataManager extends Manager{
 		}
 	}
 	
-	public boolean updateTransmission(Transmission t){
+	public boolean updateTransmission(Transmision t){
 		if(!initialized){
 			return false;
 		}
@@ -161,6 +230,7 @@ public class PersistentDataManager extends Manager{
 			Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 			session.beginTransaction();
 			
+			session.update(t.getHelperItem());
 			session.update(t);
 			
 			session.getTransaction().commit();

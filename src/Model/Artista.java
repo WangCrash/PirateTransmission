@@ -97,8 +97,10 @@ public class Artista extends HelperItem {
 			for (int i = 0; i < getTags().length; i++) {
 				tags += getTags()[i] + ", ";
 			}
-			tags = tags.substring(0, tags.length() - 2);
-			result += "Tags: " + tags + "\n";
+			if(!tags.isEmpty()){
+				tags = tags.substring(0, tags.length() - 2);
+				result += "Tags: " + tags + "\n";
+			}
 		}
 		return result;
 	}

@@ -35,7 +35,7 @@ import Managers.Persistent.HibernateUtil;
 import Managers.Persistent.PersistentDataManager;
 import Model.Artista;
 import Model.Disco;
-import Model.Transmission;
+import Model.Transmision;
 import Model.FichaPelicula;
 import Model.HelperItem;
 
@@ -145,7 +145,7 @@ public class pruebas {
 	}
 	
 	private void createAndStoreEvent(Session session, String itemType, Date theDate) {
-        Transmission theEvent = new Transmission();
+        Transmision theEvent = new Transmision();
         theEvent.setTipoItem(itemType);
         theEvent.setFecha(theDate);
         session.save(theEvent);
@@ -162,11 +162,11 @@ public class pruebas {
 		//HibernateUtil.getSessionFactory().close();
 	}
 	
-	public Transmission saveObjectWithHibernate(String itemType, Date date, HelperItem item){
+	public Transmision saveObjectWithHibernate(String itemType, Date date, HelperItem item){
 		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 		session.beginTransaction();
 		
-		Transmission t = new Transmission();
+		Transmision t = new Transmision();
 		t.setTipoItem(itemType);
 		t.setFecha(date);
 		t.setHelperItem(item);
@@ -178,7 +178,7 @@ public class pruebas {
 		return t;
 	}
 	
-	public void deleteObjectWithHibernate(Transmission event){
+	public void deleteObjectWithHibernate(Transmision event){
 		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 		session.beginTransaction();
 		
@@ -189,7 +189,7 @@ public class pruebas {
 		session.getTransaction().commit();
 	}
 	
-	public void updateObjectWithHibernate(Transmission event){
+	public void updateObjectWithHibernate(Transmision event){
 		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 		session.beginTransaction();
 		
@@ -199,8 +199,8 @@ public class pruebas {
 	}
 	
 	public void listAllObjectsFromDB(){
-		List<Transmission> objects = listTransmissions();
-		for (Transmission listEvent : objects) {
+		List<Transmision> objects = listTransmissions();
+		for (Transmision listEvent : objects) {
 			System.out.println("ITEM: ");
 			if(listEvent.getHelperItem().getClass() == FichaPelicula.class){
 				FichaPelicula eventFilm = (FichaPelicula)listEvent.getHelperItem();
@@ -215,11 +215,11 @@ public class pruebas {
 		}
 	}
 	
-	private List<Transmission> listTransmissions() {
+	private List<Transmision> listTransmissions() {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
-        List<Transmission> result = session.createQuery("from Transmission").list();
-        for (Transmission t : result) {
+        List<Transmision> result = session.createQuery("from Transmission").list();
+        for (Transmision t : result) {
 			t.setHelperItem(initializeAndUnproxy(t.getHelperItem()));
 		}
         session.getTransaction().commit();
@@ -268,6 +268,18 @@ public class pruebas {
 		session.getTransaction().commit();
 	}
 	
+	private HelperItem[] getTestItems() {
+		HelperItem[] items = new HelperItem[3];
+		for (int i = 0; i < items.length; i++) {
+			Artista artist = new Artista();
+			artist.setNombre("Gala cla " + i);
+			artist.setIsRated(false);
+			
+			items[i] = artist;
+		}
+		return items;
+	}
+	
 	public static void main(String[] args) throws Exception{
 		if(!PersistentDataManager.getInstance().initManager()){
 			System.out.println("PERSISTENT MANAGER NO INICIADO");
@@ -305,8 +317,13 @@ public class pruebas {
 //		album.setArtista("The testing band");
 //		album.setAño(1995);
 //		album.setTags(new String[]{"tag 4", "tag 5", "tag 6"});
+//		
+//		PersistentDataManager.getInstance().addTransmission(album);//p.saveObjectWithHibernate("un disquito", new Date(), album);
 		
-		//Transmission disquito = PersistentDataManager.getInstance().addTransmission(album);//p.saveObjectWithHibernate("un disquito", new Date(), album);
+		HelperItem[] items = new pruebas().getTestItems();
+		for (int i = 0; i < items.length; i++) {
+			PersistentDataManager.getInstance().addTransmission(items[i]);
+		}
 		
 		//System.out.println("Deleting peli");
 		//PersistentDataManager.getInstance().deleteTransmission(peli);
@@ -321,6 +338,12 @@ public class pruebas {
 //		p.updateObjectWithHibernate(event);
 		
 		//p.listFilmsFromDB();
+		
+//		if(PersistentDataManager.getInstance().itemAlreadyExists("A Fucking Test Album", "The testing band", 2)){
+//			System.out.println("YA EXISTE");
+//		}else{
+//			System.out.println("NO EXISTE");
+//		}
 		
 		PersistentDataManager.getInstance().finalizeManager();
 		

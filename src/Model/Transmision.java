@@ -24,7 +24,7 @@ package Model;
  */
 import java.util.Date;
 
-public class Transmission {
+public class Transmision {
 	public final static String TRANSMISSION_TYPE_FILM = "Película";
 	public final static String TRANSMISSION_TYPE_ARTIST = "Artista";
 	public final static String TRANSMISSION_TYPE_ALBUM = "Disco";
@@ -36,11 +36,11 @@ public class Transmission {
 	private HelperItem helperItem;
 	private boolean rated;
 
-	public Transmission() {
+	public Transmision() {
 		// this form used by Hibernate
 	}
 
-	public Transmission(String title, Date date) {
+	public Transmision(String title, Date date) {
 		// for application use, to create new events
 		this.tipoItem = title;
 		this.fecha = date;

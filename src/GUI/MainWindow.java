@@ -17,7 +17,7 @@ import GUI.Helpers.Chooser.HelperChooserSection;
 import GUI.Helpers.Results.HelperResultsSection;
 import GUI.Helpers.Searcher.HelperSearcherSection;
 import GUI.PirateBay.PiratebaySection;
-import GUI.Transmissions.TransmissionsView;
+import GUI.Transmisiones.TransmisionesView;
 import Managers.ApplicationConfiguration;
 import Managers.Helpers.FilmAffinityBot;
 import Managers.Helpers.HelperManager;
@@ -116,10 +116,10 @@ public class MainWindow extends JFrame {
 		});
 		mnAplicacin.add(mntmConfiguracin);
 		
-		mnTransmissions = new JMenu("Transmissions");
+		mnTransmissions = new JMenu("Transmisiones");
 		menuBar.add(mnTransmissions);
 		
-		mntmVerTransmissions = new JMenuItem("Ver Transmissions");
+		mntmVerTransmissions = new JMenuItem("Ver Transmisiones");
 		mntmVerTransmissions.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				openTransmissionsView();
@@ -198,7 +198,7 @@ public class MainWindow extends JFrame {
 	}
 	
 	private void openTransmissionsView() {
-		TransmissionsView transmissionsView = new TransmissionsView(this);
+		TransmisionesView transmissionsView = new TransmisionesView(this);
 		transmissionsView.setVisible(true);
 	}
 	

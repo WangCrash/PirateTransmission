@@ -36,7 +36,7 @@
         <property name="hbm2ddl.auto">update</property>
 
 		<mapping resource="Model/HelperItem.hbm.xml"/>
-        <mapping resource="Model/Transmission.hbm.xml"/>
+        <mapping resource="Model/Transmision.hbm.xml"/>
 
     </session-factory>
 

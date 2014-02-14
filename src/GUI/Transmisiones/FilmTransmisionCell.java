@@ -1,4 +1,4 @@
-package GUI.Transmissions;
+package GUI.Transmisiones;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -10,19 +10,19 @@ import GUI.OneArgumentRunnableObject;
 import GUI.Helpers.Results.Items.Films.Rating.RateFilm;
 import GUI.Helpers.Results.Items.Films.Rating.RateMovieView;
 import Model.FichaPelicula;
-import Model.Transmission;
+import Model.Transmision;
 import Utils.UtilTools;
 
 @SuppressWarnings("serial")
-public class FilmTransmissionCell extends TransmissionCell implements RateFilm{
+public class FilmTransmisionCell extends TransmisionCell implements RateFilm{
 	private FichaPelicula film;
 
 	/**
 	 * Create the panel.
 	 */
-	public FilmTransmissionCell(JFrame mainFrame, TransmissionsView parentView, Transmission transmission) {
+	public FilmTransmisionCell(JFrame mainFrame, TransmisionesView parentView, Transmision transmission) {
 		super(mainFrame, parentView, transmission);
-		getRatingImageLabel().setIcon(new ImageIcon(FilmTransmissionCell.class.getResource("/images/transmission-rated.png")));
+		setAppropiateRatingImage();
 		this.film = (FichaPelicula)transmission.getHelperItem();
 		initLabels();
 	}
@@ -41,7 +41,7 @@ public class FilmTransmissionCell extends TransmissionCell implements RateFilm{
 			});
 			itemImageThread.start();
 		}
-		super.getDateLabel().setText(transmission.getFecha().toString());
+		//super.getDateLabel().setText(transmission.getFecha().toString());
 		super.getCustomButton().setText("Votar");
 		setAppropiateRatingImage();
 	}
@@ -68,7 +68,9 @@ public class FilmTransmissionCell extends TransmissionCell implements RateFilm{
 	@Override
 	public void filmSuccesfullyRated(FichaPelicula film) {
 		transmission.setRated(true);
+		this.film = film;
 		setAppropiateRatingImage();
+		updateTransmission();
 	}
 
 }

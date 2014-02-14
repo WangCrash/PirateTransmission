@@ -1,23 +1,20 @@
-package GUI.Transmissions;
+package GUI.Transmisiones;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.BoxLayout;
-import net.miginfocom.swing.MigLayout;
+
 import java.awt.GridLayout;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
+
 import javax.swing.JScrollPane;
-import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
+
 import java.awt.Color;
-import java.awt.SystemColor;
+
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 
@@ -26,25 +23,27 @@ import Model.Artista;
 import Model.Disco;
 import Model.FichaPelicula;
 import Model.HelperItem;
-import Model.Transmission;
+import Model.Transmision;
 import Utils.UtilTools;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 
-public class TransmissionsView extends JDialog {
+@SuppressWarnings("serial")
+public class TransmisionesView extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JPanel cellsPanel;
 	private JFrame mainFrame;
+	private JScrollPane scrollPane;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			TransmissionsView dialog = new TransmissionsView(new JFrame());
+			TransmisionesView dialog = new TransmisionesView(new JFrame());
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -55,7 +54,7 @@ public class TransmissionsView extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public TransmissionsView(JFrame mainFrame) {
+	public TransmisionesView(JFrame mainFrame) {
 		super(mainFrame, true);
 		setResizable(false);
 		this.mainFrame = mainFrame;
@@ -70,7 +69,7 @@ public class TransmissionsView extends JDialog {
 		contentPanel.add(panel);
 		panel.setLayout(new GridLayout(1, 0, 0, 0));
 		
-		JScrollPane scrollPane = new JScrollPane();
+		scrollPane = new JScrollPane();
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 		panel.add(scrollPane);
 		
@@ -106,27 +105,29 @@ public class TransmissionsView extends JDialog {
 		if(cellsPanel.getComponentCount() > 0){
 			cellsPanel.removeAll();
 		}
-		Transmission[] transmissions = PersistentDataManager.getInstance().listPersistentObjects();
+		Transmision[] transmissions = PersistentDataManager.getInstance().listPersistentObjects();
 		if(transmissions == null){
 			new UtilTools().showWarningDialog(mainFrame, "Error", "No se ha podido recuperar la lista de transmissions");
 		}else if(transmissions.length > 0){
 			for (int i = 0; i < transmissions.length; i++) {
 				HelperItem item = transmissions[i].getHelperItem();
 				if(item.getClass() == FichaPelicula.class){
-					cellsPanel.add(new FilmTransmissionCell(mainFrame, this, transmissions[i]));
+					cellsPanel.add(new FilmTransmisionCell(mainFrame, this, transmissions[i]));
 				}else if(item.getClass() == Artista.class){
-					//cellsPanel.add(new ArtistTransmissionCell(mainFrame, this, transmissions[i]));
+					cellsPanel.add(new ArtistTransmisionCell(mainFrame, this, transmissions[i]));
 				}else if(item.getClass() == Disco.class){
-					cellsPanel.add(new AlbumTransmissionCell(mainFrame, this, transmissions[i]));
+					cellsPanel.add(new AlbumTransmisionCell(mainFrame, this, transmissions[i]));
 				}
 			}
-			
+		}else{
+			scrollPane.remove(cellsPanel);
+			scrollPane.setViewportView(cellsPanel);
 		}
 		this.revalidate();
 		//controlar la posición del scroll vertical
 	}
-	
-	public void deleteTransmission(Transmission transmission){
+
+	public void deleteTransmission(Transmision transmission){
 		if(!PersistentDataManager.getInstance().deleteTransmission(transmission)){
 			new UtilTools().showWarningDialog(mainFrame, "Error", "La base de datos no responde");
 		}

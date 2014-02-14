@@ -1,34 +1,36 @@
-package GUI.Transmissions;
+package GUI.Transmisiones;
 
 
 import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 import GUI.OneArgumentRunnableObject;
 import Managers.Helpers.LastFMManager;
 import Model.Disco;
-import Model.Transmission;
+import Model.Transmision;
 import Utils.UtilTools;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 @SuppressWarnings("serial")
-public class AlbumTransmissionCell extends TransmissionCell {
+public class AlbumTransmisionCell extends TransmisionCell {
 	private Disco album;
 	/**
 	 * Create the panel.
 	 */
-	public AlbumTransmissionCell(JFrame mainFrame, TransmissionsView parentView, Transmission transmission) {
+	public AlbumTransmisionCell(JFrame mainFrame, TransmisionesView parentView, Transmision transmission) {
 		super(mainFrame, parentView, transmission);
 		getCustomButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				rateItem();
 			}
 		});
-		getRatingImageLabel().setIcon(new ImageIcon(FilmTransmissionCell.class.getResource("/images/transmission-rated.png")));
 		this.album = (Disco)transmission.getHelperItem();
+		setAppropiateRatingImage();
 		initLabels();
 	}
 
@@ -41,22 +43,27 @@ public class AlbumTransmissionCell extends TransmissionCell {
 				
 				@Override
 				public void run() {
+					System.out.println("Buscando imagen " + (URL) this.getArgument());
 					getItemImage((URL) this.getArgument());
 				}
 			});
 			itemImageThread.start();
 		}
-		super.getDateLabel().setText(transmission.getFecha().toString());
-		if(album.getIsRated()){
-			getCustomButton().setText("No me Gusta");
-		}else{
-			getCustomButton().setText("Me Gusta");
-		}
+		//super.getDateLabel().setText(transmission.getFecha().toString());
+		setRatingButtonText();
 		super.getCustomTagLabel1().setText("Artista: ");
 		super.getCustomTagLabel1().setVisible(true);
 		super.getCustomFieldLabel1().setText(this.album.getArtista());
 		super.getCustomFieldLabel1().setVisible(true);
 		setAppropiateRatingImage();
+	}
+	
+	private void setRatingButtonText(){
+		if(album.getIsRated()){
+			getCustomButton().setText("No me Gusta");
+		}else{
+			getCustomButton().setText("Me Gusta");
+		}
 	}
 	
 	private void getItemImage(URL imageURL) {
@@ -74,6 +81,8 @@ public class AlbumTransmissionCell extends TransmissionCell {
 			addItemToCollection();
 		}
 		setAppropiateRatingImage();
+		updateTransmission();
+		setRatingButtonText();
 	}
 	
 	public void addItemToCollection() {
@@ -81,6 +90,9 @@ public class AlbumTransmissionCell extends TransmissionCell {
 			album.setIsRated(true);
 			getCustomButton().setText("No me Gusta");
 			new UtilTools().showInfoOKDialog(mainFrame, "", "Añadido a tu biblioteca");
+			if(!transmission.getRated()){
+				transmission.setRated(true);
+			}
 		}else{
 			new UtilTools().showWarningDialog(mainFrame, "Error", "No ha sido posible añadir el álbum");
 		}
@@ -91,6 +103,9 @@ public class AlbumTransmissionCell extends TransmissionCell {
 			album.setIsRated(false);
 			getCustomButton().setText("Me Gusta");
 			new UtilTools().showInfoOKDialog(mainFrame, "", "Álbum eliminado");
+			if(!transmission.getRated()){
+				transmission.setRated(true);
+			}
 		}else{
 			new UtilTools().showWarningDialog(mainFrame, "Error", "No se ha podido eliminar el álbum");
 		}

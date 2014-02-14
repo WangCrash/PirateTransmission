@@ -306,7 +306,7 @@ public class FilmCell extends FilmResultItem implements Runnable {
 		
 		int maxDirectors = 3;
 		boolean cutLength = true;
-		if(maxDirectors > ficha.getDirector().length){
+		if(maxDirectors >= ficha.getDirector().length){
 			maxDirectors = ficha.getDirector().length;
 			cutLength = false;
 		}
