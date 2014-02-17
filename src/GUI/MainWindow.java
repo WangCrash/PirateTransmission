@@ -96,7 +96,7 @@ public class MainWindow extends JFrame {
 			}
 		});
 	
-		setIconImage(Toolkit.getDefaultToolkit().getImage(PirateTransmissionDemo.class.getResource("/images/Transmission-icon.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(MainWindow.class.getResource("/images/Transmission-icon.png")));
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MainWindow.class.getResource("/images/Transmission-icon.png")));
 		setTitle("Pirate Transmission");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
