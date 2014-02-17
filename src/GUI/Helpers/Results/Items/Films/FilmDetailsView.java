@@ -1,6 +1,5 @@
 package GUI.Helpers.Results.Items.Films;
 
-import javax.sound.sampled.ReverbType;
 import javax.swing.JPanel;
 
 import GUI.Helpers.Results.HelperResultsSection;
@@ -15,7 +14,6 @@ import Utils.UtilTools;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
@@ -24,10 +22,7 @@ import javax.swing.SwingUtilities;
 
 import java.awt.Cursor;
 import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Point;
-import java.awt.RenderingHints;
 
 import javax.swing.ImageIcon;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -36,34 +31,26 @@ import javax.swing.border.LineBorder;
 import java.awt.Color;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Map;
-import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JList;
-import javax.swing.AbstractListModel;
-import javax.swing.ListSelectionModel;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
-import javax.swing.border.EtchedBorder;
 import javax.swing.JTable;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.image.BufferedImage;
 
-import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.UIManager;
 import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 
+@SuppressWarnings("serial")
 public class FilmDetailsView extends FilmResultItem implements Runnable{
 	private URL imageURL;
 	
@@ -164,7 +151,9 @@ public class FilmDetailsView extends FilmResultItem implements Runnable{
 		);
 		panel.setLayout(gl_panel);
 		
-		rateButton = new JButton("Votar");
+		rateButton = new JButton("");
+		rateButton.setIcon(new ImageIcon(FilmDetailsView.class.getResource("/images/HelperResults/rate-film-icon.png")));
+		rateButton.setToolTipText("Votar");
 		rateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				rateItem();
@@ -318,7 +307,7 @@ public class FilmDetailsView extends FilmResultItem implements Runnable{
 							.addGroup(gl_infoPanel.createParallelGroup(Alignment.LEADING)
 								.addComponent(lblNewLabel_5, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
 								.addComponent(lblNewLabel_4, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE))
-							.addPreferredGap(ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.RELATED, 71, Short.MAX_VALUE)
 							.addGroup(gl_infoPanel.createParallelGroup(Alignment.LEADING)
 								.addComponent(yearLabel, GroupLayout.PREFERRED_SIZE, 148, GroupLayout.PREFERRED_SIZE)
 								.addComponent(countryLabel, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE))
@@ -351,12 +340,12 @@ public class FilmDetailsView extends FilmResultItem implements Runnable{
 								.addComponent(sinopsisScrollPane, GroupLayout.PREFERRED_SIZE, 212, GroupLayout.PREFERRED_SIZE))))
 					.addGap(27)
 					.addGroup(gl_infoPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(rateButton, GroupLayout.PREFERRED_SIZE, 77, GroupLayout.PREFERRED_SIZE)
 						.addComponent(panel, GroupLayout.PREFERRED_SIZE, 77, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_infoPanel.createSequentialGroup()
 							.addGap(13)
 							.addComponent(yourMarkLabel))
-						.addComponent(usersMarkFrame, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(rateButton, GroupLayout.PREFERRED_SIZE, 77, GroupLayout.PREFERRED_SIZE)))
+						.addComponent(usersMarkFrame, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
 				.addGroup(gl_infoPanel.createSequentialGroup()
 					.addGap(9)
 					.addComponent(lblNewLabel_9, GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE)
@@ -411,9 +400,9 @@ public class FilmDetailsView extends FilmResultItem implements Runnable{
 							.addComponent(yourMarkLabel)
 							.addGap(6)
 							.addComponent(usersMarkFrame, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addGap(6)
-							.addComponent(rateButton)))
-					.addGap(32)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(rateButton, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)))
+					.addGap(18)
 					.addGroup(gl_infoPanel.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblNewLabel_7)
 						.addComponent(prizesScrollPane, GroupLayout.PREFERRED_SIZE, 109, GroupLayout.PREFERRED_SIZE))
@@ -439,25 +428,26 @@ public class FilmDetailsView extends FilmResultItem implements Runnable{
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(2)
-					.addComponent(infoPanel, GroupLayout.PREFERRED_SIZE, 437, GroupLayout.PREFERRED_SIZE))
+					.addComponent(infoPanel, GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(3)
-					.addComponent(infoPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addComponent(infoPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		setLayout(groupLayout);
 		initLabels();
 	}
 	
-	private String arrayToString(String[] array){
-		String result = "";
-		for (int i = 0; i < array.length; i++) {
-			result += array[i] + ", ";
-		}
-		return result.substring(0, result.length() - 2);
-	}
+//	private String arrayToString(String[] array){
+//		String result = "";
+//		for (int i = 0; i < array.length; i++) {
+//			result += array[i] + ", ";
+//		}
+//		return result.substring(0, result.length() - 2);
+//	}
 	
 	private void initLabels() {
 		System.out.println("Detalles de \n" + this.getFilm());

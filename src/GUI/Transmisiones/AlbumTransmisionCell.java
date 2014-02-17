@@ -5,9 +5,9 @@ import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 import GUI.OneArgumentRunnableObject;
+import GUI.Helpers.Results.Items.Music.ArtistCell;
 import Managers.Helpers.LastFMManager;
 import Model.Disco;
 import Model.Transmision;
@@ -38,6 +38,7 @@ public class AlbumTransmisionCell extends TransmisionCell {
 	protected void initLabels() {
 		super.getItemTypeLabel().setText("ÁLBUM");
 		super.getTitleLabel().setText(album.getNombre());
+		super.getTitleLabel().setToolTipText(album.getNombre());
 		if(album.getImageURL() != null){
 			Thread itemImageThread = new Thread(new OneArgumentRunnableObject(album.getImageURL()) {
 				
@@ -50,7 +51,7 @@ public class AlbumTransmisionCell extends TransmisionCell {
 			itemImageThread.start();
 		}
 		//super.getDateLabel().setText(transmission.getFecha().toString());
-		setRatingButtonText();
+		setUpRatingButton();
 		super.getCustomTagLabel1().setText("Artista: ");
 		super.getCustomTagLabel1().setVisible(true);
 		super.getCustomFieldLabel1().setText(this.album.getArtista());
@@ -58,11 +59,13 @@ public class AlbumTransmisionCell extends TransmisionCell {
 		setAppropiateRatingImage();
 	}
 	
-	private void setRatingButtonText(){
+	private void setUpRatingButton(){
 		if(album.getIsRated()){
-			getCustomButton().setText("No me Gusta");
+			getCustomButton().setIcon(new ImageIcon(ArtistCell.class.getResource("/images/HelperResults/dislike-music-icon.png")));
+			getCustomButton().setToolTipText("Eliminar de tu colección");
 		}else{
-			getCustomButton().setText("Me Gusta");
+			getCustomButton().setIcon(new ImageIcon(ArtistCell.class.getResource("/images/HelperResults/like-music-icon.png")));
+			getCustomButton().setToolTipText("Añadir a tu colección");
 		}
 	}
 	
@@ -82,13 +85,12 @@ public class AlbumTransmisionCell extends TransmisionCell {
 		}
 		setAppropiateRatingImage();
 		updateTransmission();
-		setRatingButtonText();
+		setUpRatingButton();
 	}
 	
 	public void addItemToCollection() {
 		if(LastFMManager.getInstance().rateItem(album)){
 			album.setIsRated(true);
-			getCustomButton().setText("No me Gusta");
 			new UtilTools().showInfoOKDialog(mainFrame, "", "Añadido a tu biblioteca");
 			if(!transmission.getRated()){
 				transmission.setRated(true);
@@ -101,7 +103,6 @@ public class AlbumTransmisionCell extends TransmisionCell {
 	public void removeItemFromCollection(){
 		if(LastFMManager.getInstance().removeAlbum(album)){
 			album.setIsRated(false);
-			getCustomButton().setText("Me Gusta");
 			new UtilTools().showInfoOKDialog(mainFrame, "", "Álbum eliminado");
 			if(!transmission.getRated()){
 				transmission.setRated(true);
@@ -110,4 +111,6 @@ public class AlbumTransmisionCell extends TransmisionCell {
 			new UtilTools().showWarningDialog(mainFrame, "Error", "No se ha podido eliminar el álbum");
 		}
 	}
+	
+	
 }

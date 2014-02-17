@@ -16,4 +16,5 @@ public abstract class MusicResultItem extends HelperResultItem{
 	protected abstract void getItemTags();
 	
 	public abstract void removeItem();
+
 }

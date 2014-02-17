@@ -17,12 +17,14 @@ import Utils.UtilTools;
 public class FilmTransmisionCell extends TransmisionCell implements RateFilm{
 	private FichaPelicula film;
 
+	public FilmTransmisionCell(){
+		super();
+	}
 	/**
 	 * Create the panel.
 	 */
 	public FilmTransmisionCell(JFrame mainFrame, TransmisionesView parentView, Transmision transmission) {
 		super(mainFrame, parentView, transmission);
-		setAppropiateRatingImage();
 		this.film = (FichaPelicula)transmission.getHelperItem();
 		initLabels();
 	}
@@ -31,6 +33,9 @@ public class FilmTransmisionCell extends TransmisionCell implements RateFilm{
 	protected void initLabels() {
 		super.getItemTypeLabel().setText("PELÍCULA/SERIE/DOCUMENTAL");
 		super.getTitleLabel().setText(film.getTitulo());
+		super.getTitleLabel().setToolTipText(film.getTitulo());
+		getCustomButton().setIcon(new ImageIcon(TransmisionCell.class.getResource("/images/HelperResults/rate-film-icon.png")));
+		getCustomButton().setToolTipText("Votar");
 		if(film.getImageUrl() != null && !film.getImageUrl().isEmpty()){
 			Thread itemImageThread = new Thread(new OneArgumentRunnableObject(film.getImageUrl()) {
 				
@@ -41,8 +46,6 @@ public class FilmTransmisionCell extends TransmisionCell implements RateFilm{
 			});
 			itemImageThread.start();
 		}
-		//super.getDateLabel().setText(transmission.getFecha().toString());
-		super.getCustomButton().setText("Votar");
 		setAppropiateRatingImage();
 	}
 

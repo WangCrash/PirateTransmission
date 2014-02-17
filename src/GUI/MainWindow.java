@@ -100,7 +100,7 @@ public class MainWindow extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MainWindow.class.getResource("/images/Transmission-icon.png")));
 		setTitle("Pirate Transmission");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 934, 599);
+		setBounds(100, 100, 963, 733);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -141,22 +141,26 @@ public class MainWindow extends JFrame {
 		helperResults = new JPanel();
 		GroupLayout gl_helperPanel = new GroupLayout(helperPanel);
 		gl_helperPanel.setHorizontalGroup(
-			gl_helperPanel.createParallelGroup(Alignment.TRAILING)
+			gl_helperPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_helperPanel.createSequentialGroup()
-					.addGroup(gl_helperPanel.createParallelGroup(Alignment.TRAILING)
-						.addComponent(helperRecommendations, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE)
-						.addComponent(helperResults, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE)
-						.addComponent(helperSearcher, GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE))
-					.addContainerGap())
+					.addGap(5)
+					.addComponent(helperSearcher, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addGap(6))
+				.addComponent(helperRecommendations, GroupLayout.DEFAULT_SIZE, 512, Short.MAX_VALUE)
+				.addGroup(gl_helperPanel.createSequentialGroup()
+					.addGap(5)
+					.addComponent(helperResults, GroupLayout.PREFERRED_SIZE, 497, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		gl_helperPanel.setVerticalGroup(
 			gl_helperPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_helperPanel.createSequentialGroup()
-					.addComponent(helperRecommendations, GroupLayout.PREFERRED_SIZE, 94, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(helperSearcher, GroupLayout.PREFERRED_SIZE, 92, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(helperResults, GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE))
+					.addComponent(helperRecommendations, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE)
+					.addGap(1)
+					.addComponent(helperSearcher, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(helperResults, GroupLayout.PREFERRED_SIZE, 481, GroupLayout.PREFERRED_SIZE)
+					.addGap(1))
 		);
 		helperPanel.setLayout(gl_helperPanel);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
@@ -164,13 +168,16 @@ public class MainWindow extends JFrame {
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addComponent(piratebayPanel, GroupLayout.PREFERRED_SIZE, 440, GroupLayout.PREFERRED_SIZE)
-					.addGap(6)
-					.addComponent(helperPanel, GroupLayout.PREFERRED_SIZE, 481, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(helperPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addComponent(piratebayPanel, GroupLayout.PREFERRED_SIZE, 540, GroupLayout.PREFERRED_SIZE)
-				.addComponent(helperPanel, GroupLayout.PREFERRED_SIZE, 540, GroupLayout.PREFERRED_SIZE)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(piratebayPanel, GroupLayout.PREFERRED_SIZE, 675, GroupLayout.PREFERRED_SIZE)
+						.addComponent(helperPanel, GroupLayout.PREFERRED_SIZE, 673, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		contentPane.setLayout(gl_contentPane);
 		includeSections();

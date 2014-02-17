@@ -26,6 +26,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.ImageIcon;
+import java.awt.FlowLayout;
+import java.awt.Font;
 
 public class HelperChooserSection extends JPanel implements Runnable {
 	private static final long serialVersionUID = 9179013116749250575L;
@@ -43,6 +46,10 @@ public class HelperChooserSection extends JPanel implements Runnable {
 	private JButton getRecommendationsButton;
 	private JButton setUpFiltersButton;
 	private LoadingView loadingView;
+	
+	public HelperChooserSection(){
+		this(null);
+	}
 	/**
 	 * Create the panel.
 	 */
@@ -57,6 +64,7 @@ public class HelperChooserSection extends JPanel implements Runnable {
 		
 		comboModel = new String[]{FILMS_COMBO_OPTION, MUSIC_COMBO_OPTION};
 		helperChooserComboBox = new JComboBox(comboModel);
+		helperChooserComboBox.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		helperChooserComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String option = comboModel[helperChooserComboBox.getSelectedIndex()];
@@ -71,13 +79,17 @@ public class HelperChooserSection extends JPanel implements Runnable {
 			}
 		});
 		
-		getRecommendationsButton = new JButton("Ver Recomendaciones");
+		getRecommendationsButton = new JButton("");
+		getRecommendationsButton.setIcon(new ImageIcon(HelperChooserSection.class.getResource("/images/HelperChooser/ver-recomendaciones-icon.png")));
+		getRecommendationsButton.setToolTipText("Ver Recomendaciones");
 		getRecommendationsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				showRecommendations();
 			}
 		});
-		setUpFiltersButton = new JButton("Ajustar Filtros");
+		setUpFiltersButton = new JButton("");
+		setUpFiltersButton.setIcon(new ImageIcon(HelperChooserSection.class.getResource("/images/HelperChooser/ajuste-fitros-icon.png")));
+		setUpFiltersButton.setToolTipText("Ajustar Filtros");
 		setUpFiltersButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				openFiltersSetUpView();
@@ -87,27 +99,33 @@ public class HelperChooserSection extends JPanel implements Runnable {
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap(55, Short.MAX_VALUE)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(helperChooserComboBox, GroupLayout.PREFERRED_SIZE, 392, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED, 12, Short.MAX_VALUE))
 						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-							.addComponent(getRecommendationsButton, GroupLayout.PREFERRED_SIZE, 170, GroupLayout.PREFERRED_SIZE)
-							.addGap(18)
-							.addComponent(setUpFiltersButton, GroupLayout.PREFERRED_SIZE, 167, GroupLayout.PREFERRED_SIZE)
-							.addGap(44))
-						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-							.addComponent(helperChooserComboBox, GroupLayout.PREFERRED_SIZE, 256, GroupLayout.PREFERRED_SIZE)
-							.addGap(76))))
+							.addContainerGap()
+							.addComponent(getRecommendationsButton, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE)
+							.addGap(138)))
+					.addComponent(setUpFiltersButton, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE)
+					.addGap(7))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(8)
-					.addComponent(helperChooserComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(setUpFiltersButton, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
-						.addComponent(getRecommendationsButton, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap())
+					.addGap(0, 0, Short.MAX_VALUE)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(2)
+							.addComponent(setUpFiltersButton, GroupLayout.PREFERRED_SIZE, 48, GroupLayout.PREFERRED_SIZE)
+							.addGap(38))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(4)
+							.addComponent(helperChooserComboBox, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addComponent(getRecommendationsButton, GroupLayout.PREFERRED_SIZE, 48, GroupLayout.PREFERRED_SIZE)
+							.addGap(1))))
 		);
 		setLayout(groupLayout);
 

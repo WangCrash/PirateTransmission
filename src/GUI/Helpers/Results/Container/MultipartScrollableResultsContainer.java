@@ -27,7 +27,6 @@ import Model.HelperItem;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
-import java.awt.Rectangle;
 import java.awt.SystemColor;
 
 import javax.swing.ImageIcon;
@@ -69,7 +68,9 @@ public class MultipartScrollableResultsContainer extends ResultsContainer{
 		sendBackButton.setIcon(new ImageIcon(MultipartScrollableResultsContainer.class.getResource("/images/backButton.png")));
 		sendBackButton.setEnabled(enableBackButton);
 		
-		searchTorrentButton = new JButton("Buscar Torrent");
+		searchTorrentButton = new JButton("");
+		searchTorrentButton.setToolTipText("Buscar Torrent\r\n");
+		searchTorrentButton.setIcon(new ImageIcon(MultipartScrollableResultsContainer.class.getResource("/images/HelperResults/search-torrent-icon.png")));
 		searchTorrentButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				itemDetailsPanel.searchItemTorrent();
@@ -77,23 +78,23 @@ public class MultipartScrollableResultsContainer extends ResultsContainer{
 		});
 		GroupLayout gl_staticPane = new GroupLayout(staticPane);
 		gl_staticPane.setHorizontalGroup(
-			gl_staticPane.createParallelGroup(Alignment.LEADING)
+			gl_staticPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_staticPane.createSequentialGroup()
-					.addGap(166)
+					.addContainerGap(210, Short.MAX_VALUE)
 					.addComponent(searchTorrentButton)
-					.addContainerGap(166, Short.MAX_VALUE))
+					.addGap(204))
 		);
 		gl_staticPane.setVerticalGroup(
-			gl_staticPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, gl_staticPane.createSequentialGroup()
-					.addGap(5)
-					.addComponent(searchTorrentButton, GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)
+			gl_staticPane.createParallelGroup(Alignment.TRAILING)
+				.addGroup(Alignment.LEADING, gl_staticPane.createSequentialGroup()
+					.addGap(2)
+					.addComponent(searchTorrentButton, GroupLayout.PREFERRED_SIZE, 31, Short.MAX_VALUE)
 					.addGap(3))
 		);
 		staticPane.setLayout(gl_staticPane);
 		
 		resultsPanel = new JPanel();
-		resultsPanel.setBackground(new Color(204, 255, 153));
+		resultsPanel.setBackground(new Color(204, 204, 153));
 		scrollPane.setViewportView(resultsPanel);
 		resultsPanel.setLayout(new GridLayout(0, 1, 0, 0));
 		GroupLayout groupLayout = new GroupLayout(this);
@@ -102,20 +103,22 @@ public class MultipartScrollableResultsContainer extends ResultsContainer{
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(1)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 483, Short.MAX_VALUE)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(sendBackButton, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
-							.addContainerGap(415, Short.MAX_VALUE))
-						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 466, Short.MAX_VALUE)
-						.addComponent(staticPane, GroupLayout.DEFAULT_SIZE, 466, Short.MAX_VALUE)))
+							.addContainerGap(446, Short.MAX_VALUE))))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addComponent(staticPane, GroupLayout.DEFAULT_SIZE, 483, Short.MAX_VALUE)
+					.addGap(1))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addComponent(sendBackButton, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
 					.addGap(1)
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 251, GroupLayout.PREFERRED_SIZE)
-					.addGap(3)
-					.addComponent(staticPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 389, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(staticPane, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)
 					.addGap(5))
 		);
 		setLayout(groupLayout);
@@ -132,7 +135,7 @@ public class MultipartScrollableResultsContainer extends ResultsContainer{
 		}else if(this.helperItem.getClass() == Disco.class){
 			itemDetailsPanel = new AlbumDetailsView(mainFrame, parentView, helperItem);
 		}
-		itemDetailsPanel.setBackground(new Color(204, 255, 153));
+		//itemDetailsPanel.setBackground(new Color(204, 255, 153));
 		resultsPanel.add(itemDetailsPanel);
 		//resultsPanel.add(new JButton("ADFSASDFASDFASDF"));
 		resultsPanel.revalidate();

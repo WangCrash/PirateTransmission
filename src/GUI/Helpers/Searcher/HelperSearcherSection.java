@@ -34,6 +34,8 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
 
 public class HelperSearcherSection extends JPanel implements Runnable {
 	private static final long serialVersionUID = 9179013116749250575L;
@@ -47,6 +49,11 @@ public class HelperSearcherSection extends JPanel implements Runnable {
 	private LoadingView loadingView;
 	private JTextField searchField;
 	private JLabel titleLabel;
+	
+	public HelperSearcherSection(){
+		this(null);
+	}
+	
 	/**
 	 * Create the panel.
 	 */
@@ -64,6 +71,10 @@ public class HelperSearcherSection extends JPanel implements Runnable {
 			}
 		});
 		
+		titleLabel = new JLabel("New label");
+		titleLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
+		titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		
 		searchField = new JTextField();
 		searchField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -73,31 +84,35 @@ public class HelperSearcherSection extends JPanel implements Runnable {
 		searchField.setMargin(new Insets(12, 12, 12, 12));
 		searchField.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		searchField.setColumns(10);
-		
-		titleLabel = new JLabel("New label");
-		titleLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
-		titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(searchField, GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(configSearchButton, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-					.addGap(8))
-				.addComponent(titleLabel, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 454, Short.MAX_VALUE)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(6)
+							.addComponent(titleLabel, GroupLayout.PREFERRED_SIZE, 462, GroupLayout.PREFERRED_SIZE))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(10)
+							.addComponent(searchField, GroupLayout.PREFERRED_SIZE, 418, GroupLayout.PREFERRED_SIZE)
+							.addGap(9)
+							.addComponent(configSearchButton, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)))
+					.addGap(11))
 		);
 		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.TRAILING)
+			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(4)
+					.addGap(3)
 					.addComponent(titleLabel)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addComponent(configSearchButton, GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
-						.addComponent(searchField, GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
-					.addContainerGap())
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(2)
+							.addComponent(searchField, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
+							.addGap(10))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(4)
+							.addComponent(configSearchButton, GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
+							.addContainerGap())))
 		);
 		setLayout(groupLayout);
 		

@@ -18,7 +18,6 @@ import javax.swing.JLabel;
 import java.awt.Cursor;
 import java.awt.Font;
 
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JList;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
@@ -90,8 +89,9 @@ public class AlbumDetailsView extends MusicResultItem {
 		aboutAlbumScrollPane.setViewportView(aboutAlbumEditorPane);
 		
 		rateButton = new JButton("No me Gusta");
+		rateButton.setIcon(new ImageIcon(AlbumDetailsView.class.getResource("/images/HelperResults/like-music-icon.png")));
 		rateButton.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		rateButton.setText(getDisco().getIsRated()?rateButton.getText():"Me Gusta");
+		rateButton.setText("");
 		rateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(getDisco().getIsRated()){
@@ -112,46 +112,40 @@ public class AlbumDetailsView extends MusicResultItem {
 		imageLabel.setIcon(new ImageIcon(AlbumDetailsView.class.getResource("/javax/swing/plaf/basic/icons/image-delayed.png")));
 		imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		imageLabel.setBorder(new LineBorder(new Color(0, 0, 0)));
+		tagsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addContainerGap()
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addGroup(groupLayout.createSequentialGroup()
-									.addComponent(lblArtista)
-									.addGap(39)
-									.addComponent(artistLabel, GroupLayout.PREFERRED_SIZE, 294, GroupLayout.PREFERRED_SIZE))
-								.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
-									.addGroup(groupLayout.createSequentialGroup()
-										.addComponent(lblArtistasSimilares, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE)
-										.addGap(10)
-										.addComponent(songsScrollPane))
-									.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
-										.addComponent(lblGnero, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-										.addGap(35)
-										.addComponent(tagsPanel, GroupLayout.PREFERRED_SIZE, 312, GroupLayout.PREFERRED_SIZE))))
-							.addPreferredGap(ComponentPlacement.RELATED, 37, Short.MAX_VALUE))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(titleLabel, GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(lblBio, GroupLayout.PREFERRED_SIZE, 112, GroupLayout.PREFERRED_SIZE))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(aboutAlbumScrollPane, GroupLayout.PREFERRED_SIZE, 422, GroupLayout.PREFERRED_SIZE)))
-					.addContainerGap())
-				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-					.addContainerGap(168, Short.MAX_VALUE)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(12)
-							.addComponent(rateButton, GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE)))
-					.addGap(162))
+					.addGap(10)
+					.addComponent(titleLabel, GroupLayout.PREFERRED_SIZE, 430, GroupLayout.PREFERRED_SIZE))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(165)
+					.addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(183)
+					.addComponent(rateButton))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(10)
+					.addComponent(lblGnero, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+					.addGap(35)
+					.addComponent(tagsPanel, GroupLayout.PREFERRED_SIZE, 312, GroupLayout.PREFERRED_SIZE))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(10)
+					.addComponent(lblArtista)
+					.addGap(39)
+					.addComponent(artistLabel, GroupLayout.PREFERRED_SIZE, 294, GroupLayout.PREFERRED_SIZE))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(10)
+					.addComponent(lblArtistasSimilares, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE)
+					.addGap(10)
+					.addComponent(songsScrollPane, GroupLayout.PREFERRED_SIZE, 312, GroupLayout.PREFERRED_SIZE))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(10)
+					.addComponent(lblBio, GroupLayout.PREFERRED_SIZE, 112, GroupLayout.PREFERRED_SIZE))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(10)
+					.addComponent(aboutAlbumScrollPane, GroupLayout.PREFERRED_SIZE, 422, GroupLayout.PREFERRED_SIZE))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -161,31 +155,28 @@ public class AlbumDetailsView extends MusicResultItem {
 					.addGap(18)
 					.addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 99, GroupLayout.PREFERRED_SIZE)
 					.addGap(9)
-					.addComponent(rateButton)
-					.addGap(23)
+					.addComponent(rateButton, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE)
+					.addGap(28)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblGnero, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(4)
-							.addComponent(tagsPanel, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)))
-					.addGap(11)
+							.addGap(8)
+							.addComponent(lblGnero, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE))
+						.addComponent(tagsPanel, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE))
+					.addGap(23)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblArtista)
 						.addComponent(artistLabel))
+					.addGap(28)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(29)
+							.addGap(1)
 							.addComponent(lblArtistasSimilares))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(28)
-							.addComponent(songsScrollPane, GroupLayout.PREFERRED_SIZE, 76, GroupLayout.PREFERRED_SIZE)))
+						.addComponent(songsScrollPane, GroupLayout.PREFERRED_SIZE, 76, GroupLayout.PREFERRED_SIZE))
 					.addGap(28)
 					.addComponent(lblBio)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(aboutAlbumScrollPane, GroupLayout.PREFERRED_SIZE, 141, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap())
+					.addGap(6)
+					.addComponent(aboutAlbumScrollPane, GroupLayout.PREFERRED_SIZE, 141, GroupLayout.PREFERRED_SIZE))
 		);
-		tagsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		setLayout(groupLayout);
 		initLabels();
 	}
@@ -194,6 +185,7 @@ public class AlbumDetailsView extends MusicResultItem {
 		Disco disco = getDisco();
 		getAlbumImage();
 		titleLabel.setText(disco.getNombre());
+		setUpRateButton();
 		artistLabel.setText("<HTML><U>" + disco.getArtista() + "<U><HTML>");
 		artistLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		if(disco.getTags() == null){
@@ -285,7 +277,7 @@ public class AlbumDetailsView extends MusicResultItem {
 	public void rateItem() {
 		if(LastFMManager.getInstance().rateItem(getDisco())){
 			getDisco().setIsRated(true);
-			rateButton.setText("No me Gusta");
+			setUpRateButton();
 			new UtilTools().showInfoOKDialog(mainFrame, "", "Añadido a tu biblioteca");
 		}else{
 			new UtilTools().showWarningDialog(mainFrame, "Error", "No ha sido posible añadir el álbum");
@@ -296,7 +288,7 @@ public class AlbumDetailsView extends MusicResultItem {
 	public void removeItem(){
 		if(LastFMManager.getInstance().removeAlbum(disco)){
 			getDisco().setIsRated(false);
-			rateButton.setText("Me Gusta");
+			setUpRateButton();
 			new UtilTools().showInfoOKDialog(mainFrame, "", "Álbum eliminado");
 		}else{
 			new UtilTools().showWarningDialog(mainFrame, "Error", "No se ha podido eliminar el álbum");
@@ -356,5 +348,15 @@ public class AlbumDetailsView extends MusicResultItem {
 		tag = tag.replaceAll("<U>", "");
 		String search = tag;
 		parentView.searchItem(search, LastFMManager.LASTFM_TAG_SEARCH_OPTION);
+	}
+	
+	private void setUpRateButton(){
+		if(getDisco().getIsRated()){
+			rateButton.setToolTipText("Eliminar de tu colección");
+			rateButton.setIcon(new ImageIcon(ArtistCell.class.getResource("/images/HelperResults/dislike-music-icon.png")));
+		}else{
+			rateButton.setToolTipText("Añadir a tu colección");
+			rateButton.setIcon(new ImageIcon(ArtistCell.class.getResource("/images/HelperResults/like-music-icon.png")));
+		}
 	}
 }

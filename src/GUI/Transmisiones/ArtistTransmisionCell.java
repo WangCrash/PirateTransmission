@@ -6,6 +6,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import GUI.OneArgumentRunnableObject;
+import GUI.Helpers.Results.Items.Music.ArtistCell;
 import Managers.Helpers.LastFMManager;
 import Model.Artista;
 import Model.Transmision;
@@ -28,6 +29,7 @@ public class ArtistTransmisionCell extends TransmisionCell {
 	protected void initLabels() {
 		super.getItemTypeLabel().setText("ARTISTA");
 		super.getTitleLabel().setText(artist.getNombre());
+		super.getTitleLabel().setToolTipText(artist.getNombre());
 		if(artist.getImageURL() != null){
 			Thread itemImageThread = new Thread(new OneArgumentRunnableObject(artist.getImageURL()) {
 				
@@ -39,7 +41,7 @@ public class ArtistTransmisionCell extends TransmisionCell {
 			itemImageThread.start();
 		}
 		//super.getDateLabel().setText(transmission.getFecha().toString());
-		setRattingButtonText();
+		setUpRatingButton();
 //		super.getCustomTagLabel1().setText("Artista: ");
 //		super.getCustomTagLabel1().setVisible(true);
 //		super.getCustomFieldLabel1().setText(this.artist.getArtista());
@@ -47,11 +49,13 @@ public class ArtistTransmisionCell extends TransmisionCell {
 		setAppropiateRatingImage();
 	}
 	
-	private void setRattingButtonText(){
+	private void setUpRatingButton(){
 		if(artist.getIsRated()){
-			getCustomButton().setText("No me Gusta");
+			getCustomButton().setIcon(new ImageIcon(ArtistCell.class.getResource("/images/HelperResults/dislike-music-icon.png")));
+			getCustomButton().setToolTipText("Eliminar de tu colección");
 		}else{
-			getCustomButton().setText("Me Gusta");
+			getCustomButton().setIcon(new ImageIcon(ArtistCell.class.getResource("/images/HelperResults/like-music-icon.png")));
+			getCustomButton().setToolTipText("Añadir a tu colección");
 		}
 	}
 
@@ -73,12 +77,12 @@ public class ArtistTransmisionCell extends TransmisionCell {
 		}
 		setAppropiateRatingImage();
 		updateTransmission();
+		setUpRatingButton();
 	}
 	
 	public void addItemToCollection() {
 		if(LastFMManager.getInstance().rateItem(artist)){
 			artist.setIsRated(true);
-			getCustomButton().setText("No me Gusta");
 			new UtilTools().showInfoOKDialog(mainFrame, "", "Añadido a tu biblioteca");
 			if(!transmission.getRated()){
 				transmission.setRated(true);
@@ -91,7 +95,6 @@ public class ArtistTransmisionCell extends TransmisionCell {
 	public void removeItemFromCollection(){
 		if(LastFMManager.getInstance().removeArtist(artist)){
 			artist.setIsRated(false);
-			getCustomButton().setText("Me Gusta");
 			new UtilTools().showInfoOKDialog(mainFrame, "", "Artista eliminado");
 			if(!transmission.getRated()){
 				transmission.setRated(true);

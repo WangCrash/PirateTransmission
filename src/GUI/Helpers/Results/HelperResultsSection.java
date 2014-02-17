@@ -28,6 +28,9 @@ public class HelperResultsSection extends JPanel {
 	private HelperItem[] items;
 	private int resultsScrollValue;
 
+	public HelperResultsSection(){
+		this(null);
+	}
 	/**
 	 * Create the panel.
 	 */
@@ -41,11 +44,11 @@ public class HelperResultsSection extends JPanel {
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addComponent(rootPanel, GroupLayout.DEFAULT_SIZE, 462, Short.MAX_VALUE)
+				.addComponent(rootPanel, GroupLayout.DEFAULT_SIZE, 486, Short.MAX_VALUE)
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addComponent(rootPanel, GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
+				.addComponent(rootPanel, GroupLayout.DEFAULT_SIZE, 471, Short.MAX_VALUE)
 		);
 		FlowLayout fl_rootPanel = new FlowLayout(FlowLayout.CENTER, 0, 0);
 		rootPanel.setLayout(fl_rootPanel);

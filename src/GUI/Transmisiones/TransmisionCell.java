@@ -23,6 +23,7 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.awt.Component;
 import java.awt.Dimension;
 
@@ -40,10 +41,12 @@ public abstract class TransmisionCell extends JPanel {
 	private JLabel itemTypeLabel;
 	private JLabel titleLabel;
 	private JLabel customFieldLabel1;
-	private JLabel customTagLabel2;
 	private JLabel customTagLabel1;
-	private JLabel customFieldLabel2;
 
+	
+	public TransmisionCell(){
+		this(new JFrame(), new TransmisionesView(new JFrame()), new Transmision("name", new Date()));
+	}
 	/**
 	 * Create the panel.
 	 */
@@ -62,7 +65,7 @@ public abstract class TransmisionCell extends JPanel {
 		
 		titleLabel = new JLabel("T\u00EDtulo");
 		titleLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
-		titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		
 		itemImageLabel = new JLabel("");
 		itemImageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -70,7 +73,9 @@ public abstract class TransmisionCell extends JPanel {
 		itemImageLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		itemImageLabel.setIcon(new ImageIcon(TransmisionCell.class.getResource("/javax/swing/plaf/basic/icons/image-delayed.png")));
 		
-		deleteButton = new JButton("Borrar");
+		deleteButton = new JButton("");
+		deleteButton.setIcon(new ImageIcon(TransmisionCell.class.getResource("/images/Transmisiones/remove-ico.png")));
+		deleteButton.setToolTipText("Eliminar");
 		deleteButton.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		deleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -78,7 +83,7 @@ public abstract class TransmisionCell extends JPanel {
 			}
 		});
 		
-		customButton = new JButton("lo que sea");
+		customButton = new JButton("");
 		customButton.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		customButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -100,93 +105,76 @@ public abstract class TransmisionCell extends JPanel {
 		customTagLabel1 = new JLabel("New label");
 		customTagLabel1.setVisible(false);
 		
-		customTagLabel2 = new JLabel("New label");
-		customTagLabel2.setVisible(false);
-		
 		customFieldLabel1 = new JLabel("New label");
 		customFieldLabel1.setVisible(false);
-		
-		customFieldLabel2 = new JLabel("New label");
-		customFieldLabel2.setVisible(false);
+		customButton.setText("");
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(10)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(titleLabel, GroupLayout.PREFERRED_SIZE, 435, GroupLayout.PREFERRED_SIZE)
-							.addGap(10))
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(itemTypeLabel, GroupLayout.PREFERRED_SIZE, 205, GroupLayout.PREFERRED_SIZE)
-							.addGap(69)
-							.addComponent(dateLabel, GroupLayout.PREFERRED_SIZE, 156, GroupLayout.PREFERRED_SIZE)
-							.addContainerGap())
+							.addPreferredGap(ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
+							.addComponent(dateLabel, GroupLayout.PREFERRED_SIZE, 156, GroupLayout.PREFERRED_SIZE))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(itemImageLabel, GroupLayout.PREFERRED_SIZE, 78, GroupLayout.PREFERRED_SIZE)
 							.addGap(10)
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-									.addGroup(groupLayout.createSequentialGroup()
-										.addComponent(customTagLabel1, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
-										.addGap(10)
-										.addComponent(customFieldLabel1, GroupLayout.PREFERRED_SIZE, 214, GroupLayout.PREFERRED_SIZE))
-									.addGroup(groupLayout.createSequentialGroup()
-										.addComponent(customTagLabel2, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
-										.addGap(10)
-										.addComponent(customFieldLabel2, GroupLayout.PREFERRED_SIZE, 212, GroupLayout.PREFERRED_SIZE)))
+								.addComponent(titleLabel, GroupLayout.PREFERRED_SIZE, 340, GroupLayout.PREFERRED_SIZE)
 								.addGroup(groupLayout.createSequentialGroup()
-									.addGap(26)
-									.addComponent(deleteButton, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE)
-									.addGap(20)
-									.addComponent(customButton, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)))
-							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-							.addComponent(ratingImageLabel, GroupLayout.PREFERRED_SIZE, 49, GroupLayout.PREFERRED_SIZE)
-							.addGap(16))))
+									.addComponent(customTagLabel1, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
+									.addGap(12)
+									.addComponent(customFieldLabel1, GroupLayout.PREFERRED_SIZE, 270, GroupLayout.PREFERRED_SIZE))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(74)
+									.addComponent(deleteButton)
+									.addGap(18)
+									.addComponent(customButton, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE)
+									.addGap(63)
+									.addComponent(ratingImageLabel, GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)))
+							.addGap(1)))
+					.addGap(9))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(11)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(itemTypeLabel)
+						.addComponent(dateLabel))
+					.addGap(11)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(11)
-							.addComponent(itemTypeLabel))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(dateLabel)))
-					.addGap(13)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(14)
 							.addComponent(itemImageLabel, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-							.addContainerGap(12, Short.MAX_VALUE))
+							.addPreferredGap(ComponentPlacement.RELATED, 39, Short.MAX_VALUE))
 						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(2)
 							.addComponent(titleLabel)
+							.addGap(21)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(customTagLabel1)
+								.addComponent(customFieldLabel1))
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 								.addGroup(groupLayout.createSequentialGroup()
-									.addGap(37)
+									.addGap(22)
 									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-										.addComponent(customTagLabel1)
-										.addComponent(customFieldLabel1))
-									.addGap(11)
-									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-										.addComponent(customTagLabel2)
-										.addComponent(customFieldLabel2))
-									.addPreferredGap(ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
-									.addComponent(customButton)
-									.addGap(6))
-								.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(ratingImageLabel, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
-									.addGap(16))))))
-				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-					.addContainerGap(145, Short.MAX_VALUE)
-					.addComponent(deleteButton)
-					.addGap(5))
+										.addGroup(groupLayout.createSequentialGroup()
+											.addGap(16)
+											.addComponent(deleteButton))
+										.addGroup(groupLayout.createSequentialGroup()
+											.addGap(16)
+											.addComponent(customButton, GroupLayout.PREFERRED_SIZE, 49, GroupLayout.PREFERRED_SIZE))))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addComponent(ratingImageLabel, GroupLayout.PREFERRED_SIZE, 49, GroupLayout.PREFERRED_SIZE)))))
+					.addGap(9))
 		);
 		setLayout(groupLayout);
 
 	}
+
 	protected JLabel getRatingImageLabel() {
 		return ratingImageLabel;
 	}
@@ -229,14 +217,9 @@ public abstract class TransmisionCell extends JPanel {
 	protected JLabel getCustomFieldLabel1() {
 		return customFieldLabel1;
 	}
-	protected JLabel getCustomTagLabel2() {
-		return customTagLabel2;
-	}
+	
 	protected JLabel getCustomTagLabel1() {
 		return customTagLabel1;
-	}
-	protected JLabel getCustomFieldLabel2() {
-		return customFieldLabel2;
 	}
 	
 	protected void updateTransmission(){

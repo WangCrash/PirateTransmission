@@ -45,7 +45,9 @@ public class ArtistCell extends MusicResultItem {
 		setArtista((Artista)item);
 		setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		
-		searchTorrentButton = new JButton("Buscar Torrent");
+		searchTorrentButton = new JButton("");
+		searchTorrentButton.setIcon(new ImageIcon(ArtistCell.class.getResource("/images/HelperResults/search-torrent-icon.png")));
+		searchTorrentButton.setToolTipText("Buscar Torrent");
 		searchTorrentButton.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		searchTorrentButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -53,7 +55,9 @@ public class ArtistCell extends MusicResultItem {
 			}
 		});
 		
-		showDetailsButton = new JButton("Ver Detalles");
+		showDetailsButton = new JButton("");
+		showDetailsButton.setIcon(new ImageIcon(ArtistCell.class.getResource("/images/HelperResults/show-details-icon.png")));
+		showDetailsButton.setToolTipText("Ver Detalles");
 		showDetailsButton.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		showDetailsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -71,9 +75,11 @@ public class ArtistCell extends MusicResultItem {
 		
 		tagsPanel = new JPanel();
 		
-		rateButton = new JButton("No me Gusta");
+		rateButton = new JButton("");
+		rateButton.setIcon(new ImageIcon(ArtistCell.class.getResource("/images/HelperResults/like-music-icon.png")));
+		rateButton.setToolTipText("A\u00F1adir a la colección");
 		rateButton.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		rateButton.setText(getArtista().getIsRated()?rateButton.getText():"Me Gusta");
+		rateButton.setText("");
 		rateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(getArtista().getIsRated()){
@@ -87,39 +93,41 @@ public class ArtistCell extends MusicResultItem {
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
-						.addComponent(titleLabel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+					.addGap(10)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(titleLabel, GroupLayout.PREFERRED_SIZE, 428, GroupLayout.PREFERRED_SIZE)
+						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+							.addGap(4)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(tagsPanel, GroupLayout.PREFERRED_SIZE, 295, GroupLayout.PREFERRED_SIZE)
 								.addGroup(groupLayout.createSequentialGroup()
-									.addComponent(searchTorrentButton)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(showDetailsButton, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(rateButton, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE))
-								.addComponent(tagsPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-					.addContainerGap(5, Short.MAX_VALUE))
+									.addGap(27)
+									.addComponent(searchTorrentButton, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
+									.addGap(10)
+									.addComponent(showDetailsButton, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
+									.addGap(10)
+									.addComponent(rateButton, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE))))))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
+					.addGap(11)
 					.addComponent(titleLabel)
-					.addGap(18)
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
-						.addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
+					.addGap(28)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(18)
-							.addComponent(tagsPanel, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+							.addComponent(imageLabel, GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
+							.addGap(10))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(8)
+							.addComponent(tagsPanel, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)
+							.addGap(5)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 								.addComponent(searchTorrentButton)
-								.addComponent(showDetailsButton)
-								.addComponent(rateButton))))
-					.addGap(12))
+								.addComponent(showDetailsButton, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)
+								.addComponent(rateButton, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE))))
+					.addGap(15))
 		);
 		setLayout(groupLayout);
 		initLabels();
@@ -128,6 +136,7 @@ public class ArtistCell extends MusicResultItem {
 	private void initLabels() {
 		getArtistImage();
 		titleLabel.setText(getArtista().getNombre());
+		setUpRateButton();
 		getItemTags();
 	}
 
@@ -180,8 +189,8 @@ public class ArtistCell extends MusicResultItem {
 	public void rateItem() {
 		if(LastFMManager.getInstance().rateItem(getArtista())){
 			getArtista().setIsRated(true);
-			rateButton.setText("No me Gusta");
-			new UtilTools().showInfoOKDialog(mainFrame, "", "Añadido a tu biblioteca");
+			setUpRateButton();			
+			new UtilTools().showInfoOKDialog(mainFrame, "", "Añadido a tu colección");
 		}else{
 			new UtilTools().showWarningDialog(mainFrame, "Error", "Ha ocurrido un error inesperado");
 		}
@@ -191,7 +200,7 @@ public class ArtistCell extends MusicResultItem {
 	public void removeItem(){
 		if(LastFMManager.getInstance().removeArtist(getArtista())){
 			getArtista().setIsRated(false);
-			rateButton.setText("Me Gusta");
+			setUpRateButton();
 			new UtilTools().showInfoOKDialog(mainFrame, "", "Artista eliminado");
 		}else{
 			new UtilTools().showWarningDialog(mainFrame, "Error", "No se ha podido eliminar el artista");
@@ -239,5 +248,15 @@ public class ArtistCell extends MusicResultItem {
 		tag = tag.replaceAll("<U>", "");
 		String search = tag;
 		parentView.searchItem(search, LastFMManager.LASTFM_TAG_SEARCH_OPTION);
+	}
+	
+	private void setUpRateButton(){
+		if(getArtista().getIsRated()){
+			rateButton.setToolTipText("Eliminar de tu colección");
+			rateButton.setIcon(new ImageIcon(ArtistCell.class.getResource("/images/HelperResults/dislike-music-icon.png")));
+		}else{
+			rateButton.setToolTipText("Añadir a tu colección");
+			rateButton.setIcon(new ImageIcon(ArtistCell.class.getResource("/images/HelperResults/like-music-icon.png")));
+		}
 	}
 }

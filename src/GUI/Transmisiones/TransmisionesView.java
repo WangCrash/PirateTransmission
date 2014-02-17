@@ -107,7 +107,7 @@ public class TransmisionesView extends JDialog {
 		}
 		Transmision[] transmissions = PersistentDataManager.getInstance().listPersistentObjects();
 		if(transmissions == null){
-			new UtilTools().showWarningDialog(mainFrame, "Error", "No se ha podido recuperar la lista de transmissions");
+			new UtilTools().showWarningDialog(mainFrame, "Error", "No se ha podido recuperar la lista de transmisiones");
 		}else if(transmissions.length > 0){
 			for (int i = 0; i < transmissions.length; i++) {
 				HelperItem item = transmissions[i].getHelperItem();

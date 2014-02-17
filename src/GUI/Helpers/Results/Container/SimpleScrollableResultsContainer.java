@@ -35,6 +35,9 @@ public class SimpleScrollableResultsContainer extends ResultsContainer{
 	private JPanel resultsPanel;
 	private JScrollPane scrollPane;
 
+	public SimpleScrollableResultsContainer(){
+		this(null, null, null);
+	}
 	/**
 	 * Create the panel.
 	 */
@@ -49,11 +52,15 @@ public class SimpleScrollableResultsContainer extends ResultsContainer{
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 466, Short.MAX_VALUE)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 485, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 460, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		
 		resultsPanel = new JPanel();
