@@ -14,9 +14,9 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-import GUI.OneArgumentRunnableObject;
 import Managers.Persistent.PersistentDataManager;
 import Model.Transmision;
+import Utils.OneArgumentRunnableObject;
 import Utils.UtilTools;
 
 import java.awt.Font;

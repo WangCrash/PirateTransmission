@@ -6,11 +6,11 @@ import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
-import GUI.OneArgumentRunnableObject;
 import GUI.Helpers.Results.Items.Films.Rating.RateFilm;
 import GUI.Helpers.Results.Items.Films.Rating.RateMovieView;
 import Model.FichaPelicula;
 import Model.Transmision;
+import Utils.OneArgumentRunnableObject;
 import Utils.UtilTools;
 
 @SuppressWarnings("serial")

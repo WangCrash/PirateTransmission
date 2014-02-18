@@ -5,11 +5,11 @@ import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
-import GUI.OneArgumentRunnableObject;
 import GUI.Helpers.Results.Items.Music.ArtistCell;
 import Managers.Helpers.LastFMManager;
 import Model.Artista;
 import Model.Transmision;
+import Utils.OneArgumentRunnableObject;
 import Utils.UtilTools;
 
 @SuppressWarnings("serial")

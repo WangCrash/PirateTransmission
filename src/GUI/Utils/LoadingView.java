@@ -1,4 +1,4 @@
-package GUI;
+package GUI.Utils;
 import java.awt.BorderLayout;
 
 import javax.swing.JDialog;

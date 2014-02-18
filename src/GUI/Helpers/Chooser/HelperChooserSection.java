@@ -12,8 +12,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 
-import GUI.LoadingView;
 import GUI.MainWindow;
+import GUI.Utils.LoadingView;
 import Managers.ApplicationConfiguration;
 import Managers.Helpers.FilmAffinityBot;
 import Managers.Helpers.HelperManager;

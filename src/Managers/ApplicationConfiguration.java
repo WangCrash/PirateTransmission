@@ -2,8 +2,6 @@ package Managers;
 
 import java.util.Map;
 
-import org.omg.CORBA.CurrentHelper;
-
 import Managers.Helpers.FilmAffinityBot;
 import Managers.Helpers.HelperManager;
 import Managers.TorrentClient.TorrentClient;

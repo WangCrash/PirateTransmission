@@ -1,5 +1,7 @@
 package GUI.Pre;
+import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -14,13 +16,14 @@ import javax.swing.UIManager;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.BevelBorder;
 
+import Utils.OneArgumentRunnableObject;
+
 import GUI.MainWindow;
-import GUI.OneArgumentRunnableObject;
 
 import java.awt.Font;
 
 @SuppressWarnings("serial")
-public class PreAppView extends JDialog {
+public class PreAppView extends JFrame {
 
 	private JPanel contentPane;
 	private JLabel messageLabel;
@@ -28,17 +31,26 @@ public class PreAppView extends JDialog {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(MainWindow mainFrame) {
-		EventQueue.invokeLater(new OneArgumentRunnableObject(mainFrame) {
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
 			
 			@Override
 			public void run() {
 				try {
-					PreAppView preView = new PreAppView((MainWindow) this.getArgument());
+					PreAppView preView = new PreAppView();
+					Thread initialization = new Thread(new OneArgumentRunnableObject(preView) {
+						
+						@Override
+						public void run() {
+							PreAppView preView = (PreAppView)this.getArgument();
+							preView.initializeApplication();
+							preView.setVisible(false);
+							preView.dispose();
+							MainWindow.main(null);
+						}
+					});
+					initialization.start();
 					preView.setVisible(true);
-					preView.initializeApplication();
-					preView.setVisible(false);
-					preView.dispose();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -49,11 +61,10 @@ public class PreAppView extends JDialog {
 	/**
 	 * Create the frame.
 	 */
-	public PreAppView(JFrame mainFrame) {
-		super(mainFrame, true);
+	public PreAppView() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(PreAppView.class.getResource("/images/Transmission-icon.png")));
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setUndecorated(true);
-		setResizable(false);
 		setBounds(100, 100, 485, 315);
 		contentPane = new JPanel();
 		contentPane.setBorder(new CompoundBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null), UIManager.getBorder("Button.border")));
@@ -98,8 +109,8 @@ public class PreAppView extends JDialog {
 					.addGap(4))
 		);
 		contentPane.setLayout(gl_contentPane);
-		//this.setLocationRelativeTo(mainFrame);
-		System.out.println("Preview Constructor finished");
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
 	}
 	public JLabel getMessageLabel() {
 		return messageLabel;

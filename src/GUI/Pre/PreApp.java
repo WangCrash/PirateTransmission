@@ -15,6 +15,7 @@ public class PreApp {
 	
 	public void initializingApplication() {
 		System.out.println("INCIANDO APLICACION...");
+		loadingView.getMessageLabel().setText("Iniciando aplicación...");
 		try {
 			Thread.sleep(5000);
 		} catch (InterruptedException e) {

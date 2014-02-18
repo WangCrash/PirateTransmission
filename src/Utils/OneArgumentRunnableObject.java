@@ -1,4 +1,4 @@
-package GUI;
+package Utils;
 
 public abstract class OneArgumentRunnableObject implements Runnable {
 	private Object argument;

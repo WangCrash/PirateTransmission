@@ -17,7 +17,6 @@ import GUI.Helpers.Chooser.HelperChooserSection;
 import GUI.Helpers.Results.HelperResultsSection;
 import GUI.Helpers.Searcher.HelperSearcherSection;
 import GUI.PirateBay.PiratebaySection;
-import GUI.Pre.PreApp;
 import GUI.Pre.PreAppView;
 import GUI.Transmisiones.TransmisionesView;
 import Managers.ApplicationConfiguration;
@@ -27,6 +26,7 @@ import Managers.Helpers.LastFMManager;
 import Managers.Persistent.PersistentDataManager;
 import Model.FichaPelicula;
 import Model.HelperItem;
+import Utils.OneArgumentRunnableObject;
 
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
@@ -67,9 +67,8 @@ public class MainWindow extends JFrame {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				try {
-					MainWindow mainFrame = new MainWindow();//MainWindow.getInstance();
-					PreAppView.main(null);
+				try {					
+					MainWindow mainFrame = new MainWindow();//MainWindow.getInstance();					
 					mainFrame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -82,7 +81,6 @@ public class MainWindow extends JFrame {
 	 * Create the frame.
 	 */
 	private MainWindow() {
-		
 		setResizable(false);
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -198,7 +196,7 @@ public class MainWindow extends JFrame {
 		helperResultsSection = new HelperResultsSection(this);
 		helperResults.add(helperResultsSection);
 		
-		//helperChooserSection.showRecommendations();
+		helperChooserSection.showRecommendations();
 	}
 	
 	private void openConfigView() {
