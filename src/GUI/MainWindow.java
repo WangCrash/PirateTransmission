@@ -17,6 +17,8 @@ import GUI.Helpers.Chooser.HelperChooserSection;
 import GUI.Helpers.Results.HelperResultsSection;
 import GUI.Helpers.Searcher.HelperSearcherSection;
 import GUI.PirateBay.PiratebaySection;
+import GUI.Pre.PreApp;
+import GUI.Pre.PreAppView;
 import GUI.Transmisiones.TransmisionesView;
 import Managers.ApplicationConfiguration;
 import Managers.Helpers.FilmAffinityBot;
@@ -66,9 +68,9 @@ public class MainWindow extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					new PreApp().initializingApplication();
-					MainWindow frame = MainWindow.getInstance();
-					frame.setVisible(true);
+					MainWindow mainFrame = new MainWindow();//MainWindow.getInstance();
+					PreAppView.main(null);
+					mainFrame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -80,6 +82,7 @@ public class MainWindow extends JFrame {
 	 * Create the frame.
 	 */
 	private MainWindow() {
+		
 		setResizable(false);
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -96,7 +99,6 @@ public class MainWindow extends JFrame {
 			}
 		});
 	
-		setIconImage(Toolkit.getDefaultToolkit().getImage(MainWindow.class.getResource("/images/Transmission-icon.png")));
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MainWindow.class.getResource("/images/Transmission-icon.png")));
 		setTitle("Pirate Transmission");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -196,7 +198,7 @@ public class MainWindow extends JFrame {
 		helperResultsSection = new HelperResultsSection(this);
 		helperResults.add(helperResultsSection);
 		
-		helperChooserSection.showRecommendations();
+		//helperChooserSection.showRecommendations();
 	}
 	
 	private void openConfigView() {
