@@ -19,6 +19,8 @@ import javax.swing.border.BevelBorder;
 import Utils.OneArgumentRunnableObject;
 
 import GUI.MainWindow;
+import GUI.Panel.MainContentPanel;
+import GUI.Panel.SimpleContentPanel;
 
 import java.awt.Font;
 
@@ -66,7 +68,7 @@ public class PreAppView extends JFrame {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setUndecorated(true);
 		setBounds(100, 100, 485, 315);
-		contentPane = new JPanel();
+		contentPane = new SimpleContentPanel();
 		contentPane.setBorder(new CompoundBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null), UIManager.getBorder("Button.border")));
 		setContentPane(contentPane);
 		

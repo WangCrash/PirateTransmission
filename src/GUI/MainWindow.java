@@ -1,6 +1,7 @@
 package GUI;
 
 import java.awt.EventQueue;
+import java.awt.Graphics;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -16,9 +17,12 @@ import GUI.Configuration.ConfigView;
 import GUI.Helpers.Chooser.HelperChooserSection;
 import GUI.Helpers.Results.HelperResultsSection;
 import GUI.Helpers.Searcher.HelperSearcherSection;
+import GUI.Panel.MainContentPanel;
+import GUI.Panel.TransparentPanel;
 import GUI.PirateBay.PiratebaySection;
 import GUI.Pre.PreAppView;
 import GUI.Transmisiones.TransmisionesView;
+import GUI.Utils.LoadingView;
 import Managers.ApplicationConfiguration;
 import Managers.Helpers.FilmAffinityBot;
 import Managers.Helpers.HelperManager;
@@ -33,10 +37,11 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
 
+@SuppressWarnings("serial")
 public class MainWindow extends JFrame {
 
-	private static final long serialVersionUID = -6836764944504173037L;
 	private static volatile MainWindow instance = null;
 	
 	private JPanel contentPane;
@@ -85,15 +90,7 @@ public class MainWindow extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
-				if(FilmAffinityBot.getInstance().isLogged()){
-					FilmAffinityBot.getInstance().terminateManager();
-				}
-				if(LastFMManager.getInstance().isLogged()){
-					LastFMManager.getInstance().logout();
-				}
-				if(PersistentDataManager.getInstance().isStarted()){
-					PersistentDataManager.getInstance().finalizeManager();
-				}
+				closeApplication();
 			}
 		});
 	
@@ -126,31 +123,34 @@ public class MainWindow extends JFrame {
 			}
 		});
 		mnTransmissions.add(mntmVerTransmissions);
-		contentPane = new JPanel();
+		contentPane = new MainContentPanel();
+		contentPane.setBackground(new Color(153, 204, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
 		piratebayPanel = new JPanel();
+		piratebayPanel.setBackground(new Color(153, 0, 204, 0));
 		
 		JPanel helperPanel = new JPanel();
+		helperPanel.setBackground(new Color(204, 204, 51, 0));
 		
 		helperRecommendations = new JPanel();
+		helperRecommendations.setBackground(new Color(255, 255, 204, 0));
 		
 		helperSearcher = new JPanel();
+		helperSearcher.setBackground(new Color(0, 51, 255, 0));
 		
 		helperResults = new JPanel();
+		helperResults.setBackground(new Color(0, 51, 255, 0));
 		GroupLayout gl_helperPanel = new GroupLayout(helperPanel);
 		gl_helperPanel.setHorizontalGroup(
 			gl_helperPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_helperPanel.createSequentialGroup()
-					.addGap(5)
-					.addComponent(helperSearcher, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+				.addGroup(Alignment.TRAILING, gl_helperPanel.createSequentialGroup()
+					.addGroup(gl_helperPanel.createParallelGroup(Alignment.TRAILING)
+						.addComponent(helperResults, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)
+						.addComponent(helperRecommendations, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)
+						.addComponent(helperSearcher, GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE))
 					.addGap(6))
-				.addComponent(helperRecommendations, GroupLayout.DEFAULT_SIZE, 512, Short.MAX_VALUE)
-				.addGroup(gl_helperPanel.createSequentialGroup()
-					.addGap(5)
-					.addComponent(helperResults, GroupLayout.PREFERRED_SIZE, 497, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		gl_helperPanel.setVerticalGroup(
 			gl_helperPanel.createParallelGroup(Alignment.LEADING)
@@ -158,9 +158,9 @@ public class MainWindow extends JFrame {
 					.addComponent(helperRecommendations, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE)
 					.addGap(1)
 					.addComponent(helperSearcher, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(helperResults, GroupLayout.PREFERRED_SIZE, 481, GroupLayout.PREFERRED_SIZE)
-					.addGap(1))
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		helperPanel.setLayout(gl_helperPanel);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
@@ -185,6 +185,7 @@ public class MainWindow extends JFrame {
 
 	private void includeSections() {
 		pirateBaySection = new PiratebaySection(this);
+		pirateBaySection.setBackground(new Color(51, 204, 102, 0));
 		piratebayPanel.add(pirateBaySection);
 		
 		helperChooserSection = new HelperChooserSection(this);
@@ -249,5 +250,46 @@ public class MainWindow extends JFrame {
 		ApplicationConfiguration.getInstance().setCurrentHelperManager(helper);
 		this.helperSearcherSection.drawOptionsByHelper();
 		helperChooserSection.showRecommendations();
+	}
+	
+	public Color color(double val) {
+	    double H = val * 0.3; 
+	    double S = 0.9; 
+	    double B = 0.9; 
+	    int rgb = Color.HSBtoRGB((float)H, (float)S, (float)B);
+	    int red = (rgb >> 16) & 0xFF;
+	    int green = (rgb >> 8) & 0xFF;
+	    int blue = rgb & 0xFF;
+	    Color color = new Color(red, green, blue, 0x33);
+	    return color;
+	}
+
+	private void closeApplication() {
+		LoadingView loadingView = new LoadingView(this);
+		loadingView.setMessageLabel("Cerrando...");
+		Thread closingManagersThread = new Thread(new OneArgumentRunnableObject(loadingView) {
+			
+			@Override
+			public void run() {
+				LoadingView loadingView = (LoadingView)this.getArgument();
+				if(FilmAffinityBot.getInstance().isLogged()){
+					loadingView.setMessageLabel("Cerrando sesión en FilmAffinity...");
+					FilmAffinityBot.getInstance().terminateManager();
+				}
+				
+				if(LastFMManager.getInstance().isLogged()){
+					loadingView.setMessageLabel("Cerrando sesión en LastFM...");
+					LastFMManager.getInstance().logout();
+				}
+				if(PersistentDataManager.getInstance().isStarted()){
+					loadingView.setMessageLabel("Cerrando controlador de persistencia...");
+					PersistentDataManager.getInstance().finalizeManager();
+				}
+				loadingView.setVisible(false);
+				loadingView.dispose();
+			}
+		});
+		closingManagersThread.start();
+		loadingView.setVisible(true);
 	}
 }

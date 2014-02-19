@@ -14,6 +14,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
+import GUI.Panel.PanelProperties;
 import Managers.Persistent.PersistentDataManager;
 import Model.Transmision;
 import Utils.OneArgumentRunnableObject;
@@ -57,6 +58,7 @@ public abstract class TransmisionCell extends JPanel {
 		
 //		setMaximumSize(new Dimension(457, 180));
 //		setMinimumSize(new Dimension(457, 180));
+		setBackground(PanelProperties.BACKGROUND);
 		setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		
 		itemTypeLabel = new JLabel("Tipo de Item");

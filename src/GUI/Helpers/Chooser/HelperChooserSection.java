@@ -1,20 +1,20 @@
 package GUI.Helpers.Chooser;
 
-import javax.swing.JPanel;
-
 
 import javax.swing.JComboBox;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
+import javax.swing.JPanel;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingUtilities;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 
 import GUI.MainWindow;
+import GUI.Panel.PanelProperties;
+import GUI.Panel.SectionPanel;
 import GUI.Utils.LoadingView;
-import Managers.ApplicationConfiguration;
 import Managers.Helpers.FilmAffinityBot;
 import Managers.Helpers.HelperManager;
 import Managers.Helpers.LastFMManager;
@@ -27,8 +27,8 @@ import java.util.Map;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
-import java.awt.FlowLayout;
 import java.awt.Font;
+
 
 public class HelperChooserSection extends JPanel implements Runnable {
 	private static final long serialVersionUID = 9179013116749250575L;
@@ -59,8 +59,8 @@ public class HelperChooserSection extends JPanel implements Runnable {
 		//de momento por defecto se usa filmaffinity
 		this.helperManager = FilmAffinityBot.getInstance();
 		
-		setBorder(new SoftBevelBorder(BevelBorder.RAISED, new Color(64, 64, 64), null, null, null));
-		setBackground(new Color(204, 255, 153));
+		setBorder(PanelProperties.BORDER);
+		setBackground(PanelProperties.BACKGROUND);
 		
 		comboModel = new String[]{FILMS_COMBO_OPTION, MUSIC_COMBO_OPTION};
 		helperChooserComboBox = new JComboBox(comboModel);
@@ -88,6 +88,7 @@ public class HelperChooserSection extends JPanel implements Runnable {
 			}
 		});
 		setUpFiltersButton = new JButton("");
+		setUpFiltersButton.setForeground(new Color(0, 0, 0));
 		setUpFiltersButton.setIcon(new ImageIcon(HelperChooserSection.class.getResource("/images/HelperChooser/ajuste-fitros-icon.png")));
 		setUpFiltersButton.setToolTipText("Ajustar Filtros");
 		setUpFiltersButton.addActionListener(new ActionListener() {

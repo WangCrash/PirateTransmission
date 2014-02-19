@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import Codification.Base64;
+import GUI.Panel.PanelProperties;
 import Managers.Manager;
 import Managers.Helpers.HelperManager;
 import Utils.UtilTools;
@@ -37,6 +38,8 @@ public class SimpleSectionConfig extends ConfigurationSection {
 	public SimpleSectionConfig(String initialUser, String initialPassword) {
 		this.initialUser = (initialUser == null)?"":initialUser;
 		this.initialPassword = (initialPassword == null)?"":initialPassword;
+		
+		setBackground(PanelProperties.BACKGROUND);
 		JLabel lblNewLabel = new JLabel("Usuario");
 		
 		JLabel lblNewLabel_1 = new JLabel("Password");

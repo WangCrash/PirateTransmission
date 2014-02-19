@@ -1,6 +1,5 @@
 package Utils;
 
-import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -24,9 +23,7 @@ import java.util.regex.Pattern;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -157,14 +154,14 @@ public class UtilTools {
 		JOptionPane.showMessageDialog(frame, message, title, JOptionPane.WARNING_MESSAGE);
 	}
 	
-	public boolean showYesNoDialog(JFrame frame, String title, String message){
+	public int showYesNoDialog(JFrame frame, String title, String message){
 		Object[] options = {"Sí", "No"};
-		return (JOptionPane.showOptionDialog(frame, 
+		return JOptionPane.showOptionDialog(frame, 
 				message, 
 				title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, 
 				null,     //do not use a custom Icon
 				options,  //the titles of buttons
-				options[0]) == JOptionPane.YES_OPTION); //default button title
+				options[0]); //default button title
 	}
 	
 	//quita palabras que filmaffinity pone en los títulos de las fichas como aclaración y que provocan búsquedas fallidas en pirateBay

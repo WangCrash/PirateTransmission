@@ -17,6 +17,8 @@ import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
+import GUI.Panel.MainContentPanel;
+import GUI.Panel.PanelProperties;
 import Managers.PirateBayBot;
 import Model.ArchivoTorrent;
 import Utils.UtilTools;
@@ -40,14 +42,16 @@ public class PiratebaySection extends JPanel implements Runnable{
 	 * Create the panel.
 	 */
 	public PiratebaySection(JFrame mainFrame){
+		setBackground(new Color(255, 255, 255));
 		this.mainFrame = mainFrame;
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+		scrollPane.setBackground(PanelProperties.BACKGROUND);
 		
 		JPanel searchPanel = new JPanel();
-		searchPanel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, Color.DARK_GRAY, null, null, null));
-		searchPanel.setBackground(new Color(204, 255, 153));
+		searchPanel.setBorder(PanelProperties.BORDER);
+		searchPanel.setBackground(PanelProperties.BACKGROUND);
 		
 		JLabel lblBuscarTorrent = new JLabel("Buscar Torrent");
 		lblBuscarTorrent.setHorizontalAlignment(SwingConstants.CENTER);
@@ -55,6 +59,7 @@ public class PiratebaySection extends JPanel implements Runnable{
 		lblBuscarTorrent.setBackground(Color.LIGHT_GRAY);
 		
 		searchField = new JTextField();
+		searchField.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		searchField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				JTextField textField = (JTextField)arg0.getSource();
@@ -65,8 +70,8 @@ public class PiratebaySection extends JPanel implements Runnable{
 		searchField.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		
 		resultsPanel = new JPanel();
-		resultsPanel.setBorder(new SoftBevelBorder(BevelBorder.RAISED, Color.DARK_GRAY, null, null, null));
-		resultsPanel.setBackground(new Color(204, 255, 153));
+		resultsPanel.setBorder(PanelProperties.BORDER);
+		resultsPanel.setBackground(PanelProperties.BACKGROUND);
 		scrollPane.setViewportView(resultsPanel);
 		resultsPanel.setLayout(new GridLayout(0, 1, 1, 2));
 		GroupLayout gl_searchPanel = new GroupLayout(searchPanel);

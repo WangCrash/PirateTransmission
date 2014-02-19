@@ -13,6 +13,7 @@ import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 
 import GUI.MainWindow;
+import GUI.Panel.PanelProperties;
 import GUI.Utils.LoadingView;
 import Managers.ApplicationConfiguration;
 import Managers.Helpers.FilmAffinityBot;
@@ -60,8 +61,8 @@ public class HelperSearcherSection extends JPanel implements Runnable {
 	public HelperSearcherSection(MainWindow mainFrame) {
 		this.mainFrame = mainFrame;		
 		
-		setBorder(new SoftBevelBorder(BevelBorder.RAISED, new Color(64, 64, 64), null, null, null));
-		setBackground(new Color(204, 255, 153));
+		setBorder(PanelProperties.BORDER);
+		setBackground(PanelProperties.BACKGROUND);
 		
 		configSearchButton = new JButton("");
 		configSearchButton.setIcon(new ImageIcon(HelperSearcherSection.class.getResource("/javax/swing/plaf/metal/icons/sortDown.png")));
@@ -76,6 +77,7 @@ public class HelperSearcherSection extends JPanel implements Runnable {
 		titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		searchField = new JTextField();
+		searchField.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		searchField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				searchItem();

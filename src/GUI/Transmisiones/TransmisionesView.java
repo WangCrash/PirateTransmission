@@ -18,6 +18,8 @@ import java.awt.Color;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 
+import GUI.Panel.PanelProperties;
+import GUI.Panel.SimpleContentPanel;
 import Managers.Persistent.PersistentDataManager;
 import Model.Artista;
 import Model.Disco;
@@ -33,7 +35,7 @@ import java.awt.Font;
 @SuppressWarnings("serial")
 public class TransmisionesView extends JDialog {
 
-	private final JPanel contentPanel = new JPanel();
+	private final JPanel contentPanel = new SimpleContentPanel();
 	private JPanel cellsPanel;
 	private JFrame mainFrame;
 	private JScrollPane scrollPane;
@@ -66,15 +68,18 @@ public class TransmisionesView extends JDialog {
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, Color.BLACK, null, null, null));
+		panel.setBackground(PanelProperties.BACKGROUND);
+		panel.setBorder(PanelProperties.BORDER);
 		contentPanel.add(panel);
 		panel.setLayout(new GridLayout(1, 0, 0, 0));
 		
 		scrollPane = new JScrollPane();
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+		scrollPane.setBackground(PanelProperties.TRANSPARENT_BACKGROUND);
 		panel.add(scrollPane);
 		
 		cellsPanel = new JPanel();
-		cellsPanel.setBackground(new Color(204, 255, 153));
+		cellsPanel.setBackground(PanelProperties.TRANSPARENT_BACKGROUND);
 		scrollPane.setViewportView(cellsPanel);
 		cellsPanel.setLayout(new GridLayout(0, 1, 0, 5));
 		{

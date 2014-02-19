@@ -1,6 +1,7 @@
 package GUI.Helpers.Results.Items.Films;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import GUI.Helpers.Results.HelperResultsSection;
 import GUI.Helpers.Results.Items.HelperResultItem;
@@ -29,16 +30,19 @@ public abstract class FilmResultItem extends HelperResultItem implements RateFil
 	@Override
 	public void searchItemTorrent() {
 		FichaPelicula ficha = this.getFilm();
-		String search;
-		if(new UtilTools().showYesNoDialog(this.mainFrame, "Buscar Torrent", "Buscar en su idioma original")){
+		String search = null;
+		int response = new UtilTools().showYesNoDialog(this.mainFrame, "Buscar Torrent", "Buscar en su idioma original");
+		if(response == JOptionPane.YES_OPTION){
 			if(ficha.getTituloOriginal() == null || ficha.getTituloOriginal().isEmpty()){
 				ficha = FilmAffinityBot.getInstance().fillFichaPelicula(ficha);
 			}
 			search = ficha.getTituloOriginal();
-		}else{
+		}else if(response == JOptionPane.NO_OPTION){
 			search = new UtilTools().killFilmAffinityWords(ficha.getTitulo());
 		}
-		this.parentView.searchTorrent(search, getFilm());
+		if(search != null){
+			this.parentView.searchTorrent(search, getFilm());
+		}
 	}
 	
 	public void setFilm(FichaPelicula film){

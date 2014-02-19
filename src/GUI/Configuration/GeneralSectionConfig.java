@@ -3,6 +3,7 @@ package GUI.Configuration;
 import java.util.HashMap;
 import java.util.Map;
 
+import GUI.Panel.PanelProperties;
 import Managers.ApplicationConfiguration;
 import Managers.Manager;
 import Managers.TorrentClient.TransmissionManager;
@@ -33,6 +34,8 @@ public class GeneralSectionConfig extends ConfigurationSection {
 	public GeneralSectionConfig(Manager manager) {
 		setManager(manager);
 		setInitialVariables();
+		
+		setBackground(PanelProperties.BACKGROUND);
 		JLabel lblNewLabel = new JLabel("Cliente Torrent");
 		
 		JLabel lblUsar = new JLabel("Usar:");

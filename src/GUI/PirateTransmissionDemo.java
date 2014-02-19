@@ -31,6 +31,7 @@ import Managers.Helpers.FilmAffinityBot;
 import Model.ArchivoTorrent;
 import Utils.UtilTools;
 
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.SystemColor;
@@ -40,6 +41,14 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.BorderLayout;
+import javax.swing.SwingConstants;
+import javax.swing.ImageIcon;
+import java.awt.event.ContainerAdapter;
+import java.awt.event.ContainerEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.image.ImageObserver;
 
 
 public class PirateTransmissionDemo extends JFrame {
@@ -74,28 +83,18 @@ public class PirateTransmissionDemo extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	@SuppressWarnings("serial")
 	public PirateTransmissionDemo() {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
-				if(FilmAffinityBot.getInstance().isLogged()){
-					FilmAffinityBot.getInstance().terminateManager();
-				}
 			}
 		});
-		ApplicationConfiguration.getInstance().initManager();
 		setIconImage(Toolkit.getDefaultToolkit().getImage(PirateTransmissionDemo.class.getResource("/images/Transmission-icon.png")));
-		if(!ApplicationConfiguration.getInstance().getDefaultTorrentClient().initManager()){
-			String clientName = ApplicationConfiguration.getInstance().getDefaultTorrentClient().getTorrentClientName();
-			new UtilTools().showWarningDialog(this, "Error", "No se ha podido conectar con " + clientName);
-		}
-		if(!PirateBayBot.getInstance().initManager()){
-			new UtilTools().showWarningDialog(this, "Error", "No se ha podido conectar con PirateBay. Es posible que haya cambiado la dirección de su servidor");
-		}
 		setResizable(false);
 		setTitle("PirateTransmissionDemo");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 547, 368);
+		setBounds(100, 100, 664, 540);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -110,7 +109,13 @@ public class PirateTransmissionDemo extends JFrame {
 			}
 		});
 		mnOpciones.add(mntmConfiguracin);
-		contentPane = new JPanel();
+		contentPane = new JPanel(){
+			@Override
+			protected void paintComponent(Graphics g){
+				super.paintComponent(g);
+				g.drawImage(Toolkit.getDefaultToolkit().getImage(PirateTransmissionDemo.class.getResource("/images/panel-background.png")), 0, 0, null);
+			}
+		};
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
@@ -121,22 +126,39 @@ public class PirateTransmissionDemo extends JFrame {
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		
+		JPanel panel = new JPanel();
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 524, Short.MAX_VALUE)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(6)
-					.addComponent(searchPanel, GroupLayout.DEFAULT_SIZE, 512, Short.MAX_VALUE)
-					.addContainerGap())
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
+							.addGroup(gl_contentPane.createSequentialGroup()
+								.addGap(6)
+								.addComponent(searchPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+							.addComponent(scrollPane, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 493, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(panel, GroupLayout.PREFERRED_SIZE, 623, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap(489, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addComponent(searchPanel, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE))
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 262, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 301, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(20, Short.MAX_VALUE))
 		);
+		panel.setLayout(new BorderLayout(0, 0));
+		
+		JLabel lblNewLabel = new JLabel("");
+		panel.add(lblNewLabel, BorderLayout.WEST);
+		lblNewLabel.setIcon(new ImageIcon(PirateTransmissionDemo.class.getResource("/images/Transmission-icon.png")));
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		JLabel searchLabel = new JLabel("Buscar: ");
 		searchLabel.setBackground(Color.LIGHT_GRAY);
@@ -156,9 +178,16 @@ public class PirateTransmissionDemo extends JFrame {
 		searchPanel.add(searchField);
 		searchField.setColumns(10);
 		
-		resultsPanel = new JPanel();
+		resultsPanel = new JPanel(){
+			@Override
+			protected void paintComponent(Graphics g){
+				super.paintComponent(g);
+				g.drawImage(Toolkit.getDefaultToolkit().getImage(PirateTransmissionDemo.class.getResource("/images/panel-background.png")), 0, 0, null);
+			}
+		};
 		resultsPanel.setBorder(new SoftBevelBorder(BevelBorder.RAISED, Color.DARK_GRAY, null, null, null));
-		resultsPanel.setBackground(SystemColor.activeCaption);
+		//resultsPanel.setBackground(SystemColor.activeCaption);
+		resultsPanel.setBackground(new Color(135f/255f, 237f/255f, 244f/255f, 0f));
 		scrollPane.setViewportView(resultsPanel);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 		resultsPanel.setLayout(new GridLayout(0, 1, 0, 2));

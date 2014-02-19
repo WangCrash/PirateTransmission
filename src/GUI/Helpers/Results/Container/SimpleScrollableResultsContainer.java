@@ -18,6 +18,7 @@ import GUI.Helpers.Results.Items.HelperResultItem;
 import GUI.Helpers.Results.Items.Films.FilmCell;
 import GUI.Helpers.Results.Items.Music.AlbumCell;
 import GUI.Helpers.Results.Items.Music.ArtistCell;
+import GUI.Panel.PanelProperties;
 import Model.Artista;
 import Model.Disco;
 import Model.FichaPelicula;
@@ -48,7 +49,7 @@ public class SimpleScrollableResultsContainer extends ResultsContainer{
 		scrollPane = new JScrollPane();
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		//scrollPane.;
+		scrollPane.setBackground(PanelProperties.BACKGROUND);
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -65,7 +66,7 @@ public class SimpleScrollableResultsContainer extends ResultsContainer{
 		
 		resultsPanel = new JPanel();
 		resultsPanel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, Color.DARK_GRAY, null, null, null));
-		resultsPanel.setBackground(new Color(204, 255, 153));
+		resultsPanel.setBackground(PanelProperties.BACKGROUND);
 		scrollPane.setViewportView(resultsPanel);
 		resultsPanel.setLayout(new GridLayout(0, 1, 1, 10));
 		setLayout(groupLayout);

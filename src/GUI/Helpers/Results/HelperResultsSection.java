@@ -10,6 +10,7 @@ import GUI.MainWindow;
 import GUI.Helpers.Results.Container.MultipartScrollableResultsContainer;
 import GUI.Helpers.Results.Container.ResultsContainer;
 import GUI.Helpers.Results.Container.SimpleScrollableResultsContainer;
+import GUI.Panel.PanelProperties;
 import Managers.Helpers.FilmAffinityBot;
 import Model.FichaPelicula;
 import Model.HelperItem;
@@ -35,12 +36,12 @@ public class HelperResultsSection extends JPanel {
 	 * Create the panel.
 	 */
 	public HelperResultsSection(MainWindow rootFrame) {
-		setBackground(new Color(230, 230, 250));
+		setBackground(PanelProperties.BACKGROUND);
 		this.mainFrame = rootFrame;
 		
-		setBorder(new LineBorder(new Color(64, 64, 64)));		
+		setBorder(PanelProperties.BORDER);		
 		rootPanel = new JPanel();
-		rootPanel.setBackground(new Color(204, 255, 153));
+		rootPanel.setBackground(PanelProperties.BACKGROUND);
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)

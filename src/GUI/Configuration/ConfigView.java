@@ -1,8 +1,10 @@
 package GUI.Configuration;
 import java.awt.EventQueue;
 
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -10,6 +12,7 @@ import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dialog.ModalExclusionType;
 
 import javax.swing.JButton;
@@ -19,6 +22,9 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JTabbedPane;
 
+import GUI.Panel.MainContentPanel;
+import GUI.Panel.PanelProperties;
+import GUI.Panel.SimpleContentPanel;
 import Managers.ApplicationConfiguration;
 import Managers.Helpers.FilmAffinityBot;
 import Managers.Helpers.LastFMManager;
@@ -34,7 +40,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 
-public class ConfigView extends JFrame {
+public class ConfigView extends JDialog {
 
 	/**
 	 * 
@@ -44,7 +50,7 @@ public class ConfigView extends JFrame {
 	private JTabbedPane sectionsPane;
 	private ConfigurationSection[] sections;
 	private Map<String, String> configProperties;
-	private JFrame parentFrame;
+	private JFrame mainFrame;
 
 	/**
 	 * Launch the application.
@@ -66,25 +72,27 @@ public class ConfigView extends JFrame {
 	 * Create the frame.
 	 */
 	public ConfigView(JFrame mainFrame) {
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent arg0) {
-				parentFrame.setEnabled(true);
-			}
-		});
-		parentFrame = mainFrame;
-		parentFrame.setEnabled(false);
+		super(mainFrame, true);
+		this.mainFrame = mainFrame;
 		setType(Type.UTILITY);
 		setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
 		setTitle("Configuraci\u00F3n");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 486, 446);
 		setIconImage(null);
-		contentPane = new JPanel();
+		contentPane = new SimpleContentPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
+		UIManager.put("TabbedPane.contentOpaque", false);
 		sectionsPane = new JTabbedPane(JTabbedPane.TOP);
+		sectionsPane.setBackground(PanelProperties.BACKGROUND);
+		sectionsPane.setBorder(PanelProperties.BORDER);
+		sectionsPane.setOpaque(false);
+		Component[] sectionsPaneComponents = sectionsPane.getComponents();
+		for(int i = 0; i < sectionsPaneComponents.length; i++){
+			sectionsPaneComponents[i].setBackground(PanelProperties.BACKGROUND);
+		}
 			
 		GeneralSectionConfig generalSection = new GeneralSectionConfig(ApplicationConfiguration.getInstance());
 				
@@ -180,9 +188,8 @@ public class ConfigView extends JFrame {
 	}
 	
 	private void close() {
-		parentFrame.setEnabled(true);
 		this.setVisible(false);
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 	}
 	
 	private boolean validateSections(){
@@ -190,7 +197,7 @@ public class ConfigView extends JFrame {
 		boolean result = true;
 		while(i < sections.length){
 			if(!sections[i].isValidPassLength()){
-				new UtilTools().showWarningDialog(this, "Error de configuración", "La contraseña de " + sectionsPane.getTitleAt(i) + " no tiene 4 caracteres o más");
+				new UtilTools().showWarningDialog(mainFrame, "Error de configuración", "La contraseña de " + sectionsPane.getTitleAt(i) + " no tiene 4 caracteres o más");
 				sectionsPane.setSelectedIndex(i);
 				result = false;
 				break;
@@ -238,7 +245,7 @@ public class ConfigView extends JFrame {
 			}
 		}
 		if(!message.isEmpty()){
-			tools.showWarningDialog(parentFrame, "Error", "No se ha podido conectar con:\n" + message);
+			tools.showWarningDialog(mainFrame, "Error", "No se ha podido conectar con:\n" + message);
 		}else{
 			close();
 		}

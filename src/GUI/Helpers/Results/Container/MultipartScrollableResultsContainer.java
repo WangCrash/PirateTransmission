@@ -19,6 +19,7 @@ import GUI.Helpers.Results.Items.HelperResultItem;
 import GUI.Helpers.Results.Items.Films.FilmDetailsView;
 import GUI.Helpers.Results.Items.Music.AlbumDetailsView;
 import GUI.Helpers.Results.Items.Music.ArtistDetailsView;
+import GUI.Panel.PanelProperties;
 import Model.Artista;
 import Model.Disco;
 import Model.FichaPelicula;
@@ -54,10 +55,11 @@ public class MultipartScrollableResultsContainer extends ResultsContainer{
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+		scrollPane.setBackground(new Color(204, 255, 153, 0));
 		
 		JPanel staticPane = new JPanel();
 		staticPane.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, new Color(64, 64, 64), null, null, null));
-		staticPane.setBackground(new Color(204, 255, 153));
+		staticPane.setBackground(PanelProperties.BACKGROUND);
 		
 		sendBackButton = new JButton("");
 		sendBackButton.addActionListener(new ActionListener() {
@@ -94,7 +96,7 @@ public class MultipartScrollableResultsContainer extends ResultsContainer{
 		staticPane.setLayout(gl_staticPane);
 		
 		resultsPanel = new JPanel();
-		resultsPanel.setBackground(new Color(204, 204, 153));
+		resultsPanel.setBackground(PanelProperties.BACKGROUND);
 		scrollPane.setViewportView(resultsPanel);
 		resultsPanel.setLayout(new GridLayout(0, 1, 0, 0));
 		GroupLayout groupLayout = new GroupLayout(this);

@@ -9,6 +9,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JPasswordField;
 
 import Codification.Base64;
+import GUI.Panel.PanelProperties;
 import Managers.Manager;
 import Managers.TorrentClient.TorrentClient;
 import Utils.UtilTools;
@@ -43,11 +44,14 @@ public class TorrentClientSectionConfig extends ConfigurationSection {
 		setManager(manager);
 		setInitialVariables();
 		
+		setBackground(PanelProperties.BACKGROUND);
 		JLabel lblNewLabel = new JLabel("RPC Server");
 		
 		userLabel = new JLabel("Usuario");
+		userLabel.setBackground(PanelProperties.TRANSPARENT_BACKGROUND);
 		
 		passwordLabel = new JLabel("Password");
+		passwordLabel.setBackground(PanelProperties.TRANSPARENT_BACKGROUND);
 		
 		userField = new JTextField();
 		userField.setColumns(10);
