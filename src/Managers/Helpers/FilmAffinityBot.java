@@ -89,7 +89,10 @@ public class FilmAffinityBot extends HelperManager{
 		cm = new ConnectionManager();
 		if(!testing){
 			setUpManager();
-			logged = login();
+			logged = false;
+			if(user != null && !user.isEmpty()){
+				logged = login();
+			}
 			return logged;
 		}
 		return true;

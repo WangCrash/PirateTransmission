@@ -441,11 +441,13 @@ public class LastFMManager extends HelperManager {
 	@Override
 	public boolean initManager() {
 		setUpManager();
-		Caller.getInstance().setUserAgent(USER_AGENT);
-		initSession();
-		minutesToReCheck = 10 * 60 * 1000;
-		if(session != null){
-			watchForLibraryDaemon();
+		if(user != null && !user.isEmpty()){
+			Caller.getInstance().setUserAgent(USER_AGENT);
+			initSession();
+			minutesToReCheck = 10 * 60 * 1000;
+			if(session != null){
+				watchForLibraryDaemon();
+			}
 		}
 		return (session != null);
 	}
