@@ -68,7 +68,7 @@ public class PreAppView extends JFrame {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setUndecorated(true);
 		setBounds(100, 100, 485, 315);
-		contentPane = new SimpleContentPanel();
+		contentPane = new SimpleContentPanel(485, 315);
 		contentPane.setBorder(new CompoundBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null), UIManager.getBorder("Button.border")));
 		setContentPane(contentPane);
 		

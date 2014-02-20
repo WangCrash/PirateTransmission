@@ -32,6 +32,7 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+@SuppressWarnings("serial")
 public class SearchOptionsView extends JDialog implements ActionListener{
 	private JFrame mainFrame;
 	private HelperSearcherSection parentView;

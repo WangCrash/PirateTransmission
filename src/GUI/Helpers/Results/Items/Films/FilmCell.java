@@ -42,19 +42,19 @@ public class FilmCell extends FilmResultItem implements Runnable {
 	private JLabel imageLabel;
 	private JLabel countryLabel;
 	private JLabel yearLabel;
-	private JLabel noteLabel;
-	private JButton voteButton;
+	private JLabel markLabel;
+	private JButton rateButton;
 	private JButton searchTorrentButton;
 	private JButton showDetailsButton;
 	
 	private URL imageURL;
-	private JPanel noteFrame;
+	private JPanel markFrame;
 	private JLabel yourNoteLabel;
 	private JLabel usersNoteLabel;
 	private JPanel usersNoteFrame;
 	private JPanel directorsPane;
 
-	public FilmCell(JFrame mainFrame, HelperResultsSection parentView, HelperItem helperItem, boolean showForRating) {
+	public FilmCell(JFrame mainFrame, HelperResultsSection parentView, HelperItem helperItem) {
 		super(mainFrame, parentView, helperItem);
 		setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		
@@ -67,15 +67,15 @@ public class FilmCell extends FilmResultItem implements Runnable {
 		titleLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
 		titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		
-		noteFrame = new JPanel();
-		noteFrame.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
-		noteFrame.setBackground(new Color(255, 255, 255));
+		markFrame = new JPanel();
+		markFrame.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
+		markFrame.setBackground(new Color(255, 255, 255));
 		
-		voteButton = new JButton("");
-		voteButton.setIcon(new ImageIcon(FilmCell.class.getResource("/images/HelperResults/rate-film-icon.png")));
-		voteButton.setToolTipText("Votar");
-		voteButton.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		voteButton.addActionListener(new ActionListener() {
+		rateButton = new JButton("");
+		rateButton.setIcon(new ImageIcon(FilmCell.class.getResource("/images/HelperResults/rate-film-icon.png")));
+		rateButton.setToolTipText("Votar");
+		rateButton.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		rateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				rateItem();
 			}
@@ -111,25 +111,25 @@ public class FilmCell extends FilmResultItem implements Runnable {
 		JLabel lblAo = new JLabel("A\u00F1o");
 		lblAo.setFont(new Font("Dialog", Font.BOLD, 11));
 		
-		noteLabel = new JLabel("10");
-		noteLabel.setFont(new Font("Tahoma", Font.PLAIN, 33));
-		noteLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		GroupLayout gl_noteFrame = new GroupLayout(noteFrame);
+		markLabel = new JLabel("10");
+		markLabel.setFont(new Font("Tahoma", Font.PLAIN, 33));
+		markLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		GroupLayout gl_noteFrame = new GroupLayout(markFrame);
 		gl_noteFrame.setHorizontalGroup(
 			gl_noteFrame.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_noteFrame.createSequentialGroup()
 					.addGap(5)
-					.addComponent(noteLabel, GroupLayout.PREFERRED_SIZE, 47, GroupLayout.PREFERRED_SIZE)
+					.addComponent(markLabel, GroupLayout.PREFERRED_SIZE, 47, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		gl_noteFrame.setVerticalGroup(
 			gl_noteFrame.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_noteFrame.createSequentialGroup()
 					.addGap(3)
-					.addComponent(noteLabel, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
+					.addComponent(markLabel, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
-		noteFrame.setLayout(gl_noteFrame);
+		markFrame.setLayout(gl_noteFrame);
 		
 		countryLabel = new JLabel("Pa\u00EDs");
 		countryLabel.setFont(new Font("Dialog", Font.PLAIN, 11));
@@ -198,13 +198,13 @@ public class FilmCell extends FilmResultItem implements Runnable {
 							.addGap(25)
 							.addComponent(searchTorrentButton, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)
 							.addGap(10)
-							.addComponent(voteButton, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)
+							.addComponent(rateButton, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)
 							.addGap(10)
 							.addComponent(showDetailsButton, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED, 27, Short.MAX_VALUE)))
 					.addGap(20)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(noteFrame, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
+						.addComponent(markFrame, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
 						.addComponent(yourNoteLabel, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(1)
@@ -237,11 +237,11 @@ public class FilmCell extends FilmResultItem implements Runnable {
 							.addGap(48)
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
 								.addComponent(searchTorrentButton, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
-								.addComponent(voteButton, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
+								.addComponent(rateButton, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
 								.addComponent(showDetailsButton, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(6)
-							.addComponent(noteFrame, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
+							.addComponent(markFrame, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
 							.addGap(9)
 							.addComponent(yourNoteLabel)
 							.addGap(2)
@@ -250,7 +250,7 @@ public class FilmCell extends FilmResultItem implements Runnable {
 		);
 		setLayout(groupLayout);
 		
-		initLabels(showForRating);
+		initLabels();
 	}
 	
 	public void filmSuccesfullyRated(FichaPelicula film){
@@ -262,7 +262,7 @@ public class FilmCell extends FilmResultItem implements Runnable {
 		usersNoteLabel.setVisible(flag);
 	}
 
-	private void initLabels(boolean showForRating) {
+	private void initLabels() {
 		FichaPelicula ficha = this.getFilm();
 		System.out.println(ficha);
 		try {
@@ -310,13 +310,12 @@ public class FilmCell extends FilmResultItem implements Runnable {
 		yearLabel.setText(ficha.getAño());
 		
 		if((ficha.getValoracion() == null) || (ficha.getValoracion().isEmpty())){
-			noteLabel.setVisible(false);
-			noteFrame.setVisible(false);
+			markLabel.setVisible(false);
+			markFrame.setVisible(false);
 		}else{
-			noteLabel.setText(ficha.getValoracion());
+			markLabel.setText(ficha.getValoracion());
 		}
-		
-		voteButton.setVisible(showForRating);
+		rateButton.setEnabled(FilmAffinityBot.getInstance().isLogged());
 	}
 	
 	private void showFilmDetails() {

@@ -38,8 +38,8 @@ import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 
+@SuppressWarnings("serial")
 public class HelperSearcherSection extends JPanel implements Runnable {
-	private static final long serialVersionUID = 9179013116749250575L;
 
 	private HelperItem[] results;
 	private int searchOption;
@@ -156,11 +156,11 @@ public class HelperSearcherSection extends JPanel implements Runnable {
 	}
 	
 	private void searchItem(){
-		HelperManager helperManager = ApplicationConfiguration.getInstance().getCurrentHelperManager();
-		if(!helperManager.isLogged()){
-			new UtilTools().showWarningDialog(mainFrame, "", "No se ha iniciado sesión en " + helperManager.getHelperName());
-			return;
-		}
+//		HelperManager helperManager = ApplicationConfiguration.getInstance().getCurrentHelperManager();
+//		if(!helperManager.isLogged()){
+//			new UtilTools().showWarningDialog(mainFrame, "", "No se ha iniciado sesión en " + helperManager.getHelperName());
+//			return;
+//		}
 		Thread t = new Thread(this);
 		t.start();
 		showLoadingView();

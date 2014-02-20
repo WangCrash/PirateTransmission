@@ -84,7 +84,7 @@ public class SimpleScrollableResultsContainer extends ResultsContainer{
 		for (int i = 0; i < items.length; i++) {
 			HelperResultItem cell;
 			if(items[i].getClass() == FichaPelicula.class){
-				cell = new FilmCell(mainFrame, parentView, items[i], true);
+				cell = new FilmCell(mainFrame, parentView, items[i]);
 			}else{
 				if(items[i].getClass() == Artista.class){
 					cell = new ArtistCell(mainFrame, parentView, items[i]);

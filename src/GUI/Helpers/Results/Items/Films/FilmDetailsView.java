@@ -543,7 +543,7 @@ public class FilmDetailsView extends FilmResultItem implements Runnable{
 		imageLabel.setText("");
 		imageLabel.setBorder(null);
 		System.out.println("Ancho: " + (int)imageLabel.getSize().width + ", Alto:" + (int)imageLabel.getSize().getHeight());
-		imageLabel.setIcon(new UtilTools().getScaledImage(image.getImage(), 129, 166));
+		imageLabel.setIcon(new UtilTools().getScaledImageIcon(image.getImage(), 129, 166));
 		SwingUtilities.invokeLater(new Runnable(){
 			public void run(){
 				infoPanel.revalidate();

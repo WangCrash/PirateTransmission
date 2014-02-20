@@ -369,7 +369,7 @@ public class ArtistDetailsView extends MusicResultItem {
 				ImageIcon image = new ImageIcon(getArtista().getImageURL());
 				imageLabel.setText("");
 				//imageLabel.setBorder(null);
-				imageLabel.setIcon(new UtilTools().getScaledImage(image.getImage(), 140, 170));
+				imageLabel.setIcon(new UtilTools().getScaledImageIcon(image.getImage(), 140, 170));
 				SwingUtilities.invokeLater(new Runnable(){
 					public void run(){
 						revalidate();

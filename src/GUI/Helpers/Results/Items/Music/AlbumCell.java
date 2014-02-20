@@ -257,7 +257,7 @@ public class AlbumCell extends MusicResultItem {
 				imageLabel.setText("");
 				imageLabel.setBorder(null);
 				System.out.println("Ancho: " + (int)imageLabel.getSize().width + ", Alto:" + (int)imageLabel.getSize().getHeight());
-				imageLabel.setIcon(new UtilTools().getScaledImage(image.getImage(), 72, 79));
+				imageLabel.setIcon(new UtilTools().getScaledImageIcon(image.getImage(), 72, 79));
 				SwingUtilities.invokeLater(new Runnable(){
 					public void run(){
 						revalidate();

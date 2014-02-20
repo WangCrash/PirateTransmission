@@ -73,7 +73,7 @@ public class AlbumTransmisionCell extends TransmisionCell {
 		ImageIcon image = new ImageIcon(imageURL);
 		//super.getItemImageLabel().setBorder(null);
 		System.out.println("Ancho: " + (int)super.getItemImageLabel().getSize().width + ", Alto:" + (int)super.getItemImageLabel().getSize().getHeight());
-		super.getItemImageLabel().setIcon(new UtilTools().getScaledImage(image.getImage(), 120, 120));
+		super.getItemImageLabel().setIcon(new UtilTools().getScaledImageIcon(image.getImage(), 120, 120));
 	}
 
 	@Override

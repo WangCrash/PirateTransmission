@@ -88,7 +88,7 @@ public class ReviewsTableModel extends AbstractTableModel implements ActionListe
 				return null;
 			}
 			System.out.println("image added");
-			return tools.getScaledImage(image.getImage(), 30, 30);
+			return tools.getScaledImageIcon(image.getImage(), 30, 30);
 		case 2:
 			JButton button = new ReviewsTableButton("Leer", author);
 			button.addActionListener(this);

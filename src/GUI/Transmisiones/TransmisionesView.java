@@ -18,8 +18,8 @@ import java.awt.Color;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 
-import GUI.Panel.PanelProperties;
 import GUI.Panel.SimpleContentPanel;
+import GUI.Panel.PanelProperties;
 import Managers.Persistent.PersistentDataManager;
 import Model.Artista;
 import Model.Disco;
@@ -30,12 +30,14 @@ import Utils.UtilTools;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.Font;
 
 @SuppressWarnings("serial")
 public class TransmisionesView extends JDialog {
 
-	private final JPanel contentPanel = new SimpleContentPanel();
+	private final JPanel contentPanel = new SimpleContentPanel(532, 403);
 	private JPanel cellsPanel;
 	private JFrame mainFrame;
 	private JScrollPane scrollPane;
@@ -68,7 +70,7 @@ public class TransmisionesView extends JDialog {
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, Color.BLACK, null, null, null));
-		panel.setBackground(PanelProperties.BACKGROUND);
+		panel.setBackground(PanelProperties.TRANSPARENT_BACKGROUND);
 		panel.setBorder(PanelProperties.BORDER);
 		contentPanel.add(panel);
 		panel.setLayout(new GridLayout(1, 0, 0, 0));
@@ -76,6 +78,13 @@ public class TransmisionesView extends JDialog {
 		scrollPane = new JScrollPane();
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 		scrollPane.setBackground(PanelProperties.TRANSPARENT_BACKGROUND);
+		scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+			
+			@Override
+			public void adjustmentValueChanged(AdjustmentEvent arg0) {
+				verticalScrollBarIsScrolling();				
+			}
+		});
 		panel.add(scrollPane);
 		
 		cellsPanel = new JPanel();
@@ -128,7 +137,9 @@ public class TransmisionesView extends JDialog {
 			scrollPane.remove(cellsPanel);
 			scrollPane.setViewportView(cellsPanel);
 		}
-		this.revalidate();
+		//cellsPanel.revalidate();
+		cellsPanel.repaint();
+		this.repaint();
 		//controlar la posición del scroll vertical
 	}
 
@@ -143,5 +154,11 @@ public class TransmisionesView extends JDialog {
 	private void close() {
 		this.setVisible(false);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	}
+	
+	private void verticalScrollBarIsScrolling() {
+		System.out.println("Scrolling...");
+		//contentPanel.repaint(scrollPane.getBounds());
+		contentPanel.repaint();
 	}
 }

@@ -126,9 +126,6 @@ public class LastFMManager extends HelperManager {
 	}
 	
 	public Artista getArtistTopAlbums(Artista artista){
-		if(session == null){
-			return artista;
-		}
 		List<Disco> discografia = new ArrayList<Disco>();
 		for (Album album : Artist.getTopAlbums(artista.getNombre(), apiKey)) {
 			if(album == null){
@@ -142,9 +139,6 @@ public class LastFMManager extends HelperManager {
 	}
 	
 	public Disco getAlbumTracks(Disco disco){
-		if(session == null){
-			return disco;
-		}
 		Album album = Album.getInfo(disco.getArtista(), disco.getMbid(), apiKey);
 		List<String> tracks = new ArrayList<String>();
 		for (Track track : album.getTracks()) {
@@ -159,6 +153,9 @@ public class LastFMManager extends HelperManager {
 
 	@Override
 	public boolean rateItem(HelperItem item) {
+		if(session == null){
+			return false;
+		}
 		if(item.getClass() == Artista.class){
 			return rateArtist((Artista)item);
 		}else if(item.getClass() == Disco.class){
@@ -178,6 +175,9 @@ public class LastFMManager extends HelperManager {
 	}
 	
 	public boolean removeFromLibrary(HelperItem item){
+		if(session == null){
+			return false;
+		}
 		if(item.getClass() == Artista.class){
 			return removeArtist((Artista)item);
 		}else if(item.getClass() == Disco.class){

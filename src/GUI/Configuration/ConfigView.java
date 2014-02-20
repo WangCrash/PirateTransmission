@@ -80,7 +80,7 @@ public class ConfigView extends JDialog {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 486, 446);
 		setIconImage(null);
-		contentPane = new SimpleContentPanel();
+		contentPane = new SimpleContentPanel(486, 446);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		

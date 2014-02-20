@@ -214,7 +214,7 @@ public abstract class TransmisionCell extends JPanel {
 		}else{
 			ratingImage = new ImageIcon(getClass().getResource("/images/transmission-not-rated.png"));
 		}
-		ratingImageLabel.setIcon(new UtilTools().getScaledImage(ratingImage.getImage(), 40, 40));
+		ratingImageLabel.setIcon(new UtilTools().getScaledImageIcon(ratingImage.getImage(), 40, 40));
 	}
 	protected JLabel getCustomFieldLabel1() {
 		return customFieldLabel1;
