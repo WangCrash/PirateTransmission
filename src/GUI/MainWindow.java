@@ -1,7 +1,7 @@
 package GUI;
 
 import java.awt.EventQueue;
-import java.awt.Graphics;
+import java.awt.Rectangle;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -18,9 +18,8 @@ import GUI.Helpers.Chooser.HelperChooserSection;
 import GUI.Helpers.Results.HelperResultsSection;
 import GUI.Helpers.Searcher.HelperSearcherSection;
 import GUI.Panel.MainContentPanel;
-import GUI.Panel.TransparentPanel;
+import GUI.Panel.PanelProperties;
 import GUI.PirateBay.PiratebaySection;
-import GUI.Pre.PreAppView;
 import GUI.Transmisiones.TransmisionesView;
 import GUI.Utils.LoadingView;
 import Managers.ApplicationConfiguration;
@@ -38,9 +37,14 @@ import java.awt.event.WindowEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
+import java.awt.event.WindowFocusListener;
 
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
+	public static final int MAIN_WINDOW_PIRATEBAY_SECTION = 0;
+	public static final int MAIN_WINDOW_HELPER_CHOOSER_SECTION = 1;
+	public static final int MAIN_WINDOW_HELPER_SEACHER_SECTION = 2;
+	public static final int MAIN_WINDOW_HELPER_RESULTS_SECTION = 3;
 
 	private static volatile MainWindow instance = null;
 	
@@ -69,7 +73,7 @@ public class MainWindow extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	private static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {					
@@ -81,11 +85,22 @@ public class MainWindow extends JFrame {
 			}
 		});
 	}
+	
+	public static void startApplication(){
+		main(null);
+	}
 
 	/**
 	 * Create the frame.
 	 */
 	private MainWindow() {
+		addWindowFocusListener(new WindowFocusListener() {
+			public void windowGainedFocus(WindowEvent arg0) {
+				MainWindow.this.contentPane.repaint();
+			}
+			public void windowLostFocus(WindowEvent arg0) {
+			}
+		});
 		setResizable(false);
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -141,7 +156,7 @@ public class MainWindow extends JFrame {
 		helperSearcher.setBackground(new Color(0, 51, 255, 0));
 		
 		helperResults = new JPanel();
-		helperResults.setBackground(new Color(0, 51, 255, 0));
+		helperResults.setBackground(PanelProperties.TRANSPARENT_BACKGROUND);
 		GroupLayout gl_helperPanel = new GroupLayout(helperPanel);
 		gl_helperPanel.setHorizontalGroup(
 			gl_helperPanel.createParallelGroup(Alignment.LEADING)
@@ -291,5 +306,30 @@ public class MainWindow extends JFrame {
 		});
 		closingManagersThread.start();
 		loadingView.setVisible(true);
+	}
+	
+	public void repaintSection(int section){
+		Rectangle r;
+		switch (section) {
+		case MAIN_WINDOW_PIRATEBAY_SECTION:
+			r = piratebayPanel.getBounds();
+			break;
+		case MAIN_WINDOW_HELPER_CHOOSER_SECTION:
+			r = helperRecommendations.getBounds();
+			break;
+		case MAIN_WINDOW_HELPER_SEACHER_SECTION:
+			r = helperSearcher.getBounds();
+			break;
+		case MAIN_WINDOW_HELPER_RESULTS_SECTION:
+			r = helperResults.getBounds();
+			break;
+
+		default:
+			r = null;
+			break;
+		}
+		if(r != null){
+			contentPane.repaint(r);
+		}
 	}
 }

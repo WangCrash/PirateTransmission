@@ -4,8 +4,6 @@ import javax.swing.JPanel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 
-import java.awt.Color;
-
 import GUI.MainWindow;
 import GUI.Helpers.Results.Container.MultipartScrollableResultsContainer;
 import GUI.Helpers.Results.Container.ResultsContainer;
@@ -14,8 +12,6 @@ import GUI.Panel.PanelProperties;
 import Managers.Helpers.FilmAffinityBot;
 import Model.FichaPelicula;
 import Model.HelperItem;
-
-import javax.swing.border.LineBorder;
 
 import java.awt.FlowLayout;
 
@@ -36,12 +32,13 @@ public class HelperResultsSection extends JPanel {
 	 * Create the panel.
 	 */
 	public HelperResultsSection(MainWindow rootFrame) {
-		setBackground(PanelProperties.BACKGROUND);
 		this.mainFrame = rootFrame;
 		
+		setBackground(PanelProperties.TRANSPARENT_BACKGROUND);
 		setBorder(PanelProperties.BORDER);		
+		
 		rootPanel = new JPanel();
-		rootPanel.setBackground(PanelProperties.BACKGROUND);
+		rootPanel.setBackground(PanelProperties.TRANSPARENT_BACKGROUND);
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)

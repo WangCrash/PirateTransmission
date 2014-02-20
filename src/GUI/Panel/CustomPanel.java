@@ -34,6 +34,7 @@ public abstract class CustomPanel extends JPanel {
 		}
 		this.makeTransparent = makeTransparent;
 		this.setDoubleBuffered(true);
+		this.setOpaque(false);
 	}
 	
 	@Override

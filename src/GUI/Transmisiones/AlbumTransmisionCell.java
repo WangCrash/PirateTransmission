@@ -101,7 +101,7 @@ public class AlbumTransmisionCell extends TransmisionCell {
 	}
 	
 	public void removeItemFromCollection(){
-		if(LastFMManager.getInstance().removeAlbum(album)){
+		if(LastFMManager.getInstance().removeFromLibrary(album)){
 			album.setIsRated(false);
 			new UtilTools().showInfoOKDialog(mainFrame, "", "Álbum eliminado");
 			if(!transmission.getRated()){

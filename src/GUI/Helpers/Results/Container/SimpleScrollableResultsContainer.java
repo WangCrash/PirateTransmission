@@ -1,6 +1,5 @@
 package GUI.Helpers.Results.Container;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.GroupLayout;
@@ -13,6 +12,7 @@ import java.awt.Rectangle;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 
+import GUI.MainWindow;
 import GUI.Helpers.Results.HelperResultsSection;
 import GUI.Helpers.Results.Items.HelperResultItem;
 import GUI.Helpers.Results.Items.Films.FilmCell;
@@ -25,6 +25,8 @@ import Model.FichaPelicula;
 import Model.HelperItem;
 
 import java.awt.GridLayout;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 
 import javax.swing.ScrollPaneConstants;
 
@@ -42,14 +44,24 @@ public class SimpleScrollableResultsContainer extends ResultsContainer{
 	/**
 	 * Create the panel.
 	 */
-	public SimpleScrollableResultsContainer(JFrame mainFrame, HelperResultsSection parentView, HelperItem[] items) {
+	public SimpleScrollableResultsContainer(MainWindow mainFrame, HelperResultsSection parentView, HelperItem[] items) {
 		super(mainFrame, items);
 		this.parentView = parentView;
 		
+		setBackground(PanelProperties.TRANSPARENT_BACKGROUND);
+		
 		scrollPane = new JScrollPane();
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+		scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+			
+			@Override
+			public void adjustmentValueChanged(AdjustmentEvent e) {
+				SimpleScrollableResultsContainer.this.mainFrame.repaintSection(MainWindow.MAIN_WINDOW_HELPER_RESULTS_SECTION);
+			}
+		});
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane.setBackground(PanelProperties.BACKGROUND);
+		scrollPane.setBackground(PanelProperties.TRANSPARENT_BACKGROUND);
+		
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -66,7 +78,7 @@ public class SimpleScrollableResultsContainer extends ResultsContainer{
 		
 		resultsPanel = new JPanel();
 		resultsPanel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, Color.DARK_GRAY, null, null, null));
-		resultsPanel.setBackground(PanelProperties.BACKGROUND);
+		resultsPanel.setBackground(PanelProperties.TRANSPARENT_BACKGROUND);
 		scrollPane.setViewportView(resultsPanel);
 		resultsPanel.setLayout(new GridLayout(0, 1, 1, 10));
 		setLayout(groupLayout);

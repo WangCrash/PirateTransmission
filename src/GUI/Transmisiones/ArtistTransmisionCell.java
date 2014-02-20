@@ -93,7 +93,7 @@ public class ArtistTransmisionCell extends TransmisionCell {
 	}
 	
 	public void removeItemFromCollection(){
-		if(LastFMManager.getInstance().removeArtist(artist)){
+		if(LastFMManager.getInstance().removeFromLibrary(artist)){
 			artist.setIsRated(false);
 			new UtilTools().showInfoOKDialog(mainFrame, "", "Artista eliminado");
 			if(!transmission.getRated()){

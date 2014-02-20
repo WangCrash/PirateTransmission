@@ -186,12 +186,12 @@ public class LastFMManager extends HelperManager {
 		return false;
 	}
 	
-	public boolean removeArtist(Artista artista){
+	private boolean removeArtist(Artista artista){
 		Result result = Library.removeArtist(artista.getNombre(), session);
 		return result.isSuccessful();
 	}
 	
-	public boolean removeAlbum(Disco disco){
+	private boolean removeAlbum(Disco disco){
 		Result result = Library.removeAlbum(disco.getArtista(), disco.getNombre(), session);
 		return result.isSuccessful();
 	}

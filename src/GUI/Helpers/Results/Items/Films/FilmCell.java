@@ -1,6 +1,7 @@
 package GUI.Helpers.Results.Items.Films;
 
 import GUI.Helpers.Results.HelperResultsSection;
+import GUI.Panel.PanelProperties;
 import Managers.Helpers.FilmAffinityBot;
 import Model.FichaPelicula;
 import Model.HelperItem;
@@ -56,7 +57,9 @@ public class FilmCell extends FilmResultItem implements Runnable {
 
 	public FilmCell(JFrame mainFrame, HelperResultsSection parentView, HelperItem helperItem) {
 		super(mainFrame, parentView, helperItem);
-		setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+		
+		setBackground(PanelProperties.BACKGROUND);
+		setBorder(PanelProperties.BORDER);
 		
 		imageLabel = new JLabel("");
 		imageLabel.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -168,6 +171,7 @@ public class FilmCell extends FilmResultItem implements Runnable {
 		yourNoteLabel.setVisible(false);
 		
 		directorsPane = new JPanel();
+		directorsPane.setBackground(PanelProperties.TRANSPARENT_BACKGROUND);
 		directorsPane.setLayout(new GridLayout(0, 2, 0, 0));
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(

@@ -4,20 +4,17 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import GUI.Helpers.Results.HelperResultsSection;
+import GUI.Panel.PanelProperties;
 import Managers.Helpers.LastFMManager;
 import Model.Artista;
 import Model.HelperItem;
 import Utils.UtilTools;
 
-import javax.swing.border.LineBorder;
-
-import java.awt.Color;
 import java.awt.Cursor;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
@@ -28,7 +25,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 @SuppressWarnings("serial")
 public class ArtistCell extends MusicResultItem {
@@ -43,7 +39,9 @@ public class ArtistCell extends MusicResultItem {
 	public ArtistCell(JFrame mainFrame, HelperResultsSection parentView, HelperItem item) {
 		super(mainFrame, parentView, item);
 		setArtista((Artista)item);
-		setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+		
+		setBackground(PanelProperties.BACKGROUND);
+		setBorder(PanelProperties.BORDER);
 		
 		searchTorrentButton = new JButton("");
 		searchTorrentButton.setIcon(new ImageIcon(ArtistCell.class.getResource("/images/HelperResults/search-torrent-icon.png")));
@@ -74,6 +72,7 @@ public class ArtistCell extends MusicResultItem {
 		titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		tagsPanel = new JPanel();
+		tagsPanel.setBackground(PanelProperties.TRANSPARENT_BACKGROUND);
 		
 		rateButton = new JButton("");
 		rateButton.setIcon(new ImageIcon(ArtistCell.class.getResource("/images/HelperResults/like-music-icon.png")));
@@ -198,7 +197,7 @@ public class ArtistCell extends MusicResultItem {
 	
 	@Override
 	public void removeItem(){
-		if(LastFMManager.getInstance().removeArtist(getArtista())){
+		if(LastFMManager.getInstance().removeFromLibrary(getArtista())){
 			getArtista().setIsRated(false);
 			setUpRateButton();
 			new UtilTools().showInfoOKDialog(mainFrame, "", "Artista eliminado");

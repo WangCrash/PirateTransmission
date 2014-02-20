@@ -4,20 +4,17 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import GUI.Helpers.Results.HelperResultsSection;
+import GUI.Panel.PanelProperties;
 import Managers.Helpers.LastFMManager;
 import Model.Disco;
 import Model.HelperItem;
 import Utils.UtilTools;
 
-import javax.swing.border.LineBorder;
-
-import java.awt.Color;
 import java.awt.Cursor;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
@@ -45,7 +42,8 @@ public class AlbumCell extends MusicResultItem {
 		super(mainFrame, parentView, item);
 		setDisco((Disco)item);
 		
-		setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+		setBackground(PanelProperties.BACKGROUND);
+		setBorder(PanelProperties.BORDER);
 		
 		searchTorrentButton = new JButton("");
 		searchTorrentButton.setIcon(new ImageIcon(AlbumCell.class.getResource("/images/HelperResults/search-torrent-icon.png")));
@@ -76,6 +74,7 @@ public class AlbumCell extends MusicResultItem {
 		titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		tagsPanel = new JPanel();
+		tagsPanel.setBackground(PanelProperties.TRANSPARENT_BACKGROUND);
 		
 		rateButton = new JButton("No me Gusta");
 		rateButton.setIcon(new ImageIcon(AlbumCell.class.getResource("/images/HelperResults/like-music-icon.png")));
@@ -223,7 +222,7 @@ public class AlbumCell extends MusicResultItem {
 	
 	@Override
 	public void removeItem(){
-		if(LastFMManager.getInstance().removeAlbum(disco)){
+		if(LastFMManager.getInstance().removeFromLibrary(disco)){
 			getDisco().setIsRated(false);
 			setUpRateButton();
 			new UtilTools().showInfoOKDialog(mainFrame, "", "Álbum eliminado");

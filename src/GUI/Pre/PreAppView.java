@@ -19,7 +19,6 @@ import javax.swing.border.BevelBorder;
 import Utils.OneArgumentRunnableObject;
 
 import GUI.MainWindow;
-import GUI.Panel.MainContentPanel;
 import GUI.Panel.SimpleContentPanel;
 
 import java.awt.Font;
@@ -40,7 +39,7 @@ public class PreAppView extends JFrame {
 			public void run() {
 				try {
 					PreAppView preView = new PreAppView();
-					Thread initialization = new Thread(new OneArgumentRunnableObject(preView) {
+					Thread initializationThread = new Thread(new OneArgumentRunnableObject(preView) {
 						
 						@Override
 						public void run() {
@@ -48,10 +47,10 @@ public class PreAppView extends JFrame {
 							preView.initializeApplication();
 							preView.setVisible(false);
 							preView.dispose();
-							MainWindow.main(null);
+							MainWindow.startApplication();
 						}
 					});
-					initialization.start();
+					initializationThread.start();
 					preView.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

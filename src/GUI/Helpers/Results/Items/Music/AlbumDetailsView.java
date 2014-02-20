@@ -286,7 +286,7 @@ public class AlbumDetailsView extends MusicResultItem {
 	
 	@Override
 	public void removeItem(){
-		if(LastFMManager.getInstance().removeAlbum(disco)){
+		if(LastFMManager.getInstance().removeFromLibrary(disco)){
 			getDisco().setIsRated(false);
 			setUpRateButton();
 			new UtilTools().showInfoOKDialog(mainFrame, "", "Álbum eliminado");

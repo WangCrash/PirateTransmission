@@ -249,7 +249,7 @@ public class ArtistDetailsView extends MusicResultItem {
 	
 	@Override
 	public void removeItem(){
-		if(LastFMManager.getInstance().removeArtist(getArtista())){
+		if(LastFMManager.getInstance().removeFromLibrary(getArtista())){
 			getArtista().setIsRated(false);
 			setUpRateButton();
 			new UtilTools().showInfoOKDialog(mainFrame, "", "Artista eliminado");

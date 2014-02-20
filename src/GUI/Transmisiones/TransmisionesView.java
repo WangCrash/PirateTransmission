@@ -82,7 +82,7 @@ public class TransmisionesView extends JDialog {
 			
 			@Override
 			public void adjustmentValueChanged(AdjustmentEvent arg0) {
-				verticalScrollBarIsScrolling();				
+				contentPanel.repaint();
 			}
 		});
 		panel.add(scrollPane);
@@ -137,9 +137,7 @@ public class TransmisionesView extends JDialog {
 			scrollPane.remove(cellsPanel);
 			scrollPane.setViewportView(cellsPanel);
 		}
-		//cellsPanel.revalidate();
-		cellsPanel.repaint();
-		this.repaint();
+		cellsPanel.revalidate();
 		//controlar la posición del scroll vertical
 	}
 
@@ -156,9 +154,7 @@ public class TransmisionesView extends JDialog {
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 	
-	private void verticalScrollBarIsScrolling() {
-		System.out.println("Scrolling...");
-		//contentPanel.repaint(scrollPane.getBounds());
+	public void repaintCells(){
 		contentPanel.repaint();
 	}
 }
