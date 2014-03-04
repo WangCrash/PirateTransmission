@@ -268,8 +268,8 @@ public class pruebas {
 		session.getTransaction().commit();
 	}
 	
-	private HelperItem[] getTestItems() {
-		HelperItem[] items = new HelperItem[3];
+	private HelperItem[] getTestItems(int numItems) {
+		HelperItem[] items = new HelperItem[numItems];
 		for (int i = 0; i < items.length; i++) {
 			Artista artist = new Artista();
 			artist.setNombre("Gala cla " + i);
@@ -320,7 +320,7 @@ public class pruebas {
 //		
 //		PersistentDataManager.getInstance().addTransmission(album);//p.saveObjectWithHibernate("un disquito", new Date(), album);
 		
-		HelperItem[] items = new pruebas().getTestItems();
+		HelperItem[] items = new pruebas().getTestItems(10);
 		for (int i = 0; i < items.length; i++) {
 			PersistentDataManager.getInstance().addTransmission(items[i]);
 		}

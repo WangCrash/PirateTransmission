@@ -36,8 +36,10 @@ public class HelperResultsSection extends JPanel {
 		
 		setBackground(PanelProperties.TRANSPARENT_BACKGROUND);
 		setBorder(PanelProperties.BORDER);		
+		setOpaque(false);
 		
 		rootPanel = new JPanel();
+		rootPanel.setOpaque(false);
 		rootPanel.setBackground(PanelProperties.TRANSPARENT_BACKGROUND);
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(

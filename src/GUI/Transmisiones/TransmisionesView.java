@@ -1,10 +1,13 @@
 package GUI.Transmisiones;
 
 import java.awt.BorderLayout;
+import java.awt.Container;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLayer;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -17,9 +20,11 @@ import java.awt.Color;
 
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
+import javax.swing.plaf.LayerUI;
 
-import GUI.Panel.SimpleContentPanel;
 import GUI.Panel.PanelProperties;
+import GUI.Panel.SimpleContentPanel;
+import GUI.Panel.SimpleWallpaperLayerUI;
 import Managers.Persistent.PersistentDataManager;
 import Model.Artista;
 import Model.Disco;
@@ -30,13 +35,12 @@ import Utils.UtilTools;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
 import java.awt.Font;
 
 @SuppressWarnings("serial")
 public class TransmisionesView extends JDialog {
 
+	//private final JPanel contentPanel = new JPanel();
 	private final JPanel contentPanel = new SimpleContentPanel(532, 403);
 	private JPanel cellsPanel;
 	private JFrame mainFrame;
@@ -49,6 +53,7 @@ public class TransmisionesView extends JDialog {
 		try {
 			TransmisionesView dialog = new TransmisionesView(new JFrame());
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dialog.testBehavior();
 			dialog.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -63,28 +68,30 @@ public class TransmisionesView extends JDialog {
 		setResizable(false);
 		this.mainFrame = mainFrame;
 		setBounds(100, 100, 532, 403);
+
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(new GridLayout(1, 0, 0, 0));
 		
-		JPanel panel = new JPanel();
+		LayerUI<Container> layerUI = new SimpleWallpaperLayerUI(532, 403);
+		//JLayer<Container> contentPanelLayer = new JLayer<Container>(contentPanel, layerUI);
+		JLayer<Container> contentPaneLayer = new JLayer<Container>();
+		
+		//getContentPane().add(contentPanelLayer, BorderLayout.CENTER);
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		
+		JPanel panel = new JPanel();		
 		panel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, Color.BLACK, null, null, null));
 		panel.setBackground(PanelProperties.TRANSPARENT_BACKGROUND);
 		panel.setBorder(PanelProperties.BORDER);
+		
 		contentPanel.add(panel);
 		panel.setLayout(new GridLayout(1, 0, 0, 0));
 		
 		scrollPane = new JScrollPane();
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 		scrollPane.setBackground(PanelProperties.TRANSPARENT_BACKGROUND);
-		scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
-			
-			@Override
-			public void adjustmentValueChanged(AdjustmentEvent arg0) {
-				contentPanel.repaint();
-			}
-		});
+		
 		panel.add(scrollPane);
 		
 		cellsPanel = new JPanel();
@@ -108,7 +115,7 @@ public class TransmisionesView extends JDialog {
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
 			}
-		}
+		}		
 		
 		showPersistentTransmissions();
 		
@@ -154,7 +161,9 @@ public class TransmisionesView extends JDialog {
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 	
-	public void repaintCells(){
-		contentPanel.repaint();
+	private void testBehavior(){
+		PersistentDataManager.getInstance().initManager();
+		showPersistentTransmissions();
+		PersistentDataManager.getInstance().finalizeManager();
 	}
 }

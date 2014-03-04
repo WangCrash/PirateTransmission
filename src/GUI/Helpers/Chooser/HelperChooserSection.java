@@ -8,12 +8,9 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingUtilities;
-import javax.swing.border.SoftBevelBorder;
-import javax.swing.border.BevelBorder;
 
 import GUI.MainWindow;
 import GUI.Panel.PanelProperties;
-import GUI.Panel.SectionPanel;
 import GUI.Utils.LoadingView;
 import Managers.Helpers.FilmAffinityBot;
 import Managers.Helpers.HelperManager;

@@ -26,8 +26,6 @@ import java.awt.event.ActionEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.awt.Component;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 @SuppressWarnings("serial")
 public abstract class TransmisionCell extends JPanel {
@@ -67,12 +65,6 @@ public abstract class TransmisionCell extends JPanel {
 		itemTypeLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		
 		titleLabel = new JLabel("T\u00EDtulo");
-		titleLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseExited(MouseEvent arg0) {
-				repaintCell();
-			}
-		});
 		titleLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
 		titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		
@@ -83,12 +75,6 @@ public abstract class TransmisionCell extends JPanel {
 		itemImageLabel.setIcon(new ImageIcon(TransmisionCell.class.getResource("/javax/swing/plaf/basic/icons/image-delayed.png")));
 		
 		deleteButton = new JButton("");
-		deleteButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseExited(MouseEvent arg0) {
-				repaintCell();
-			}
-		});
 		deleteButton.setIcon(new ImageIcon(TransmisionCell.class.getResource("/images/Transmisiones/remove-ico.png")));
 		deleteButton.setToolTipText("Eliminar");
 		deleteButton.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -99,12 +85,6 @@ public abstract class TransmisionCell extends JPanel {
 		});
 		
 		customButton = new JButton("");
-		customButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseExited(MouseEvent e) {
-				repaintCell();
-			}
-		});
 		customButton.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		customButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -252,9 +232,5 @@ public abstract class TransmisionCell extends JPanel {
 			}
 		});
 		updateTransmission.start();
-	}
-	
-	private void repaintCell() {
-		parentView.repaintCells();
 	}
 }

@@ -57,6 +57,7 @@ public class FilmCell extends FilmResultItem implements Runnable {
 
 	public FilmCell(JFrame mainFrame, HelperResultsSection parentView, HelperItem helperItem) {
 		super(mainFrame, parentView, helperItem);
+		setOpaque(false);
 		
 		setBackground(PanelProperties.BACKGROUND);
 		setBorder(PanelProperties.BORDER);

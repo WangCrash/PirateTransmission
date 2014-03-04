@@ -21,7 +21,7 @@ public class PreApp {
 		} catch (InterruptedException e) {
 			System.out.println(e.getMessage());
 		}
-		loadingView.getMessageLabel().setText("Leyendo fichero de configuración...");
+		loadingView.getMessageLabel().setText("Recuperando configuración...");
 		ApplicationConfiguration.getInstance().initManager();
 		
 		loadingView.getMessageLabel().setText("Cargando configuración de cliente Torrent...");

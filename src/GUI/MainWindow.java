@@ -1,7 +1,6 @@
 package GUI;
 
 import java.awt.EventQueue;
-import java.awt.Rectangle;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -17,8 +16,8 @@ import GUI.Configuration.ConfigView;
 import GUI.Helpers.Chooser.HelperChooserSection;
 import GUI.Helpers.Results.HelperResultsSection;
 import GUI.Helpers.Searcher.HelperSearcherSection;
-import GUI.Panel.MainContentPanel;
 import GUI.Panel.PanelProperties;
+import GUI.Panel.SimpleContentPanel;
 import GUI.PirateBay.PiratebaySection;
 import GUI.Transmisiones.TransmisionesView;
 import GUI.Utils.LoadingView;
@@ -41,10 +40,6 @@ import java.awt.event.WindowFocusListener;
 
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
-	public static final int MAIN_WINDOW_PIRATEBAY_SECTION = 0;
-	public static final int MAIN_WINDOW_HELPER_CHOOSER_SECTION = 1;
-	public static final int MAIN_WINDOW_HELPER_SEACHER_SECTION = 2;
-	public static final int MAIN_WINDOW_HELPER_RESULTS_SECTION = 3;
 
 	private static volatile MainWindow instance = null;
 	
@@ -94,13 +89,6 @@ public class MainWindow extends JFrame {
 	 * Create the frame.
 	 */
 	private MainWindow() {
-		addWindowFocusListener(new WindowFocusListener() {
-			public void windowGainedFocus(WindowEvent arg0) {
-				MainWindow.this.contentPane.repaint();
-			}
-			public void windowLostFocus(WindowEvent arg0) {
-			}
-		});
 		setResizable(false);
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -138,8 +126,8 @@ public class MainWindow extends JFrame {
 			}
 		});
 		mnTransmissions.add(mntmVerTransmissions);
-		contentPane = new MainContentPanel();
-		contentPane.setBackground(new Color(153, 204, 255));
+		contentPane = new SimpleContentPanel(963, 733);
+		//contentPane.setBackground(new Color(153, 204, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
@@ -210,6 +198,7 @@ public class MainWindow extends JFrame {
 		helperSearcher.add(helperSearcherSection);
 		
 		helperResultsSection = new HelperResultsSection(this);
+		helperResultsSection.setOpaque(false);
 		helperResults.add(helperResultsSection);
 		
 		helperChooserSection.showRecommendations();
@@ -306,30 +295,5 @@ public class MainWindow extends JFrame {
 		});
 		closingManagersThread.start();
 		loadingView.setVisible(true);
-	}
-	
-	public void repaintSection(int section){
-		Rectangle r;
-		switch (section) {
-		case MAIN_WINDOW_PIRATEBAY_SECTION:
-			r = piratebayPanel.getBounds();
-			break;
-		case MAIN_WINDOW_HELPER_CHOOSER_SECTION:
-			r = helperRecommendations.getBounds();
-			break;
-		case MAIN_WINDOW_HELPER_SEACHER_SECTION:
-			r = helperSearcher.getBounds();
-			break;
-		case MAIN_WINDOW_HELPER_RESULTS_SECTION:
-			r = helperResults.getBounds();
-			break;
-
-		default:
-			r = null;
-			break;
-		}
-		if(r != null){
-			contentPane.repaint(r);
-		}
 	}
 }

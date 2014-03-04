@@ -13,7 +13,6 @@ import javax.swing.border.BevelBorder;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dialog.ModalExclusionType;
 
 import javax.swing.JButton;
 
@@ -22,9 +21,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JTabbedPane;
 
-import GUI.Panel.MainContentPanel;
 import GUI.Panel.PanelProperties;
-import GUI.Panel.SimpleContentPanel;
 import Managers.ApplicationConfiguration;
 import Managers.Helpers.FilmAffinityBot;
 import Managers.Helpers.LastFMManager;
@@ -35,9 +32,6 @@ import Utils.UtilTools;
 import java.util.Map;
 
 import javax.swing.LayoutStyle.ComponentPlacement;
-
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 
 public class ConfigView extends JDialog {
@@ -80,7 +74,7 @@ public class ConfigView extends JDialog {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 486, 446);
 		setIconImage(null);
-		contentPane = new SimpleContentPanel(486, 446);
+		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		

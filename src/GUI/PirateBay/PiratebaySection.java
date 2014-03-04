@@ -8,16 +8,12 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
 import java.awt.Cursor;
-import java.awt.SystemColor;
-import javax.swing.border.SoftBevelBorder;
-import javax.swing.border.BevelBorder;
 import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-import GUI.Panel.MainContentPanel;
 import GUI.Panel.PanelProperties;
 import Managers.PirateBayBot;
 import Model.ArchivoTorrent;

@@ -38,6 +38,7 @@ public class ArtistCell extends MusicResultItem {
 
 	public ArtistCell(JFrame mainFrame, HelperResultsSection parentView, HelperItem item) {
 		super(mainFrame, parentView, item);
+		setOpaque(false);
 		setArtista((Artista)item);
 		
 		setBackground(PanelProperties.BACKGROUND);

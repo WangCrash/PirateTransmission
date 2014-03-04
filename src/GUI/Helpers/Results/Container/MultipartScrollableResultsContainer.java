@@ -27,8 +27,6 @@ import Model.HelperItem;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
 import java.awt.GridLayout;
 import java.awt.SystemColor;
 
@@ -59,12 +57,6 @@ public class MultipartScrollableResultsContainer extends ResultsContainer{
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 		scrollPane.setBackground(PanelProperties.TRANSPARENT_BACKGROUND);
-		scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
-			@Override
-			public void adjustmentValueChanged(AdjustmentEvent arg0) {
-				MultipartScrollableResultsContainer.this.mainFrame.repaintSection(MainWindow.MAIN_WINDOW_HELPER_RESULTS_SECTION);
-			}
-		});
 		
 		JPanel staticPane = new JPanel();
 		staticPane.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, new Color(64, 64, 64), null, null, null));

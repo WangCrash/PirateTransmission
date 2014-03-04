@@ -25,8 +25,6 @@ import Model.FichaPelicula;
 import Model.HelperItem;
 
 import java.awt.GridLayout;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
 
 import javax.swing.ScrollPaneConstants;
 
@@ -48,19 +46,14 @@ public class SimpleScrollableResultsContainer extends ResultsContainer{
 		super(mainFrame, items);
 		this.parentView = parentView;
 		
+		setOpaque(false);
 		setBackground(PanelProperties.TRANSPARENT_BACKGROUND);
 		
 		scrollPane = new JScrollPane();
+		scrollPane.setOpaque(false);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-		scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
-			
-			@Override
-			public void adjustmentValueChanged(AdjustmentEvent e) {
-				SimpleScrollableResultsContainer.this.mainFrame.repaintSection(MainWindow.MAIN_WINDOW_HELPER_RESULTS_SECTION);
-			}
-		});
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane.setBackground(PanelProperties.TRANSPARENT_BACKGROUND);
+		//scrollPane.setBackground(PanelProperties.TRANSPARENT_BACKGROUND);
 		
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
@@ -77,6 +70,7 @@ public class SimpleScrollableResultsContainer extends ResultsContainer{
 		);
 		
 		resultsPanel = new JPanel();
+		resultsPanel.setOpaque(false);
 		resultsPanel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, Color.DARK_GRAY, null, null, null));
 		resultsPanel.setBackground(PanelProperties.TRANSPARENT_BACKGROUND);
 		scrollPane.setViewportView(resultsPanel);

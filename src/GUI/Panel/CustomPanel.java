@@ -45,7 +45,7 @@ public abstract class CustomPanel extends JPanel {
 		}
 		if(makeTransparent){
 			Graphics2D g2 = (Graphics2D) g;
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_IN, 1f));
             if (isBackgroundSet()) {
                 Color c = getBackground();
                 g2.setColor(c);

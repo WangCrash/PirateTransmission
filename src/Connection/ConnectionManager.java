@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -190,5 +191,18 @@ public class ConnectionManager {
 			return null;
 		}		
 	}
-
+	
+	public static void main(String[] args){
+		URL url;
+		try {
+			url = new URL("http://thepiratebay.org");
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			return;
+		}
+		ConnectionManager cm = new ConnectionManager();
+		Map<String, String> response = cm.sendRequest(url, ConnectionManager.METHOD_GET, true, false, false);
+		System.out.println(response);
+		
+	}
 }

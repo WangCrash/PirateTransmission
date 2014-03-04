@@ -40,6 +40,7 @@ public class AlbumCell extends MusicResultItem {
 
 	public AlbumCell(JFrame mainFrame, HelperResultsSection parentView, HelperItem item) {
 		super(mainFrame, parentView, item);
+		setOpaque(false);
 		setDisco((Disco)item);
 		
 		setBackground(PanelProperties.BACKGROUND);
