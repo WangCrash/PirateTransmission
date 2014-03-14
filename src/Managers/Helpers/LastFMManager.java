@@ -278,7 +278,7 @@ public class LastFMManager extends HelperManager {
 				continue;
 			}
 			results[i] = new Artista(artist);
-			results[i].setIsRated(isArtistInLibrary(artist, libraryAlbums));
+			results[i].setIsRated(isArtistInLibrary(artist, libraryArtists));
 			i++;
 		}
 		return results;
@@ -532,11 +532,11 @@ public class LastFMManager extends HelperManager {
 					List<String> artists = getLibraryArtists();
 					Date end = new Date();
 					System.out.println("artistas de la coleccion en: " + (end.getTime() - start.getTime()));
-					synchronized (artists) {
+					synchronized (libraryArtists) {
 						libraryArtists = artists;
 					}
 					List<String> albums = getLibraryAlbums();
-					synchronized (albums) {
+					synchronized (libraryAlbums) {
 						libraryAlbums = albums;
 					}
 					try {
