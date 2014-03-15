@@ -59,8 +59,8 @@ public class LastFMManager extends HelperManager {
 	private String user;
 	private String password;
 	
-	private List<String> libraryArtists;
-	private List<String> libraryAlbums;
+	private Map<String, Integer> libraryArtists;
+	private Map<String, Integer> libraryAlbums;
 	
 	private Thread daemon;
 	private long minutesToReCheck;
@@ -69,8 +69,8 @@ public class LastFMManager extends HelperManager {
 		user = "";
 		password = "";
 		token = "";
-		libraryArtists = null;
-		libraryAlbums = null;
+		libraryArtists = new HashMap<String, Integer>();
+		libraryAlbums = new HashMap<String, Integer>();
 	}
 	
 	public static LastFMManager getInstance(){
@@ -221,7 +221,7 @@ public class LastFMManager extends HelperManager {
 				continue;
 			}
 			results[i] = new Artista(artist);
-			results[i].setIsRated(isArtistInLibrary(artist, libraryArtists));
+			results[i].setIsRated(isArtistInLibrary(artist));
 			i++;
 		}
 		return results;
@@ -236,7 +236,7 @@ public class LastFMManager extends HelperManager {
 				continue;
 			}
 			results[i] = new Disco(album);
-			results[i].setIsRated(isAlbumInLibrary(album, libraryAlbums));
+			results[i].setIsRated(isAlbumInLibrary(album));
 			i++;
 		}
 		return results;
@@ -251,21 +251,21 @@ public class LastFMManager extends HelperManager {
 		return total;
 	}
 	
-	private boolean isArtistInLibrary(Artist artist, List<String> libraryArtists){
+	private boolean isArtistInLibrary(Artist artist){
 		if(libraryArtists == null){
 			return false;
 		}
 		synchronized (libraryArtists) {
-			return libraryArtists.contains(artist.getName());
+			return libraryArtists.containsKey(artist.getName());
 		}
 	}
 	
-	private boolean isAlbumInLibrary(Album album, List<String> libraryAlbums){
+	private boolean isAlbumInLibrary(Album album){
 		if(libraryAlbums == null){
 			return false;
 		}
 		synchronized (libraryAlbums) {
-			return libraryAlbums.contains(album.getArtist() + "||" + album.getName());
+			return libraryAlbums.containsKey(album.getArtist() + "||" + album.getName());
 		}
 	}
 	
@@ -278,7 +278,7 @@ public class LastFMManager extends HelperManager {
 				continue;
 			}
 			results[i] = new Artista(artist);
-			results[i].setIsRated(isArtistInLibrary(artist, libraryArtists));
+			results[i].setIsRated(isArtistInLibrary(artist));
 			i++;
 		}
 		return results;
@@ -528,18 +528,25 @@ public class LastFMManager extends HelperManager {
 			public void run() {
 				System.out.println("iniciando proceso...");
 				while(true){
-					Date start = new Date();
-					List<String> artists = getLibraryArtists();
-					Date end = new Date();
-					System.out.println("artistas de la coleccion en: " + (end.getTime() - start.getTime()));
-					synchronized (libraryArtists) {
-						libraryArtists = artists;
-					}
-					List<String> albums = getLibraryAlbums();
-					synchronized (libraryAlbums) {
-						libraryAlbums = albums;
-					}
 					try {
+						Date start = new Date();
+						List<String> artists = getLibraryArtists();
+						Date end = new Date();
+						System.out.println("artistas de la coleccion en: " + (end.getTime() - start.getTime()));
+						synchronized (libraryArtists) {
+							libraryArtists = new HashMap<String, Integer>();
+							for (String artist : artists) {
+								//se guarda la clave artista (que es lo único que importa) y un entero cualquiera, por ejemplo 1
+								libraryArtists.put(artist, new Integer(1));
+							}
+						}
+						List<String> albums = getLibraryAlbums();
+						synchronized (libraryAlbums) {
+							libraryAlbums = new HashMap<String, Integer>();
+							for (String album : albums) {
+								libraryAlbums.put(album, new Integer(1));
+							}
+						}
 						DateFormat df = new SimpleDateFormat("HH:mm:ss");
 						Date today = Calendar.getInstance().getTime();        
 						String reportDate = df.format(today);
