@@ -1,5 +1,7 @@
 package FilmAffinity;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -10,6 +12,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import Codification.Base64;
 import Connection.ConnectionManager;
 
 public class FilmAffinityLoginModule {
@@ -38,7 +41,16 @@ public class FilmAffinityLoginModule {
         Map<String, String> data = new HashMap<String, String>();
         data.put("rp", "");
         data.put("user", user);
-        data.put("password", password);
+        
+        String clearPassword = password;
+        try {
+			clearPassword = new String(Base64.decode(password), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			System.out.println("Couldn't decode FilmAffinity password");
+		} catch (IOException e) {
+			System.out.println("Couldn't decode FilmAffinity password");
+		}
+        data.put("password", clearPassword);
         data.put("postback", "1");
         data.put("ok", "Enviar");
         Map<String, String> response = doLoginProcess(url, data);

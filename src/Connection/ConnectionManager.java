@@ -33,6 +33,7 @@ public class ConnectionManager {
 	public static final String USER_AGENT = "orphean_navigator_2.0";
 	
 	private List<String> cookiesList;
+	private Map<String, String> responseHeaders;
 	private int TIMEOUT_MILLI = 10000;
 	
 	public ConnectionManager(){
@@ -124,12 +125,16 @@ public class ConnectionManager {
 		Map<String, String> result = new HashMap<String, String>();
 		result.put(STATUS_CODE_RESPONSE_KEY, String.valueOf(responseCode));
 		
+		catchHeadersResponse(con);
+		
 		if((responseCode == HttpURLConnection.HTTP_OK) || (responseCode == HttpURLConnection.HTTP_MOVED_TEMP) || responseCode == HttpURLConnection.HTTP_MOVED_PERM){
 			if(responseCode == HttpURLConnection.HTTP_MOVED_TEMP || responseCode == HttpURLConnection.HTTP_MOVED_PERM){
 				result.put("Location", con.getHeaderField("Location"));
 			}
 			if((watchCookies) && con.getHeaderField("Set-Cookie") != null){
-				if(cookiesList == null){
+				if(cookiesList != null){
+					cookiesList.clear();
+				}else{
 					cookiesList = new ArrayList<String>();
 				}
 				for (Map.Entry<String, List<String>> responseHeader : con.getHeaderFields().entrySet()){
@@ -154,7 +159,7 @@ public class ConnectionManager {
 		con.disconnect();
 		return result;
 	}
-	
+
 	private String retrieveBodyResponse(HttpURLConnection con, int responseCode){
 		BufferedReader in;
 		try {
@@ -192,6 +197,33 @@ public class ConnectionManager {
 		}		
 	}
 	
+	private void catchHeadersResponse(HttpURLConnection con){
+		responseHeaders = new HashMap<String, String>();
+		for (Map.Entry<String, List<String>> responseHeader : con.getHeaderFields().entrySet()){
+			if(responseHeader.getKey() == null || responseHeader.getKey().equals("Set-Cookie")){
+				continue;
+			}
+			List<String> value = responseHeader.getValue();
+			int i = 0;
+			for (String valueElement : value) {
+				if(i == 0){
+					responseHeaders.put(responseHeader.getKey(), valueElement);
+				}else{
+					responseHeaders.put(responseHeader.getKey(), responseHeaders.get(responseHeader.getKey()) + ";" + valueElement);
+				}
+				i++;
+			}
+		}
+	}
+	
+	public Map<String, String> getResonseHeaders() {
+		return responseHeaders;
+	}
+
+	public void setResonseHeaders(Map<String, String> resonseHeaders) {
+		this.responseHeaders = resonseHeaders;
+	}
+
 	public static void main(String[] args){
 		URL url;
 		try {
@@ -203,6 +235,5 @@ public class ConnectionManager {
 		ConnectionManager cm = new ConnectionManager();
 		Map<String, String> response = cm.sendRequest(url, ConnectionManager.METHOD_GET, true, false, false);
 		System.out.println(response);
-		
 	}
 }

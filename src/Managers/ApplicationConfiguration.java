@@ -77,10 +77,10 @@ public class ApplicationConfiguration extends Manager{
 	}
 
 	public void setCurrentHelperManager(HelperManager currentHelperManager) {
-		if(!currentHelperManager.isStarted()){
-			System.out.println("Nuevo helper iniciado");
-			currentHelperManager.initManager();
-		}
+//		if(!currentHelperManager.isStarted()){
+//			System.out.println("Nuevo helper iniciado");
+//			currentHelperManager.initManager();
+//		}
 		this.currentHelperManager = currentHelperManager;
 	}
 

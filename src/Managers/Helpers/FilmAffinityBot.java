@@ -57,8 +57,8 @@ public class FilmAffinityBot extends HelperManager{
 	
 	public static final String FILMAFFINITY_FILM_NOT_WATCHED = "-1";
 	
-	public String user;
-	public String password;
+	private String user;
+	private String password;
 	
 	private ConnectionManager cm;	
 	
@@ -92,6 +92,9 @@ public class FilmAffinityBot extends HelperManager{
 			logged = false;
 			if(user != null && !user.isEmpty()){
 				logged = login();
+				/*if(logged){
+					testOnCloseFilmAffinitySession();
+				}*/
 			}
 			return logged;
 		}
@@ -102,7 +105,7 @@ public class FilmAffinityBot extends HelperManager{
 		if(logged){
 			return true;
 		}
-		return new FilmAffinityLoginModule(cm, urlBase).login(user, password);
+		return new FilmAffinityLoginModule(cm, urlBase).login(getUser(), getPassword());
 	}
 	
 	@Override
@@ -126,13 +129,7 @@ public class FilmAffinityBot extends HelperManager{
 		
 		String faPassword = configProperties.get(FILMAFFINITY_PASSWORD_AUTH_CONFIG_KEY);
 		if(faPassword != null){
-			try {
-				password = new String(Base64.decode(faPassword), "UTF-8");
-			} catch (UnsupportedEncodingException e) {
-				System.out.println("Couldn't decode FilmAffinity password");
-			} catch (IOException e) {
-				System.out.println("Couldn't decode FilmAffinity password");
-			}
+			password = faPassword;
 		}else{
 			System.out.println("FilmAffinity password not set.");
 		}
@@ -143,7 +140,6 @@ public class FilmAffinityBot extends HelperManager{
 		if(!logged){
 			return true;
 		}
-		logged = !logout();
 		return !logged;
 	}
 	
@@ -151,7 +147,8 @@ public class FilmAffinityBot extends HelperManager{
 		if(!logged){
 			return true;
 		}
-		return new FilmAffinityLoginModule(cm, urlBase).logout();
+		logged = !new FilmAffinityLoginModule(cm, urlBase).logout();
+		return !logged;
 	}
 	
 	public FichaPelicula[] getRecommendations(Map<String, String> filters){
@@ -196,6 +193,14 @@ public class FilmAffinityBot extends HelperManager{
 	public boolean isLogged(){
 		return logged;
 	}
+	
+	public String getUser(){
+		return user;
+	}
+	
+	public String getPassword(){
+		return password;
+	}
 
 	@Override
 	public String getHelperName() {
@@ -229,7 +234,7 @@ public class FilmAffinityBot extends HelperManager{
 
 	@Override
 	public boolean isStarted() {
-		return isLogged();
+		return (instance != null);
 	}
 
 	@Override
@@ -241,13 +246,40 @@ public class FilmAffinityBot extends HelperManager{
 		}
 	}
 	
+	private void testOnCloseFilmAffinitySession(){
+		Thread testSessionThread = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				while(true){
+					try {
+						Thread.sleep(10000);
+					} catch (InterruptedException e) {
+						return;
+					}
+					if(logout()){
+						System.out.println("LOGGED OUT MADARFACKARS!!!");
+					}
+				}
+				
+			}
+		});
+		testSessionThread.start();
+	}
+	
+	
 	public static void main(String[] args){
-		FilmAffinityBot.getInstance().initManager(true);
+		FilmAffinityBot.getInstance().initManager();
 		FichaPelicula[] films = FilmAffinityBot.getInstance().searchItem("oblivion", FILMAFFINITY_TITLE_SEARCH_OPTION);
 		for (int i = 0; i < films.length; i++) {
 			if(films[i].getTitulo().equals("Land of Oblivion")){
 				System.out.println(FilmAffinityBot.getInstance().fillFichaPelicula(films[i]));
 			}
+		}
+		boolean result = FilmAffinityBot.getInstance().logout();
+		films = FilmAffinityBot.getInstance().searchItem("gladiator", FILMAFFINITY_TITLE_SEARCH_OPTION);
+		if(FilmAffinityBot.getInstance().isLogged()){
+			FilmAffinityBot.getInstance().logout();
 		}
 	}
 }

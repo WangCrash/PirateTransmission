@@ -454,8 +454,21 @@ public class LastFMManager extends HelperManager {
 
 	private void initSession() {
 		System.out.println("token: " + token);
-		session = Authenticator.getMobileSession(user, password, apiKey, secret);
+		
+		session = Authenticator.getMobileSession(user, decodePassword(), apiKey, secret);
 		System.out.println("session: " + session);
+	}
+	
+	private String decodePassword(){
+		String clearPassword = "";
+		try {
+			clearPassword = new String(Base64.decode(password), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			System.out.println("Couldn't decode LastFM password");
+		} catch (IOException e) {
+			System.out.println("Couldn't decode LastFM password");
+		}
+		return clearPassword;
 	}
 
 	@Override
@@ -475,13 +488,7 @@ public class LastFMManager extends HelperManager {
 		
 		String lFMPassword = configProperties.get(LASTFM_PASSWORD_AUTH_CONFIG_KEY);
 		if(lFMPassword != null){
-			try {
-				password = new String(Base64.decode(lFMPassword), "UTF-8");
-			} catch (UnsupportedEncodingException e) {
-				System.out.println("Couldn't decode LastFM password");
-			} catch (IOException e) {
-				System.out.println("Couldn't decode LastFM password");
-			}
+			password = lFMPassword;
 		}else{
 			System.out.println("LastFM password not set.");
 		}
@@ -499,7 +506,7 @@ public class LastFMManager extends HelperManager {
 
 	@Override
 	public boolean isStarted() {
-		return isLogged();
+		return (instance != null);
 	}
 
 	@Override

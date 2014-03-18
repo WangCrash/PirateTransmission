@@ -15,9 +15,13 @@ public class FilmAffinityVotingModule {
 	private String urlBase;
 	private ConnectionManager cm;
 	
+	private FilmAffinitySessionModule session;
+	
 	public FilmAffinityVotingModule(String urlBase, ConnectionManager cm){
 		this.urlBase = urlBase;
 		this.cm = cm;
+		
+		session = new FilmAffinitySessionModule(cm, urlBase);
 	}
 	
 	public boolean voteForFilm(FichaPelicula film){
@@ -41,7 +45,8 @@ public class FilmAffinityVotingModule {
 			}
 			String parameters = "id=" + idFilm + "&rating=" + mark + "&ucd=" + film.getDataUcd();
 			
-			Map<String, String> response = cm.sendRequest(url, parameters, true, null, ConnectionManager.METHOD_POST, true, true, true);
+			//Map<String, String> response = cm.sendRequest(url, parameters, true, null, ConnectionManager.METHOD_POST, true, true, true);
+			Map<String, String> response = session.sendRequestKeepingSessionAlive(url, parameters, true, null, ConnectionManager.METHOD_POST, true, true, true);
 			
 			if(response != null){
 				int responseCode;
@@ -53,10 +58,12 @@ public class FilmAffinityVotingModule {
 				if(responseCode == 200){
 					JSONObject jsonResponse = new JSONObject(response.get("ResponseBody"));
 					System.out.println(jsonResponse.getInt("result"));
-					//if(jsonResponse.getInt("result") == 0){
-					if(jsonResponse.get("result") != null){
+					if(jsonResponse.getInt("result") == 0){
 						return true;
 					}
+					/*if(jsonResponse.get("result") != null){
+						return true;
+					}*/
 				}
 			}
 		}
