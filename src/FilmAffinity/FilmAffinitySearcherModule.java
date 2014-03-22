@@ -279,7 +279,7 @@ public class FilmAffinitySearcherModule {
 	
 	private ArrayList<FichaPelicula> extractFilmsArray(String html, ArrayList<FichaPelicula> lista){
 		
-		String filmsListRegex = "<div class=\"movie-card movie-card-\\d*?\">(.*?<div class=\"mc-poster\">.*?<div class=\"mc-info-container\">.*?<img.*?countries.*?)</div>\\s*?</div>";
+		String filmsListRegex = "<div class=\"movie-card movie-card-\\d*?.*?\">(.*?<div class=\"mc-poster\">.*?<div class=\"mc-info-container\">.*?<img.*?countries.*?)</div>\\s*?</div>";
 		Pattern p = Pattern.compile(filmsListRegex);
 		Matcher m = p.matcher(html);
 		while(m.find()){
@@ -336,14 +336,16 @@ public class FilmAffinitySearcherModule {
 	}
 	
 	private ArrayList<FichaPelicula> extractMarks(String html, ArrayList<FichaPelicula> lista) {
-		String filmsNotesRegex = "<span class=\"wrat\">(.*?)</span>";
-		Pattern p = Pattern.compile(filmsNotesRegex);
-		Matcher m = p.matcher(html);
-		int i = 0;
-		while(m.find()){
-			FichaPelicula pelicula = lista.get(i);
-			pelicula.setValoracion(m.group(1).trim());
-			i++;
+		if(lista.size() > 0){
+			String filmsNotesRegex = "<span class=\"wrat\">(.*?)</span>";
+			Pattern p = Pattern.compile(filmsNotesRegex);
+			Matcher m = p.matcher(html);
+			int i = 0;
+			while(m.find()){
+				FichaPelicula pelicula = lista.get(i);
+				pelicula.setValoracion(m.group(1).trim());
+				i++;
+			}
 		}
 		return lista;
 	}

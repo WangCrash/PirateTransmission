@@ -271,10 +271,14 @@ public class FilmAffinityBot extends HelperManager{
 	public static void main(String[] args){
 		FilmAffinityBot.getInstance().initManager();
 		FichaPelicula[] films = FilmAffinityBot.getInstance().searchItem("oblivion", FILMAFFINITY_TITLE_SEARCH_OPTION);
-		for (int i = 0; i < films.length; i++) {
-			if(films[i].getTitulo().equals("Land of Oblivion")){
-				System.out.println(FilmAffinityBot.getInstance().fillFichaPelicula(films[i]));
+		if(films.length > 0){
+			for (int i = 0; i < films.length; i++) {
+				if(films[i].getTitulo().equals("Land of Oblivion")){
+					System.out.println(FilmAffinityBot.getInstance().fillFichaPelicula(films[i]));
+				}
 			}
+		}else{
+			System.out.println("VACÍO");
 		}
 		boolean result = FilmAffinityBot.getInstance().logout();
 		films = FilmAffinityBot.getInstance().searchItem("gladiator", FILMAFFINITY_TITLE_SEARCH_OPTION);
