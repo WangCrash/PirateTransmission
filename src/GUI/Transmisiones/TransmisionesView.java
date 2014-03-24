@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLayer;
@@ -36,6 +35,8 @@ import Utils.UtilTools;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 @SuppressWarnings("serial")
 public class TransmisionesView extends JDialog {
@@ -65,6 +66,14 @@ public class TransmisionesView extends JDialog {
 	 */
 	public TransmisionesView(JFrame mainFrame) {
 		super(mainFrame, true);
+		addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER){
+					close();
+				}
+			}
+		});
 		setResizable(false);
 		this.mainFrame = mainFrame;
 		setBounds(100, 100, 532, 403);

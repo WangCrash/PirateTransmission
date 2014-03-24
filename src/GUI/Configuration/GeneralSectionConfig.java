@@ -15,13 +15,11 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JSeparator;
 import javax.swing.JComboBox;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
+@SuppressWarnings("serial")
 public class GeneralSectionConfig extends ConfigurationSection {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7110732631195916702L;
 
 	private String initialTorrentClient;
 	@SuppressWarnings("rawtypes")
@@ -31,7 +29,8 @@ public class GeneralSectionConfig extends ConfigurationSection {
 	 * Create the panel.
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public GeneralSectionConfig(Manager manager) {
+	public GeneralSectionConfig(ConfigView parentView, Manager manager) {
+		super(parentView);
 		setManager(manager);
 		setInitialVariables();
 		
@@ -42,6 +41,12 @@ public class GeneralSectionConfig extends ConfigurationSection {
 		
 		comboModel = new String[]{TransmissionManager.TRANSMISSION_NAME_CONFIG_VALUE, microTorrentManager.MICROTORRENT_NAME_CONFIG_VALUE};
 		torrentClientBox = new JComboBox(comboModel);
+		torrentClientBox.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				GeneralSectionConfig.this.parentView.keyReleased(e);
+			}
+		});
 		
 		if(!initialTorrentClient.equals(comboModel[0])){
 			torrentClientBox.setSelectedIndex(1);

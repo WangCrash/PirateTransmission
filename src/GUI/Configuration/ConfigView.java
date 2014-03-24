@@ -3,6 +3,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
@@ -33,18 +34,22 @@ import java.util.Map;
 
 import javax.swing.LayoutStyle.ComponentPlacement;
 
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
+
+@SuppressWarnings("serial")
 public class ConfigView extends JDialog {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -7399904300753044367L;
 	private JPanel contentPane;
 	private JTabbedPane sectionsPane;
 	private ConfigurationSection[] sections;
 	private Map<String, String> configProperties;
 	private JFrame mainFrame;
+	private JButton AcceptButton;
 
 	/**
 	 * Launch the application.
@@ -68,6 +73,7 @@ public class ConfigView extends JDialog {
 	public ConfigView(JFrame mainFrame) {
 		super(mainFrame, true);
 		this.mainFrame = mainFrame;
+		
 		setType(Type.UTILITY);
 		setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
 		setTitle("Configuraci\u00F3n");
@@ -88,11 +94,11 @@ public class ConfigView extends JDialog {
 			sectionsPaneComponents[i].setBackground(PanelProperties.BACKGROUND);
 		}
 			
-		GeneralSectionConfig generalSection = new GeneralSectionConfig(ApplicationConfiguration.getInstance());
+		GeneralSectionConfig generalSection = new GeneralSectionConfig(this, ApplicationConfiguration.getInstance());
 				
-		TorrentClientSectionConfig transmissionSection = new TorrentClientSectionConfig(TransmissionManager.getInstance());
+		TorrentClientSectionConfig transmissionSection = new TorrentClientSectionConfig(this, TransmissionManager.getInstance());
 		
-		TorrentClientSectionConfig microTorrentSection = new TorrentClientSectionConfig(microTorrentManager.getInstance());
+		TorrentClientSectionConfig microTorrentSection = new TorrentClientSectionConfig(this, microTorrentManager.getInstance());
 		
 		UtilTools utils = new UtilTools();
 		Map<String, String> config = utils.getConfiguration();
@@ -102,7 +108,7 @@ public class ConfigView extends JDialog {
 			filmAffinityUser = config.get(FilmAffinityBot.FILMAFFINITY_USER_AUTH_CONFIG_KEY);
 			filmAffinityPassword = config.get(FilmAffinityBot.FILMAFFINITY_PASSWORD_AUTH_CONFIG_KEY);
 		}
-		SimpleSectionConfig filmAffinitySection = new SimpleSectionConfig(filmAffinityUser, filmAffinityPassword);
+		SimpleSectionConfig filmAffinitySection = new SimpleSectionConfig(this, filmAffinityUser, filmAffinityPassword);
 		filmAffinitySection.setManager(FilmAffinityBot.getInstance());
 		
 		String lastFMUser = "";
@@ -111,7 +117,7 @@ public class ConfigView extends JDialog {
 			lastFMUser = config.get(LastFMManager.LASTFM_USER_AUTH_CONFIG_KEY);
 			lastFMPassword = config.get(LastFMManager.LASTFM_PASSWORD_AUTH_CONFIG_KEY);
 		}
-		SimpleSectionConfig lastFMSection = new SimpleSectionConfig(lastFMUser, lastFMPassword);
+		SimpleSectionConfig lastFMSection = new SimpleSectionConfig(this, lastFMUser, lastFMPassword);
 		lastFMSection.setManager(LastFMManager.getInstance());
 		
 		sectionsPane.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, Color.DARK_GRAY, null, null, null));
@@ -120,12 +126,19 @@ public class ConfigView extends JDialog {
 		sectionsPane.addTab("microTorrent", microTorrentSection);
 		sectionsPane.addTab("FilmAffinity", filmAffinitySection);
 		sectionsPane.addTab("LastFM", lastFMSection);
+		sectionsPane.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				System.out.println("KEY_TYPED: " + e.getKeyChar());
+				ConfigView.this.keyReleased(e);
+			}
+		});
 		
 		sections = new ConfigurationSection[]{generalSection, transmissionSection, microTorrentSection, filmAffinitySection, lastFMSection};
 		sectionsPane.setSelectedIndex(0);
 		
-		JButton btnNewButton = new JButton("Aceptar");
-		btnNewButton.addActionListener(new ActionListener() {
+		AcceptButton = new JButton("Aceptar");
+		AcceptButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				checkConfigSectionsAndSave();
 			}
@@ -142,7 +155,7 @@ public class ConfigView extends JDialog {
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(143)
-					.addComponent(btnNewButton)
+					.addComponent(AcceptButton)
 					.addGap(44)
 					.addComponent(btnCancelar, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 					.addGap(153))
@@ -157,7 +170,7 @@ public class ConfigView extends JDialog {
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnCancelar)
-						.addComponent(btnNewButton))
+						.addComponent(AcceptButton))
 					.addContainerGap(21, Short.MAX_VALUE))
 		);
 		contentPane.setLayout(gl_contentPane);
@@ -239,8 +252,16 @@ public class ConfigView extends JDialog {
 			}
 		}
 		if(!message.isEmpty()){
-			tools.showWarningDialog(mainFrame, "Error", "No se ha podido conectar con:\n" + message);
+			tools.showWarningDialog(this, "Error", "No se ha podido conectar con:\n" + message);
 		}else{
+			close();
+		}
+	}
+	
+	public void keyReleased(KeyEvent keyEvent) {
+		if(keyEvent.getKeyCode() == KeyEvent.VK_ENTER){
+			checkConfigSectionsAndSave();
+		}else if(keyEvent.getKeyCode() == KeyEvent.VK_ESCAPE){
 			close();
 		}
 	}

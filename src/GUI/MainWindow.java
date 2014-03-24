@@ -1,5 +1,6 @@
 package GUI;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -105,8 +106,8 @@ public class MainWindow extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
-		JMenu mnAplicacin = new JMenu("Aplicaci\u00F3n");
-		menuBar.add(mnAplicacin);
+		JMenu settingsMenu = new JMenu("Preferencias");
+		menuBar.add(settingsMenu);
 		
 		JMenuItem mntmConfiguracin = new JMenuItem("Configuraci\u00F3n");
 		mntmConfiguracin.addActionListener(new ActionListener() {
@@ -114,7 +115,7 @@ public class MainWindow extends JFrame {
 				openConfigView();
 			}
 		});
-		mnAplicacin.add(mntmConfiguracin);
+		settingsMenu.add(mntmConfiguracin);
 		
 		mnTransmissions = new JMenu("Transmisiones");
 		menuBar.add(mnTransmissions);
@@ -184,6 +185,8 @@ public class MainWindow extends JFrame {
 		);
 		contentPane.setLayout(gl_contentPane);
 		includeSections();
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
 	}
 
 	private void includeSections() {

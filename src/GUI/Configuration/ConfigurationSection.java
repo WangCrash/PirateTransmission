@@ -6,16 +6,18 @@ import javax.swing.JPanel;
 
 import Managers.Manager;
 
+@SuppressWarnings("serial")
 public abstract class ConfigurationSection extends JPanel{
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5590489197411203857L;
+	protected ConfigView parentView;
 	protected Manager manager;
+	
+	public ConfigurationSection(ConfigView parentView){
+		this.parentView = parentView;
+	}
 	
 	public abstract boolean isValidPassLength();
 	public abstract Map<String, String> getChangedValues();
+	
 	public Manager getManager(){
 		return manager;
 	}

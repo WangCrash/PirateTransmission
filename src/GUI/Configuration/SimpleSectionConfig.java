@@ -16,14 +16,16 @@ import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
-import javax.swing.text.Utilities;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
+@SuppressWarnings("serial")
 public class SimpleSectionConfig extends ConfigurationSection {
-
-	private static final long serialVersionUID = 1261620105359922279L;
 	
 	private JTextField userField;
 	private JPasswordField passwordField;
@@ -35,7 +37,8 @@ public class SimpleSectionConfig extends ConfigurationSection {
 	/**
 	 * Create the panel.
 	 */
-	public SimpleSectionConfig(String initialUser, String initialPassword) {
+	public SimpleSectionConfig(ConfigView parentView, String initialUser, String initialPassword) {
+		super(parentView);
 		this.initialUser = (initialUser == null)?"":initialUser;
 		this.initialPassword = (initialPassword == null)?"":initialPassword;
 		
@@ -45,10 +48,34 @@ public class SimpleSectionConfig extends ConfigurationSection {
 		JLabel lblNewLabel_1 = new JLabel("Password");
 		
 		userField = new JTextField();
+		userField.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				userField.selectAll();
+			}
+		});
+		userField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				SimpleSectionConfig.this.parentView.keyReleased(e);
+			}
+		});
 		userField.setColumns(10);
 		userField.setText(initialUser);
 		
 		passwordField = new JPasswordField();
+		passwordField.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				passwordField.selectAll();
+			}
+		});
+		passwordField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				SimpleSectionConfig.this.parentView.keyReleased(e);
+			}
+		});
 		passwordField.setText(initialPassword);
 		
 		registerButton = new JButton("Registrarse");

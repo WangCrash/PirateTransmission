@@ -18,6 +18,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Map;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class TorrentClientSectionConfig extends ConfigurationSection {
 	/**
@@ -40,7 +44,8 @@ public class TorrentClientSectionConfig extends ConfigurationSection {
 	/**
 	 * Create the panel.
 	 */
-	public TorrentClientSectionConfig(Manager manager) {
+	public TorrentClientSectionConfig(ConfigView parentView, Manager manager) {
+		super(parentView);
 		setManager(manager);
 		setInitialVariables();
 		
@@ -54,14 +59,52 @@ public class TorrentClientSectionConfig extends ConfigurationSection {
 		passwordLabel.setBackground(PanelProperties.TRANSPARENT_BACKGROUND);
 		
 		userField = new JTextField();
+		userField.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				userField.selectAll();
+			}
+		});
+		userField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				TorrentClientSectionConfig.this.parentView.keyReleased(e);
+			}
+		});
 		userField.setColumns(10);
 		
 		passwordField = new JPasswordField();
+		passwordField.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				passwordField.selectAll();
+			}
+		});
+		passwordField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				TorrentClientSectionConfig.this.parentView.keyReleased(e);
+			}
+		});
 		
 		needsAuthCheckBox = new JCheckBox("Necesita autenticaci\u00F3n");
+		needsAuthCheckBox.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_SPACE){
+					needsAuthCheckBox.doClick();
+				}else{
+					TorrentClientSectionConfig.this.parentView.keyReleased(e);
+				}
+			}
+		});
 		needsAuthCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				JCheckBox checkBox = (JCheckBox)arg0.getSource();
+				if(!checkBox.isSelected()){
+					userField.setText("");
+					passwordField.setText("");
+				}
 				enableAuthFields(checkBox.isSelected());
 			}
 		});
@@ -72,6 +115,18 @@ public class TorrentClientSectionConfig extends ConfigurationSection {
 		passwordField.setText(initialPassword);
 		
 		rpcServerField = new JTextField();
+		rpcServerField.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				rpcServerField.selectAll();
+			}
+		});
+		rpcServerField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				TorrentClientSectionConfig.this.parentView.keyReleased(e);
+			}
+		});
 		rpcServerField.setColumns(10);
 		setRPCFieldText(initialRpcServer);
 		

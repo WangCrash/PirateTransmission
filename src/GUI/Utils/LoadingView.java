@@ -13,10 +13,15 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JProgressBar;
 import javax.swing.border.BevelBorder;
+
 import java.awt.Color;
 import java.awt.SystemColor;
+
 import javax.swing.border.LineBorder;
 import javax.swing.border.CompoundBorder;
+import javax.swing.SwingConstants;
+
+import GUI.Panel.PanelProperties;
 
 public class LoadingView extends JDialog {
 
@@ -37,14 +42,20 @@ public class LoadingView extends JDialog {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setUndecorated(true);
 		setResizable(false);
+		setOpacity(0.9f);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(LoadingView.class.getResource("/images/Transmission-icon.png")));
 		setModal(true);
 		setBounds(100, 100, 321, 202);
 		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setBorder(new CompoundBorder(new LineBorder(new Color(0, 0, 0), 1, true), new BevelBorder(BevelBorder.LOWERED, new Color(0, 0, 0), new Color(0, 0, 0), new Color(180, 180, 180), new Color(180, 180, 180))));
+		contentPanel.setBorder(new LineBorder(new Color(0, 0, 0), 3, true));
+		//contentPanel.setBorder(new CompoundBorder(new LineBorder(new Color(0, 0, 0), 1, true), new BevelBorder(BevelBorder.LOWERED, new Color(0, 0, 0), new Color(0, 0, 0), new Color(180, 180, 180), new Color(180, 180, 180))));
+
+		contentPanel.setBackground(new Color(211, 211, 211));
+		
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		{
 			messageLabel = new JLabel("New label");
+			messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		}
 		
 		JProgressBar progressBar = new JProgressBar();
@@ -53,11 +64,14 @@ public class LoadingView extends JDialog {
 		gl_contentPanel.setHorizontalGroup(
 			gl_contentPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPanel.createSequentialGroup()
-					.addGap(81)
-					.addGroup(gl_contentPanel.createParallelGroup(Alignment.TRAILING, false)
-						.addComponent(progressBar, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(messageLabel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE))
-					.addContainerGap(78, Short.MAX_VALUE))
+					.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPanel.createSequentialGroup()
+							.addGap(81)
+							.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_contentPanel.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(messageLabel, GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)))
+					.addContainerGap())
 		);
 		gl_contentPanel.setVerticalGroup(
 			gl_contentPanel.createParallelGroup(Alignment.LEADING)
@@ -66,7 +80,7 @@ public class LoadingView extends JDialog {
 					.addComponent(messageLabel)
 					.addGap(18)
 					.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(79, Short.MAX_VALUE))
+					.addContainerGap(83, Short.MAX_VALUE))
 		);
 		contentPanel.setLayout(gl_contentPanel);
 		this.setLocationRelativeTo(mainFrame);

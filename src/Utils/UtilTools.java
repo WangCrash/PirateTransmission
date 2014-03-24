@@ -1,5 +1,6 @@
 package Utils;
 
+import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -146,17 +147,17 @@ public class UtilTools {
 		}
 	}
 	
-	public void showInfoOKDialog(JFrame frame, String title, String message){
-		JOptionPane.showMessageDialog(frame, message, title, JOptionPane.INFORMATION_MESSAGE);
+	public void showInfoOKDialog(Component component, String title, String message){
+		JOptionPane.showMessageDialog(component, message, title, JOptionPane.INFORMATION_MESSAGE);
 	}
 	
-	public void showWarningDialog(JFrame frame, String title, String message){
-		JOptionPane.showMessageDialog(frame, message, title, JOptionPane.WARNING_MESSAGE);
+	public void showWarningDialog(Component component, String title, String message){
+		JOptionPane.showMessageDialog(component, message, title, JOptionPane.WARNING_MESSAGE);
 	}
 	
-	public int showYesNoDialog(JFrame frame, String title, String message){
+	public int showYesNoDialog(Component component, String title, String message){
 		Object[] options = {"Sí", "No"};
-		return JOptionPane.showOptionDialog(frame, 
+		return JOptionPane.showOptionDialog(component, 
 				message, 
 				title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, 
 				null,     //do not use a custom Icon
