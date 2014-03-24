@@ -22,6 +22,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.Font;
 
 public class TorrentClientSectionConfig extends ConfigurationSection {
 	/**
@@ -51,14 +52,18 @@ public class TorrentClientSectionConfig extends ConfigurationSection {
 		
 		setBackground(PanelProperties.BACKGROUND);
 		JLabel lblNewLabel = new JLabel("RPC Server");
+		lblNewLabel.setFont(new Font("Calibri", Font.PLAIN, 15));
 		
 		userLabel = new JLabel("Usuario");
+		userLabel.setFont(new Font("Calibri", Font.PLAIN, 15));
 		userLabel.setBackground(PanelProperties.TRANSPARENT_BACKGROUND);
 		
 		passwordLabel = new JLabel("Password");
+		passwordLabel.setFont(new Font("Calibri", Font.PLAIN, 15));
 		passwordLabel.setBackground(PanelProperties.TRANSPARENT_BACKGROUND);
 		
 		userField = new JTextField();
+		userField.setFont(new Font("Calibri", Font.PLAIN, 15));
 		userField.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
@@ -74,6 +79,7 @@ public class TorrentClientSectionConfig extends ConfigurationSection {
 		userField.setColumns(10);
 		
 		passwordField = new JPasswordField();
+		passwordField.setFont(new Font("Calibri", Font.PLAIN, 15));
 		passwordField.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
@@ -88,6 +94,7 @@ public class TorrentClientSectionConfig extends ConfigurationSection {
 		});
 		
 		needsAuthCheckBox = new JCheckBox("Necesita autenticaci\u00F3n");
+		needsAuthCheckBox.setFont(new Font("Calibri", Font.PLAIN, 15));
 		needsAuthCheckBox.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -115,6 +122,7 @@ public class TorrentClientSectionConfig extends ConfigurationSection {
 		passwordField.setText(initialPassword);
 		
 		rpcServerField = new JTextField();
+		rpcServerField.setFont(new Font("Calibri", Font.PLAIN, 15));
 		rpcServerField.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {

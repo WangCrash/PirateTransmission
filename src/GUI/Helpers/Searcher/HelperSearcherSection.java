@@ -3,26 +3,19 @@ package GUI.Helpers.Searcher;
 import javax.swing.JPanel;
 
 
-import javax.swing.JComboBox;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingUtilities;
-import javax.swing.border.SoftBevelBorder;
-import javax.swing.border.BevelBorder;
 
 import GUI.MainWindow;
 import GUI.Panel.PanelProperties;
 import GUI.Utils.LoadingView;
 import Managers.ApplicationConfiguration;
-import Managers.Helpers.FilmAffinityBot;
 import Managers.Helpers.HelperManager;
 import Model.HelperItem;
-import Utils.UtilTools;
 
 import java.awt.Color;
-import java.util.HashMap;
 import java.util.Map;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -32,11 +25,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
 
 @SuppressWarnings("serial")
 public class HelperSearcherSection extends JPanel implements Runnable {
@@ -186,9 +175,9 @@ public class HelperSearcherSection extends JPanel implements Runnable {
 	public void setTitle() {
 		String title;
 		if(ApplicationConfiguration.getInstance().getCurrentHelperManager().getHelperName().equals(HelperManager.HELPERMANAGER_NAME_FILMS)){
-			title = "Búsqueda de películas";
+			title = "Búsqueda en FilmAffinity";
 		}else{
-			title = "Búsqueda de música";
+			title = "Búsqueda en LastFM";
 		}
 		titleLabel.setText(title + " por " + getOptionName(searchOption));
 	}

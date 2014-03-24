@@ -17,6 +17,7 @@ import javax.swing.JComboBox;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.Font;
 
 @SuppressWarnings("serial")
 public class GeneralSectionConfig extends ConfigurationSection {
@@ -36,11 +37,14 @@ public class GeneralSectionConfig extends ConfigurationSection {
 		
 		setBackground(PanelProperties.BACKGROUND);
 		JLabel lblNewLabel = new JLabel("Cliente Torrent");
+		lblNewLabel.setFont(new Font("Calibri", Font.PLAIN, 15));
 		
 		JLabel lblUsar = new JLabel("Usar:");
+		lblUsar.setFont(new Font("Calibri", Font.PLAIN, 15));
 		
 		comboModel = new String[]{TransmissionManager.TRANSMISSION_NAME_CONFIG_VALUE, microTorrentManager.MICROTORRENT_NAME_CONFIG_VALUE};
 		torrentClientBox = new JComboBox(comboModel);
+		torrentClientBox.setFont(new Font("Calibri", Font.PLAIN, 15));
 		torrentClientBox.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {

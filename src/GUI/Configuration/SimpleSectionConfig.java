@@ -23,6 +23,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.Font;
 
 @SuppressWarnings("serial")
 public class SimpleSectionConfig extends ConfigurationSection {
@@ -44,10 +45,13 @@ public class SimpleSectionConfig extends ConfigurationSection {
 		
 		setBackground(PanelProperties.BACKGROUND);
 		JLabel lblNewLabel = new JLabel("Usuario");
+		lblNewLabel.setFont(new Font("Calibri", Font.PLAIN, 15));
 		
 		JLabel lblNewLabel_1 = new JLabel("Password");
+		lblNewLabel_1.setFont(new Font("Calibri", Font.PLAIN, 15));
 		
 		userField = new JTextField();
+		userField.setFont(new Font("Calibri", Font.PLAIN, 15));
 		userField.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
@@ -64,6 +68,7 @@ public class SimpleSectionConfig extends ConfigurationSection {
 		userField.setText(initialUser);
 		
 		passwordField = new JPasswordField();
+		passwordField.setFont(new Font("Calibri", Font.PLAIN, 15));
 		passwordField.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
@@ -79,6 +84,7 @@ public class SimpleSectionConfig extends ConfigurationSection {
 		passwordField.setText(initialPassword);
 		
 		registerButton = new JButton("Registrarse");
+		registerButton.setFont(new Font("Calibri", Font.PLAIN, 15));
 		registerButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				sendToSignUpPage();

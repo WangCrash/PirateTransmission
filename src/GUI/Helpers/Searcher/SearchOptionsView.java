@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -12,7 +11,6 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.border.EmptyBorder;
 
 import GUI.MainWindow;
 
@@ -20,9 +18,6 @@ import java.awt.GridLayout;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.GroupLayout.Alignment;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.Color;
 import javax.swing.border.LineBorder;
@@ -34,7 +29,6 @@ import java.awt.event.ActionEvent;
 
 @SuppressWarnings("serial")
 public class SearchOptionsView extends JDialog implements ActionListener{
-	private JFrame mainFrame;
 	private HelperSearcherSection parentView;
 	private int selectedOption;
 	
@@ -72,7 +66,6 @@ public class SearchOptionsView extends JDialog implements ActionListener{
 	 */
 	public SearchOptionsView(JFrame mainFrame, HelperSearcherSection parentView, String title, Map<String, Integer> options, int selectedButton) {
 		super(mainFrame, true);
-		this.parentView = parentView;
 		this.options = options;		
 		setUndecorated(true);		
 		setBounds(100, 100, 238, 214);
