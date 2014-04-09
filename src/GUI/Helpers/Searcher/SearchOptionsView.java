@@ -66,6 +66,7 @@ public class SearchOptionsView extends JDialog implements ActionListener{
 	 */
 	public SearchOptionsView(JFrame mainFrame, HelperSearcherSection parentView, String title, Map<String, Integer> options, int selectedButton) {
 		super(mainFrame, true);
+		this.parentView = parentView;
 		this.options = options;		
 		setUndecorated(true);		
 		setBounds(100, 100, 238, 214);
@@ -183,7 +184,7 @@ public class SearchOptionsView extends JDialog implements ActionListener{
 	
 	private void okButtonPressed() {
 		parentView.setSearchOption(selectedOption);
-		close();
+		close();  
 	}
 	
 	public void actionPerformed(ActionEvent e) {

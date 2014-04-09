@@ -282,32 +282,38 @@ public class FilmCell extends FilmResultItem implements Runnable {
 		titleLabel.setText(ficha.getTitulo());
 		tools.setToolTipText(titleLabel, ficha.getTitulo());
 		
-		int maxDirectors = 3;
-		boolean cutLength = true;
-		if(maxDirectors >= ficha.getDirector().length){
-			maxDirectors = ficha.getDirector().length;
-			cutLength = false;
-		}
-		for (int i = 0; i < maxDirectors; i++) {
-			JLabel directorLabel = new JLabel("<HTML><U>" + ficha.getDirector()[i] + "<U><HTML>");
-			directorLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-			directorLabel.setFont(new Font("Dialog", Font.PLAIN, 11));
-			directorLabel.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					JLabel tag = (JLabel)e.getSource();
-					if(e.getClickCount() == 1){
-						searchDirector(tag.getText());
+		
+		
+		if(ficha.getDirector() != null){
+			
+			int maxDirectors = 3;
+			boolean cutLength = true;
+			if(maxDirectors >= ficha.getDirector().length){
+				maxDirectors = ficha.getDirector().length;
+				cutLength = false;
+			}
+			for (int i = 0; i < maxDirectors; i++) {
+				JLabel directorLabel = new JLabel("<HTML><U>" + ficha.getDirector()[i] + "<U><HTML>");
+				directorLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				directorLabel.setFont(new Font("Dialog", Font.PLAIN, 11));
+				directorLabel.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						JLabel tag = (JLabel)e.getSource();
+						if(e.getClickCount() == 1){
+							searchDirector(tag.getText());
+						}
 					}
-				}
-			});
-			directorsPane.add(directorLabel);
-		}
-		if(cutLength){
-			JLabel furtherMoreLabel = new JLabel("Y más...");
-			furtherMoreLabel.setFont(new Font("Dialog", Font.PLAIN, 11));
-			directorsPane.add(furtherMoreLabel);
-		}
+				});
+				directorsPane.add(directorLabel);
+			}
+			
+			if(cutLength){
+				JLabel furtherMoreLabel = new JLabel("Y más...");
+				furtherMoreLabel.setFont(new Font("Dialog", Font.PLAIN, 11));
+				directorsPane.add(furtherMoreLabel);
+			}
+		}		
 		
 		countryLabel.setText(ficha.getPais());
 		tools.setToolTipText(countryLabel, ficha.getPais());

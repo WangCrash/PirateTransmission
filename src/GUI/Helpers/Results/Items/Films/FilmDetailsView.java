@@ -470,20 +470,22 @@ public class FilmDetailsView extends FilmResultItem implements Runnable{
 		originalTitleLabel.setText(film.getTituloOriginal());
 		tools.setToolTipText(originalTitleLabel, film.getTituloOriginal());
 		
-		for (int i = 0; i < film.getDirector().length; i++) {
-			JLabel directorLabel = new JLabel("<HTML><U>" + film.getDirector()[i] + "<U><HTML>");
-			directorLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-			directorLabel.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					JLabel tag = (JLabel)e.getSource();
-					if(e.getClickCount() == 1){
-						searchDirector(tag.getText());
+		if(film.getDirector() != null){
+			for (int i = 0; i < film.getDirector().length; i++) {
+				JLabel directorLabel = new JLabel("<HTML><U>" + film.getDirector()[i] + "<U><HTML>");
+				directorLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				directorLabel.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						JLabel tag = (JLabel)e.getSource();
+						if(e.getClickCount() == 1){
+							searchDirector(tag.getText());
+						}
 					}
-				}
-			});
-			directorLabel.setFont(new Font("Tahoma", Font.PLAIN, 11));
-			directorsPane.add(directorLabel);
+				});
+				directorLabel.setFont(new Font("Tahoma", Font.PLAIN, 11));
+				directorsPane.add(directorLabel);
+			}
 		}
 		
 		sinopsisTextPane.setText(film.getSinopsis());
