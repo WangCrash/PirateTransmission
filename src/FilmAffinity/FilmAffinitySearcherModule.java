@@ -410,7 +410,7 @@ public class FilmAffinitySearcherModule {
 		}
 		
 		if(logged){
-			String userRatingRegex = "<div class=\"rate-movie-box\".*?data-user-rating=\"(.*?)\"\\s*?data-ucd=\"(.*?)\".*?>";
+			String userRatingRegex = "<div class=\"rate-movie-box\".*?data-user-rating=\"(.*?)\".*?>.*?<select id=\"(.*?)\".*?>";
 			p = Pattern.compile(userRatingRegex);
 			m = p.matcher(content);
 			if(m.find()){
@@ -581,10 +581,10 @@ public class FilmAffinitySearcherModule {
 //	public static void main(String[] args) throws MalformedURLException{
 //		ConnectionManager cm = new ConnectionManager();
 //		FilmAffinitySearcherModule f = new FilmAffinitySearcherModule("www.filmaffinity.es", true, cm);
-//		/*URL url = new URL("http://127.0.0.1:8081");
+//		URL url = new URL("http://127.0.0.1:8081");
 //		System.out.println(url);
-//		Map<String, String> response = cm.sendRequest(url, ConnectionManager.METHOD_POST, true, false, false);*/
-//		//FichaPelicula ficha = f.extractFilmInfo(response.get(ConnectionManager.BODY_TEXT_RESPONSE_KEY));
-//		//System.out.println(ficha);
+//		Map<String, String> response = cm.sendRequest(url, ConnectionManager.METHOD_POST, true, false, false);
+//		FichaPelicula ficha = f.extractFilmInfo(response.get(ConnectionManager.BODY_TEXT_RESPONSE_KEY));
+//		System.out.println(ficha);
 //	}
 }

@@ -21,10 +21,16 @@ public class FilmAffinitySessionModule {
 	public Map<String, String> sendRequestKeepingSessionAlive(URL url, String method, boolean getBodyResponse, boolean watchCookies, boolean sendCookies){
 		return sendRequestKeepingSessionAlive(url, null, false, null, method, getBodyResponse, watchCookies, sendCookies);
 	}
+	
 	public Map<String, String> sendRequestKeepingSessionAlive(URL url, String parameters, boolean encodeParams, Map<String, String> httpAuth, String method,
 			boolean getBodyResponse, boolean watchCookies, boolean sendCookies){
+		return sendRequestKeepingSessionAlive(url, parameters, encodeParams, httpAuth, method, getBodyResponse, watchCookies, sendCookies, null);
+	}
+	
+	public Map<String, String> sendRequestKeepingSessionAlive(URL url, String parameters, boolean encodeParams, Map<String, String> httpAuth, String method,
+			boolean getBodyResponse, boolean watchCookies, boolean sendCookies, Map<String , String> addHeaders){
 		
-		Map<String, String> response = cm.sendRequest(url, parameters, encodeParams, httpAuth, method, getBodyResponse, watchCookies, sendCookies);
+		Map<String, String> response = cm.sendRequest(url, parameters, encodeParams, httpAuth, method, getBodyResponse, watchCookies, sendCookies, addHeaders);
 		boolean doRelogin = false;
 		if(FilmAffinityBot.getInstance().isLogged()){
 			if(response.get(ConnectionManager.STATUS_CODE_RESPONSE_KEY).equals("200")

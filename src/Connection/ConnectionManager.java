@@ -45,10 +45,14 @@ public class ConnectionManager {
 	}
 	
 	public Map<String, String> sendRequest(URL url, String method, boolean getBodyResponse, boolean watchCookies, boolean sendCookies){
-		return sendRequest(url, null, false, null, method, getBodyResponse, watchCookies, sendCookies);
+		return sendRequest(url, null, false, null, method, getBodyResponse, watchCookies, sendCookies, null);
 	}
 	
 	public Map<String, String> sendRequest(URL url, String parameters, boolean encodeParams, Map<String, String> httpAuth, String method, boolean getBodyResponse, boolean watchCookies, boolean sendCookies){
+		return sendRequest(url, parameters, encodeParams, httpAuth, method, getBodyResponse, watchCookies, sendCookies, null);
+	}
+	
+	public Map<String, String> sendRequest(URL url, String parameters, boolean encodeParams, Map<String, String> httpAuth, String method, boolean getBodyResponse, boolean watchCookies, boolean sendCookies, Map<String, String> addHeaders){
 		String cookieChain = "";
 		if(sendCookies){
 			if(cookiesList != null){
@@ -77,6 +81,13 @@ public class ConnectionManager {
 		
 		con.setRequestProperty("User-Agent", USER_AGENT);
 		con.setRequestProperty("Accept-Language", "es-ES,es;q=0.8,en;q=0.6");
+		
+		if(addHeaders != null){
+			for (Map.Entry<String, String> newHeader : addHeaders.entrySet()){
+				con.setRequestProperty(newHeader.getKey(), newHeader.getValue());
+			}
+		}
+		
 		if(encodeParams){
 			con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 		}
