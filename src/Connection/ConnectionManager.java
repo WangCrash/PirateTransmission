@@ -6,13 +6,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import error.ErrorDescription;
 import Codification.Base64;
 
 
@@ -29,7 +32,6 @@ public class ConnectionManager {
 	public static final String BODY_TEXT_RESPONSE_KEY = "ResponseBody";
 	public static final String STATUS_CODE_RESPONSE_KEY = "ResponseCode";
 	
-	private final int NO_INTERNET_REACHABILITY = 0;
 	public static final String USER_AGENT = "orphean_navigator_2.0";
 	
 	private List<String> cookiesList;
@@ -130,7 +132,7 @@ public class ConnectionManager {
 		try {
 			responseCode = con.getResponseCode();
 		} catch (IOException e) {
-			responseCode = NO_INTERNET_REACHABILITY;
+			responseCode = ErrorDescription.NO_INTERNET_CONNECTION;
 		}
 		
 		Map<String, String> result = new HashMap<String, String>();

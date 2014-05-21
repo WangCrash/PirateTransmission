@@ -7,6 +7,7 @@ import GUI.Helpers.Results.Items.Films.ReviewsTable.JTableButtonMouseListener;
 import GUI.Helpers.Results.Items.Films.ReviewsTable.JTableButtonRenderer;
 import GUI.Helpers.Results.Items.Films.ReviewsTable.ReviewDialog;
 import GUI.Helpers.Results.Items.Films.ReviewsTable.ReviewsTableModel;
+import GUI.Panel.PanelProperties;
 import Managers.Helpers.FilmAffinityBot;
 import Model.FichaPelicula;
 import Model.HelperItem;
@@ -23,6 +24,7 @@ import javax.swing.SwingUtilities;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Point;
+import java.awt.SystemColor;
 
 import javax.swing.ImageIcon;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -82,12 +84,13 @@ public class FilmDetailsView extends FilmResultItem implements Runnable{
 		setFilm((FichaPelicula)helperItem);
 		
 		System.out.println("creado super");
-		setBackground(new Color(204, 255, 153));
+		setBackground(SystemColor.menu);
 		
-		setBorder(new SoftBevelBorder(BevelBorder.LOWERED, new Color(64, 64, 64), null, null, null));
+		//setBorder(new SoftBevelBorder(BevelBorder.LOWERED, new Color(64, 64, 64), null, null, null));
+		setBorder(PanelProperties.BORDER);
 		
 		infoPanel = new JPanel();
-		infoPanel.setBorder(UIManager.getBorder("InternalFrame.border"));
+		//infoPanel.setBorder(UIManager.getBorder("InternalFrame.border"));
 		
 		titleLabel = new JLabel("T\u00EDtulo");
 		titleLabel.setFont(new Font("Tahoma", Font.BOLD, 16));

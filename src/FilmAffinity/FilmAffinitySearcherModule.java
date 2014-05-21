@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import error.ErrorDescription;
+import error.PTNoConnectionException;
 import Connection.ConnectionManager;
 import Managers.Helpers.FilmAffinityBot;
 import Model.FichaPelicula;
@@ -122,8 +124,8 @@ public class FilmAffinitySearcherModule {
 			System.out.println("Response Code is not a number");
 			return null;
 		}
-		if(responseCode == 0){
-			System.out.println("Error: no connection");
+		if(responseCode == ErrorDescription.NO_INTERNET_CONNECTION){
+			System.out.println("No Connection");
 			return null;
 		}
 		String responseText = response.get("ResponseBody");
@@ -170,8 +172,8 @@ public class FilmAffinitySearcherModule {
 		}catch(NumberFormatException e){
 			return null;
 		}
-		if(responseCode == 0){
-			System.out.println("Error: no connection");
+		if(responseCode == ErrorDescription.NO_INTERNET_CONNECTION){
+			System.out.println("No Connection");
 			return null;
 		}
 		

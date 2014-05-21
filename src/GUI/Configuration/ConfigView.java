@@ -21,6 +21,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JTabbedPane;
 
+import GUI.MainWindow;
 import GUI.Panel.PanelProperties;
 import Managers.ApplicationConfiguration;
 import Managers.Helpers.FilmAffinityBot;
@@ -47,7 +48,7 @@ public class ConfigView extends JDialog {
 	private JTabbedPane sectionsPane;
 	private ConfigurationSection[] sections;
 	private Map<String, String> configProperties;
-	private JFrame mainFrame;
+	private MainWindow mainFrame;
 	private JButton AcceptButton;
 
 	/**
@@ -69,7 +70,7 @@ public class ConfigView extends JDialog {
 	/**
 	 * Create the frame.
 	 */
-	public ConfigView(JFrame mainFrame) {
+	public ConfigView(MainWindow mainFrame) {
 		super(mainFrame, true);
 		this.mainFrame = mainFrame;
 		
@@ -253,6 +254,7 @@ public class ConfigView extends JDialog {
 		if(!message.isEmpty()){
 			tools.showWarningDialog(this, "Error", "No se ha podido conectar con:\n" + message);
 		}else{
+			mainFrame.checkHelperSession();
 			close();
 		}
 	}

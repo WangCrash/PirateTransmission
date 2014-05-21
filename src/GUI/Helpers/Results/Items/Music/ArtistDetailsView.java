@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import GUI.Helpers.Results.HelperResultsSection;
+import GUI.Panel.PanelProperties;
 import Managers.Helpers.LastFMManager;
 import Model.HelperItem;
 import Model.Artista;
@@ -25,7 +26,6 @@ import javax.swing.JPanel;
 import java.awt.FlowLayout;
 
 import javax.swing.JButton;
-
 import javax.swing.ImageIcon;
 import javax.swing.border.LineBorder;
 
@@ -55,11 +55,12 @@ public class ArtistDetailsView extends MusicResultItem {
 
 	public ArtistDetailsView(JFrame mainFrame, HelperResultsSection parentView, HelperItem helperItem) {
 		super(mainFrame, parentView, helperItem);
-		setBackground(new Color(204, 255, 153));
+		setBackground(SystemColor.menu);
+		setBorder(PanelProperties.BORDER);
 		this.setArtista((Artista)helperItem);
 		
 		JPanel panel = new JPanel();
-		panel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, new Color(64, 64, 64), null, null, null));
+		//panel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, new Color(64, 64, 64), null, null, null));
 		panel.setBackground(SystemColor.menu);
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(

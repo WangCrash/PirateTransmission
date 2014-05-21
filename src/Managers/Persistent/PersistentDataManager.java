@@ -160,16 +160,17 @@ public class PersistentDataManager extends Manager{
 			Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 			session.beginTransaction();
 			
+			String cleanName = name.replace("'", "''");
 			String query;
 			switch (itemType) {
 			case FICHAPELICULA_ITEM_TYPE:	
-				query = "select titulo from FichaPelicula where titulo like '" + name + "'";
+				query = "select titulo from FichaPelicula where titulo like '" + cleanName + "'";
 				break;
 			case ARTISTA_ITEM_TYPE:
-				query = "select nombre from Artista where nombre like '" + name + "'";
+				query = "select nombre from Artista where nombre like '" + cleanName + "'";
 				break;
 			case ALBUM_ITEM_TYPE:
-				query = "select artista from Disco where nombre like '" + name + "'";
+				query = "select artista from Disco where nombre like '" + cleanName + "'";
 				break;
 			default:
 				query = "";

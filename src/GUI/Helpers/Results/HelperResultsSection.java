@@ -12,6 +12,7 @@ import GUI.Panel.PanelProperties;
 import Managers.Helpers.FilmAffinityBot;
 import Model.FichaPelicula;
 import Model.HelperItem;
+import Utils.UtilTools;
 
 import java.awt.FlowLayout;
 
@@ -60,14 +61,11 @@ public class HelperResultsSection extends JPanel {
 	}
 	
 	public void showResults(HelperItem[] items){
-		if(items == null){
-			System.out.println("items es null");
+		if(items == null || items.length == 0){
+			new UtilTools().showInfoOKDialog(mainFrame, "", "No hay resultados");
 			return;
 		}
-		else if(items.length == 0){
-			System.out.println("no hay items");
-			return;
-		}
+		
 		this.items = items;
 		if(rootPanel.getComponentCount() > 0){
 			rootPanel.removeAll();
