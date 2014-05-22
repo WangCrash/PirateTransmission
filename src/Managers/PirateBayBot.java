@@ -57,7 +57,7 @@ public class PirateBayBot extends Manager{
 			initialized = false;
 			return initialized;
 		}
-		Map<String, String> response = new SimpleConnectionManager().sendGetRequest(url, null, null);
+		Map<String, String> response = new SimpleConnectionManager().sendGetRequest(url);
 		String responseCode = response.get("ResponseCode");
 		if(responseCode.equals("200")){
 			System.out.println("Response code: 200");
@@ -120,10 +120,9 @@ public class PirateBayBot extends Manager{
 		} catch (MalformedURLException e) {
 			return null;
 		}
-
-        //String[] response = ConnectionManager.sendGetRequest(url);
-        //Map<String, String> response = ConnectionManager.sendRequest(url, null, null, ConnectionManager.METHOD_GET, true, false, false);
-        Map<String, String> response = new SimpleConnectionManager().sendGetRequest(url, null, null);
+       
+        Map<String, String> response = new SimpleConnectionManager("UTF-8").sendGetRequest(url);
+        
         String responseCode = response.get("ResponseCode");
 		String responseText = response.get("ResponseBody");
         //System.out.println(response);
@@ -226,5 +225,6 @@ public class PirateBayBot extends Manager{
 	
 	public static void main(String[] args){
 		PirateBayBot.getInstance().initManager();
+		ArchivoTorrent[] result = PirateBayBot.getInstance().searchTorrent("piranha", 0, 7);
 	}
 }

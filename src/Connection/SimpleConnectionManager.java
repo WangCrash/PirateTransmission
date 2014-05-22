@@ -1,5 +1,6 @@
 package Connection;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 public class SimpleConnectionManager extends ConnectionManager{
@@ -10,6 +11,10 @@ public class SimpleConnectionManager extends ConnectionManager{
 	
 	public SimpleConnectionManager(int timeout){
 		super(timeout);
+	}
+	
+	public SimpleConnectionManager(String charset){
+		super(charset);
 	}
 	
 	public Map<String, String> sendPostRequest(URL url){

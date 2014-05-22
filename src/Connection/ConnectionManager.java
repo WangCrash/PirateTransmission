@@ -32,18 +32,28 @@ public class ConnectionManager {
 	public static final String BODY_TEXT_RESPONSE_KEY = "ResponseBody";
 	public static final String STATUS_CODE_RESPONSE_KEY = "ResponseCode";
 	
-	public static final String USER_AGENT = "orphean_navigator_2.0";
+	public static final String USER_AGENT = "continental_1.0";//"orphean_navigator_2.0";
 	
 	private List<String> cookiesList;
 	private Map<String, String> responseHeaders;
 	private int TIMEOUT_MILLI = 10000;
+	private String charset;
 	
 	public ConnectionManager(){
-		this(10000);
+		this(10000, "ISO-8859-1");
 	}
 	
 	public ConnectionManager(int timeout){
+		this(timeout, "ISO-8859-1");
+	}
+	
+	public ConnectionManager(String charset){
+		this(10000, charset);
+	}
+	
+	public ConnectionManager(int timeout, String charset){
 		this.TIMEOUT_MILLI = timeout;
+		this.charset = charset;
 	}
 	
 	public Map<String, String> sendRequest(URL url, String method, boolean getBodyResponse, boolean watchCookies, boolean sendCookies){
@@ -204,7 +214,7 @@ public class ConnectionManager {
 			return null;
 		}
 		try {
-			return new String(response.toString().getBytes(), "ISO-8859-1");
+			return new String(response.toString().getBytes(), this.charset);
 		} catch (UnsupportedEncodingException e) {
 			return null;
 		}		
@@ -248,5 +258,13 @@ public class ConnectionManager {
 		ConnectionManager cm = new ConnectionManager();
 		Map<String, String> response = cm.sendRequest(url, ConnectionManager.METHOD_GET, true, false, false);
 		System.out.println(response);
+	}
+
+	public String getCharset() {
+		return charset;
+	}
+
+	public void setCharset(String charset) {
+		this.charset = charset;
 	}
 }
