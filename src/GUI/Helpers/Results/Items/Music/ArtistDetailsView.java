@@ -5,6 +5,7 @@ import javax.swing.SwingUtilities;
 
 import GUI.Helpers.Results.HelperResultsSection;
 import GUI.Panel.PanelProperties;
+import Managers.PirateBayBot;
 import Managers.Helpers.LastFMManager;
 import Model.HelperItem;
 import Model.Artista;
@@ -234,7 +235,7 @@ public class ArtistDetailsView extends MusicResultItem {
 
 	@Override
 	public void searchItemTorrent() {
-		this.parentView.searchTorrent(getArtista().getNombre(), getArtista());
+		this.parentView.searchTorrent(getArtista().getNombre(), PirateBayBot.CATEGORY_MUSIC, getArtista());
 	}
 
 	@Override

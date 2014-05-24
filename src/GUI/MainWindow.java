@@ -31,6 +31,7 @@ import Managers.Helpers.LastFMManager;
 import Managers.Persistent.PersistentDataManager;
 import Model.FichaPelicula;
 import Model.HelperItem;
+import Utils.MultipleArgumentsRunnableObject;
 import Utils.OneArgumentRunnableObject;
 import Utils.UtilTools;
 
@@ -251,12 +252,12 @@ public class MainWindow extends JFrame {
 		transmissionsView.setVisible(true);
 	}
 	
-	public void searchTorrent(String search, HelperItem item){
-		Thread searchTorrentThread = new Thread(new OneArgumentRunnableObject(search) {
+	public void searchTorrent(String search, int category, HelperItem item){
+		Thread searchTorrentThread = new Thread(new MultipleArgumentsRunnableObject(new Object[]{search, new Integer(category)}) {
 			
 			@Override
 			public void run() {
-				pirateBaySection.searchTorrent((String)this.getArgument());
+				pirateBaySection.searchTorrent((String)this.getArgumentAtIndex(0), ((Integer)this.getArgumentAtIndex(1)).intValue());
 			}
 		});
 		searchTorrentThread.start();

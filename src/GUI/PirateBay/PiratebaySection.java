@@ -9,11 +9,13 @@ import javax.swing.ScrollPaneConstants;
 
 import java.awt.Cursor;
 import java.awt.Color;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
+import GUI.Helpers.Searcher.SearcherView;
 import GUI.Panel.PanelProperties;
 import Managers.PirateBayBot;
 import Model.ArchivoTorrent;
@@ -23,9 +25,20 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 import java.awt.GridLayout;
-import javax.swing.SwingConstants;
+import java.util.HashMap;
+import java.util.Map;
 
-public class PiratebaySection extends JPanel implements Runnable{
+import javax.swing.SwingConstants;
+import javax.swing.JButton;
+import javax.swing.ImageIcon;
+
+import GUI.SearchOptions.SearchOptionsView;;
+
+public class PiratebaySection extends JPanel implements Runnable, SearcherView{
+	
+	private static final int Category_All = 1;
+	private static final int Category_Video = 2;
+	private static final int Category_Music = 3;
 	
 	private static final long serialVersionUID = -7052443585281459283L;
 	
@@ -33,6 +46,8 @@ public class PiratebaySection extends JPanel implements Runnable{
 	private JFrame mainFrame;
 	private JTextField searchField;
 	private JPanel resultsPanel;
+	private JButton btnNewButton;
+	private int searchOption;
 
 	/**
 	 * Create the panel.
@@ -59,7 +74,7 @@ public class PiratebaySection extends JPanel implements Runnable{
 		searchField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				JTextField textField = (JTextField)arg0.getSource();
-				searchTorrent(textField.getText());
+				searchTorrent(textField.getText(), translateToPirateBayCategory(searchOption));
 			}
 		});
 		searchField.setColumns(10);
@@ -70,26 +85,38 @@ public class PiratebaySection extends JPanel implements Runnable{
 		resultsPanel.setBackground(PanelProperties.BACKGROUND);
 		scrollPane.setViewportView(resultsPanel);
 		resultsPanel.setLayout(new GridLayout(0, 1, 1, 2));
+		
+		btnNewButton = new JButton("");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				showConfigSearchView();
+			}
+		});
+		btnNewButton.setIcon(new ImageIcon(PiratebaySection.class.getResource("/javax/swing/plaf/metal/icons/sortDown.png")));
 		GroupLayout gl_searchPanel = new GroupLayout(searchPanel);
 		gl_searchPanel.setHorizontalGroup(
 			gl_searchPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_searchPanel.createSequentialGroup()
 					.addGroup(gl_searchPanel.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_searchPanel.createSequentialGroup()
-							.addGap(5)
-							.addComponent(searchField, GroupLayout.PREFERRED_SIZE, 402, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_searchPanel.createSequentialGroup()
 							.addGap(7)
-							.addComponent(lblBuscarTorrent, GroupLayout.PREFERRED_SIZE, 398, GroupLayout.PREFERRED_SIZE)))
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+							.addComponent(lblBuscarTorrent, GroupLayout.PREFERRED_SIZE, 398, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_searchPanel.createSequentialGroup()
+							.addGap(5)
+							.addComponent(searchField, GroupLayout.PREFERRED_SIZE, 374, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap(93, Short.MAX_VALUE))
 		);
 		gl_searchPanel.setVerticalGroup(
-			gl_searchPanel.createParallelGroup(Alignment.TRAILING)
-				.addGroup(Alignment.LEADING, gl_searchPanel.createSequentialGroup()
+			gl_searchPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_searchPanel.createSequentialGroup()
 					.addGap(3)
 					.addComponent(lblBuscarTorrent, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
 					.addGap(11)
-					.addComponent(searchField, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+					.addGroup(gl_searchPanel.createParallelGroup(Alignment.LEADING, false)
+						.addComponent(btnNewButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(searchField, GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE))
 					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		searchPanel.setLayout(gl_searchPanel);
@@ -98,38 +125,40 @@ public class PiratebaySection extends JPanel implements Runnable{
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(4)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 423, GroupLayout.PREFERRED_SIZE)
-						.addComponent(searchPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap())
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
+						.addComponent(searchPanel, Alignment.LEADING, 0, 0, Short.MAX_VALUE)
+						.addComponent(scrollPane, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE))
+					.addGap(23))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addComponent(searchPanel, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 590, Short.MAX_VALUE)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
 					.addGap(5))
 		);
 		setLayout(groupLayout);
-
+		
+		searchOption = translatePirateBayCategory(PirateBayBot.CATEGORY_ALL);
 	}
 	
-	public void searchTorrent(String search){
+	public void searchTorrent(String search, int category){
 		search = search.trim();
 		searchField.setText(search);
 		searchField.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		searchOption = translatePirateBayCategory(category);
 		run();
 	}
 	
-	private void requestSearch(String search){
+	private void requestSearch(String search, int category){
 		mainFrame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		if(!PirateBayBot.getInstance().isInitialized()){
 			if(!PirateBayBot.getInstance().initManager()){
 				new UtilTools().showWarningDialog(mainFrame, "Error", "No ha sido posible conectar con PirateBay");
 			}
 		}
-		torrents = PirateBayBot.getInstance().searchTorrent(search, PirateBayBot.CATEGORY_ALL, PirateBayBot.ORDERBY_SEEDERS);
+		torrents = PirateBayBot.getInstance().searchTorrent(search, category, PirateBayBot.ORDERBY_SEEDERS);
 		if(torrents == null){
 			new UtilTools().showWarningDialog(mainFrame, "Error", "Puede que no estés conectado");
 			setDefaultCursor();
@@ -168,9 +197,69 @@ public class PiratebaySection extends JPanel implements Runnable{
 		searchField.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
 		mainFrame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
+	
+	private void showConfigSearchView() {
+		Map<String, Integer> optionsIndexes = new HashMap<String, Integer>();
+		optionsIndexes.put("Todo", 1);
+		optionsIndexes.put("Vídeo", 2);
+		optionsIndexes.put("Música", 3);
+		
+		SearchOptionsView searchOptionsView = new SearchOptionsView(mainFrame, this, "Opciones de búsqueda", optionsIndexes, searchOption);
+		searchOptionsView.setVisible(true);
+	}
 
 	@Override
 	public void run() {
-		requestSearch(searchField.getText());
+		requestSearch(searchField.getText(), translateToPirateBayCategory(searchOption));
+	}
+
+	@Override
+	public void setSearchOption(int searchOption) {
+		this.searchOption = searchOption;
+	}
+	public JButton getConfigSearchButton() {
+		return btnNewButton;
+	}
+	
+	private int translatePirateBayCategory(int category){
+		int result = 1;
+		switch (category) {
+		case PirateBayBot.CATEGORY_ALL:	
+			result = 1;
+			break;
+			
+		case PirateBayBot.CATEGORY_VIDEO:
+			result = 2;
+			break;
+			
+		case PirateBayBot.CATEGORY_MUSIC:
+			result = 3;
+			break;
+
+		default:
+			break;
+		}
+		return result;
+	}
+	
+	private int translateToPirateBayCategory(int category){
+		int result = 1;
+		switch (category) {
+		case Category_All:	
+			result = PirateBayBot.CATEGORY_ALL;
+			break;
+			
+		case Category_Video:
+			result = PirateBayBot.CATEGORY_VIDEO;
+			break;
+			
+		case Category_Music:
+			result = PirateBayBot.CATEGORY_MUSIC;
+			break;
+
+		default:
+			break;
+		}
+		return result;
 	}
 }

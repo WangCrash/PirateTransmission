@@ -10,6 +10,7 @@ import javax.swing.SwingUtilities;
 
 import GUI.MainWindow;
 import GUI.Panel.PanelProperties;
+import GUI.SearchOptions.SearchOptionsView;
 import GUI.Utils.LoadingView;
 import Managers.ApplicationConfiguration;
 import Managers.Helpers.HelperManager;
@@ -19,16 +20,18 @@ import java.awt.Color;
 import java.util.Map;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+
 import java.awt.Insets;
 import java.awt.Font;
 
 @SuppressWarnings("serial")
-public class HelperSearcherSection extends JPanel implements Runnable {
+public class HelperSearcherSection extends JPanel implements Runnable, SearcherView {
 
 	private HelperItem[] results;
 	private int searchOption;

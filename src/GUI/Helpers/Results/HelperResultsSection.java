@@ -56,8 +56,8 @@ public class HelperResultsSection extends JPanel {
 		setLayout(groupLayout);
 	}
 
-	public void searchTorrent(String search, HelperItem item){
-		this.mainFrame.searchTorrent(search, item);
+	public void searchTorrent(String search, int category, HelperItem item){
+		this.mainFrame.searchTorrent(search, category, item);
 	}
 	
 	public void showResults(HelperItem[] items){

@@ -7,6 +7,7 @@ import GUI.Helpers.Results.HelperResultsSection;
 import GUI.Helpers.Results.Items.HelperResultItem;
 import GUI.Helpers.Results.Items.Films.Rating.RateFilm;
 import GUI.Helpers.Results.Items.Films.Rating.RateMovieView;
+import Managers.PirateBayBot;
 import Managers.Helpers.FilmAffinityBot;
 import Model.FichaPelicula;
 import Model.HelperItem;
@@ -41,7 +42,7 @@ public abstract class FilmResultItem extends HelperResultItem implements RateFil
 			search = new UtilTools().killFilmAffinityWords(ficha.getTitulo());
 		}
 		if(search != null){
-			this.parentView.searchTorrent(search, getFilm());
+			this.parentView.searchTorrent(search, PirateBayBot.CATEGORY_VIDEO, getFilm());
 		}
 	}
 	

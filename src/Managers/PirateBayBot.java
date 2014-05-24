@@ -226,5 +226,8 @@ public class PirateBayBot extends Manager{
 	public static void main(String[] args){
 		PirateBayBot.getInstance().initManager();
 		ArchivoTorrent[] result = PirateBayBot.getInstance().searchTorrent("piranha", 0, 7);
+		if (result == null || result.length == 0) {
+			System.out.println("RESULTADO FINADO Y ENCONTRADO");
+		}
 	}
 }

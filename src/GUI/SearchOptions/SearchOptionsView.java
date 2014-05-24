@@ -1,4 +1,4 @@
-package GUI.Helpers.Searcher;
+package GUI.SearchOptions;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -13,23 +13,34 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
 import GUI.MainWindow;
+import GUI.Helpers.Searcher.HelperSearcherSection;
+import GUI.Helpers.Searcher.OptionListComparator;
+import GUI.Helpers.Searcher.SearcherView;
 
 import java.awt.GridLayout;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
+
 import java.awt.Color;
+
 import javax.swing.border.LineBorder;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 @SuppressWarnings("serial")
 public class SearchOptionsView extends JDialog implements ActionListener{
-	private HelperSearcherSection parentView;
+	private SearcherView parentView;
 	private int selectedOption;
 	
 	private Map<String, Integer> options; 
@@ -47,12 +58,22 @@ public class SearchOptionsView extends JDialog implements ActionListener{
 			public void run() {
 				try {
 					Map<String, Integer> options = new HashMap<String, Integer>();
-					options.put("artista", 1);
-					options.put("película", 2);
-					options.put("director", 3);
-					options.put("todo", 4);
+					options.put("Todo", 1);
+					options.put("vídeo", 2);
+					options.put("música", 3);
 					JFrame mainFrame = new JFrame();
-					SearchOptionsView dialog = new SearchOptionsView(new JFrame(), new HelperSearcherSection((MainWindow)mainFrame), "Opciones búsqueda de películas", options, 10);
+					SearchOptionsView dialog = new SearchOptionsView(new JFrame(), new SearcherView() {
+						
+						@Override
+						public void setSearchOption(int searchOption) {
+							System.out.println("DONE");
+						}
+						
+						@Override
+						public JButton getConfigSearchButton() {
+							return new JButton("button");
+						}
+					}, "Opciones búsqueda de películas", options, 1);
 					dialog.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -64,7 +85,7 @@ public class SearchOptionsView extends JDialog implements ActionListener{
 	/**
 	 * Create the dialog.
 	 */
-	public SearchOptionsView(JFrame mainFrame, HelperSearcherSection parentView, String title, Map<String, Integer> options, int selectedButton) {
+	public SearchOptionsView(JFrame mainFrame, SearcherView parentView, String title, Map<String, Integer> options, int selectedButton) {
 		super(mainFrame, true);
 		this.parentView = parentView;
 		this.options = options;		
@@ -159,15 +180,25 @@ public class SearchOptionsView extends JDialog implements ActionListener{
 		int i = 0;
 		boolean someButtonSelected = false;
 		optionButtons = new JRadioButton[options.size()];
+		
+		Map<Integer, String> optionsOrder = new HashMap<Integer, String>();
 		for (Map.Entry<String, Integer> entry : options.entrySet()){
-			JRadioButton radioButton = new JRadioButton(entry.getKey());
+			optionsOrder.put(entry.getValue(), entry.getKey());
+		}
+		
+		List<Integer> order = new ArrayList<Integer>(options.values());
+		
+		Collections.sort(order, new OptionListComparator());
+		
+		for (Integer index : order) {
+			JRadioButton radioButton = new JRadioButton(optionsOrder.get(index));
 			radioButton.addActionListener(this);
-			radioButton.setSelected(entry.getValue() == selectedButton);
+			radioButton.setSelected(index.intValue() == selectedButton);
 			optionButtons[i] = radioButton;
 			optionButtonsGroup.add(radioButton);
 			radioButtonsPanel.add(radioButton);
 			if(!someButtonSelected){
-				someButtonSelected = (entry.getValue() == selectedButton);
+				someButtonSelected = (index == selectedButton);
 			}
 			i++;
 		}
