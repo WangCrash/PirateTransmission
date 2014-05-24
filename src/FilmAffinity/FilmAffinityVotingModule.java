@@ -2,11 +2,12 @@ package FilmAffinity;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import JSON.*;
 
+import JSON.*;
 import Connection.ConnectionManager;
 import Model.FichaPelicula;
 
@@ -43,10 +44,12 @@ public class FilmAffinityVotingModule {
 			}catch(NumberFormatException e){
 				mark = "ns";
 			}
-			String parameters = "id=" + idFilm + "&rating=" + mark + "&ucd=" + film.getDataUcd();
+			String parameters = "id=" + idFilm + "&rating=" + mark + "&rsid=" + film.getDataUcd();
 			
+			Map<String, String> addHeaders = new HashMap<String, String>();
+			addHeaders.put("X-Requested-With", "XMLHttpRequest");
 			//Map<String, String> response = cm.sendRequest(url, parameters, true, null, ConnectionManager.METHOD_POST, true, true, true);
-			Map<String, String> response = session.sendRequestKeepingSessionAlive(url, parameters, true, null, ConnectionManager.METHOD_POST, true, true, true);
+			Map<String, String> response = session.sendRequestKeepingSessionAlive(url, parameters, true, null, ConnectionManager.METHOD_POST, true, true, true, addHeaders);
 			
 			if(response != null){
 				int responseCode;
@@ -58,6 +61,7 @@ public class FilmAffinityVotingModule {
 				if(responseCode == 200){
 					JSONObject jsonResponse = new JSONObject(response.get("ResponseBody"));
 					System.out.println(jsonResponse.getInt("result"));
+					System.out.println("Voting Result: " + jsonResponse);
 					if(jsonResponse.getInt("result") == 0){
 						return true;
 					}

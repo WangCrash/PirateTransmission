@@ -2,12 +2,14 @@ package GUI;
 
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Image;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.ImageIcon;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -30,6 +32,7 @@ import Managers.Persistent.PersistentDataManager;
 import Model.FichaPelicula;
 import Model.HelperItem;
 import Utils.OneArgumentRunnableObject;
+import Utils.UtilTools;
 
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
@@ -38,6 +41,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.awt.event.WindowFocusListener;
+
+import javax.swing.JToggleButton;
+import javax.swing.JButton;
 
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
@@ -56,6 +62,7 @@ public class MainWindow extends JFrame {
 	private HelperResultsSection helperResultsSection;
 	private JMenu mnTransmissions;
 	private JMenuItem mntmVerTransmissions;
+	private JButton helperSessionButton;
 	
 	public static MainWindow getInstance(){
 		synchronized (FilmAffinityBot.class) {
@@ -105,6 +112,16 @@ public class MainWindow extends JFrame {
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
+		
+		helperSessionButton = new JButton();
+		helperSessionButton.setToolTipText("Iniciar sesi\u00F3n");
+		updateHelperSessionButton(ApplicationConfiguration.getInstance().getCurrentHelperManager().isLogged());
+		helperSessionButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				checkHelperSession();
+			}
+		});
+		menuBar.add(helperSessionButton);
 		
 		JMenu settingsMenu = new JMenu("Preferencias");
 		menuBar.add(settingsMenu);
@@ -188,6 +205,23 @@ public class MainWindow extends JFrame {
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
 	}
+	
+	public void checkHelperSession() {
+		if (ApplicationConfiguration.getInstance().getCurrentHelperManager().isLogged()) {
+			return;
+		}
+		updateHelperSessionButton(ApplicationConfiguration.getInstance().getCurrentHelperManager().initManager());
+	}
+
+	private void updateHelperSessionButton(boolean sessionStarted) {
+		ImageIcon buttonImage;
+		if (sessionStarted) {
+			buttonImage = new ImageIcon(MainWindow.class.getResource("/images/login/user_logged.jpg"));
+		}else{
+			buttonImage = new ImageIcon(MainWindow.class.getResource("/images/login/user_not_logged.jpg"));
+		}
+		helperSessionButton.setIcon(new UtilTools().getScaledImageIcon(buttonImage.getImage(), 20, 20));
+	}
 
 	private void includeSections() {
 		pirateBaySection = new PiratebaySection(this);
@@ -257,6 +291,7 @@ public class MainWindow extends JFrame {
 		ApplicationConfiguration.getInstance().setCurrentHelperManager(helper);
 		this.helperSearcherSection.drawOptionsByHelper();
 		helperChooserSection.showRecommendations();
+		checkHelperSession();
 	}
 	
 	public Color color(double val) {
@@ -270,6 +305,7 @@ public class MainWindow extends JFrame {
 	    Color color = new Color(red, green, blue, 0x33);
 	    return color;
 	}
+	
 
 	private void closeApplication() {
 		LoadingView loadingView = new LoadingView(this);

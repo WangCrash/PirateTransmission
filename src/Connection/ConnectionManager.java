@@ -6,13 +6,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import error.ErrorDescription;
 import Codification.Base64;
 
 
@@ -29,26 +32,39 @@ public class ConnectionManager {
 	public static final String BODY_TEXT_RESPONSE_KEY = "ResponseBody";
 	public static final String STATUS_CODE_RESPONSE_KEY = "ResponseCode";
 	
-	private final int NO_INTERNET_REACHABILITY = 0;
-	public static final String USER_AGENT = "orphean_navigator_2.0";
+	public static final String USER_AGENT = "continental_1.0";//"orphean_navigator_2.0";
 	
 	private List<String> cookiesList;
 	private Map<String, String> responseHeaders;
 	private int TIMEOUT_MILLI = 10000;
+	private String charset;
 	
 	public ConnectionManager(){
-		this(10000);
+		this(10000, "ISO-8859-1");
 	}
 	
 	public ConnectionManager(int timeout){
+		this(timeout, "ISO-8859-1");
+	}
+	
+	public ConnectionManager(String charset){
+		this(10000, charset);
+	}
+	
+	public ConnectionManager(int timeout, String charset){
 		this.TIMEOUT_MILLI = timeout;
+		this.charset = charset;
 	}
 	
 	public Map<String, String> sendRequest(URL url, String method, boolean getBodyResponse, boolean watchCookies, boolean sendCookies){
-		return sendRequest(url, null, false, null, method, getBodyResponse, watchCookies, sendCookies);
+		return sendRequest(url, null, false, null, method, getBodyResponse, watchCookies, sendCookies, null);
 	}
 	
 	public Map<String, String> sendRequest(URL url, String parameters, boolean encodeParams, Map<String, String> httpAuth, String method, boolean getBodyResponse, boolean watchCookies, boolean sendCookies){
+		return sendRequest(url, parameters, encodeParams, httpAuth, method, getBodyResponse, watchCookies, sendCookies, null);
+	}
+	
+	public Map<String, String> sendRequest(URL url, String parameters, boolean encodeParams, Map<String, String> httpAuth, String method, boolean getBodyResponse, boolean watchCookies, boolean sendCookies, Map<String, String> addHeaders){
 		String cookieChain = "";
 		if(sendCookies){
 			if(cookiesList != null){
@@ -77,6 +93,13 @@ public class ConnectionManager {
 		
 		con.setRequestProperty("User-Agent", USER_AGENT);
 		con.setRequestProperty("Accept-Language", "es-ES,es;q=0.8,en;q=0.6");
+		
+		if(addHeaders != null){
+			for (Map.Entry<String, String> newHeader : addHeaders.entrySet()){
+				con.setRequestProperty(newHeader.getKey(), newHeader.getValue());
+			}
+		}
+		
 		if(encodeParams){
 			con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 		}
@@ -119,7 +142,7 @@ public class ConnectionManager {
 		try {
 			responseCode = con.getResponseCode();
 		} catch (IOException e) {
-			responseCode = NO_INTERNET_REACHABILITY;
+			responseCode = ErrorDescription.NO_INTERNET_CONNECTION;
 		}
 		
 		Map<String, String> result = new HashMap<String, String>();
@@ -191,7 +214,7 @@ public class ConnectionManager {
 			return null;
 		}
 		try {
-			return new String(response.toString().getBytes(), "ISO-8859-1");
+			return new String(response.toString().getBytes(), this.charset);
 		} catch (UnsupportedEncodingException e) {
 			return null;
 		}		
@@ -235,5 +258,13 @@ public class ConnectionManager {
 		ConnectionManager cm = new ConnectionManager();
 		Map<String, String> response = cm.sendRequest(url, ConnectionManager.METHOD_GET, true, false, false);
 		System.out.println(response);
+	}
+
+	public String getCharset() {
+		return charset;
+	}
+
+	public void setCharset(String charset) {
+		this.charset = charset;
 	}
 }

@@ -20,7 +20,6 @@ import de.umass.lastfm.Album;
 import de.umass.lastfm.Artist;
 import de.umass.lastfm.Authenticator;
 import de.umass.lastfm.Caller;
-import de.umass.lastfm.ImageSize;
 import de.umass.lastfm.Library;
 import de.umass.lastfm.PaginatedResult;
 import de.umass.lastfm.Result;
@@ -455,7 +454,11 @@ public class LastFMManager extends HelperManager {
 	private void initSession() {
 		System.out.println("token: " + token);
 		
-		session = Authenticator.getMobileSession(user, decodePassword(), apiKey, secret);
+		try{
+			session = Authenticator.getMobileSession(user, decodePassword(), apiKey, secret);
+		}catch(Exception e){
+			return;
+		}
 		System.out.println("session: " + session);
 	}
 	

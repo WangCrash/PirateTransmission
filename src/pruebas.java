@@ -280,6 +280,13 @@ public class pruebas {
 		return items;
 	}
 	
+	private void insertTestItems(){
+		HelperItem[] items = new pruebas().getTestItems(10);
+		for (int i = 0; i < items.length; i++) {
+			PersistentDataManager.getInstance().addTransmission(items[i]);
+		}
+	}
+	
 	public static void main(String[] args) throws Exception{
 		if(!PersistentDataManager.getInstance().initManager()){
 			System.out.println("PERSISTENT MANAGER NO INICIADO");
@@ -320,10 +327,7 @@ public class pruebas {
 //		
 //		PersistentDataManager.getInstance().addTransmission(album);//p.saveObjectWithHibernate("un disquito", new Date(), album);
 		
-		HelperItem[] items = new pruebas().getTestItems(10);
-		for (int i = 0; i < items.length; i++) {
-			PersistentDataManager.getInstance().addTransmission(items[i]);
-		}
+		//new pruebas().insertTestItems();
 		
 		//System.out.println("Deleting peli");
 		//PersistentDataManager.getInstance().deleteTransmission(peli);

@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import error.ErrorDescription;
+import error.PTNoConnectionException;
 import Connection.ConnectionManager;
 import Managers.Helpers.FilmAffinityBot;
 import Model.FichaPelicula;
@@ -122,8 +124,8 @@ public class FilmAffinitySearcherModule {
 			System.out.println("Response Code is not a number");
 			return null;
 		}
-		if(responseCode == 0){
-			System.out.println("Error: no connection");
+		if(responseCode == ErrorDescription.NO_INTERNET_CONNECTION){
+			System.out.println("No Connection");
 			return null;
 		}
 		String responseText = response.get("ResponseBody");
@@ -170,8 +172,8 @@ public class FilmAffinitySearcherModule {
 		}catch(NumberFormatException e){
 			return null;
 		}
-		if(responseCode == 0){
-			System.out.println("Error: no connection");
+		if(responseCode == ErrorDescription.NO_INTERNET_CONNECTION){
+			System.out.println("No Connection");
 			return null;
 		}
 		
@@ -410,7 +412,7 @@ public class FilmAffinitySearcherModule {
 		}
 		
 		if(logged){
-			String userRatingRegex = "<div class=\"rate-movie-box\".*?data-user-rating=\"(.*?)\"\\s*?data-ucd=\"(.*?)\".*?>";
+			String userRatingRegex = "<div class=\"rate-movie-box\".*?data-user-rating=\"(.*?)\".*?>.*?<select id=\"(.*?)\".*?>";
 			p = Pattern.compile(userRatingRegex);
 			m = p.matcher(content);
 			if(m.find()){
@@ -530,28 +532,28 @@ public class FilmAffinitySearcherModule {
 	
 	private FichaPelicula fillFichaPelicula(String field, String data, FichaPelicula ficha){
 		String value = new UtilTools().escapeHtmlSpecialChars(data);
-		if(field.equals("T&iacute;tulo original")){//Título original
+		if(field.equals("Título original")){//Título original: "T&iacute;tulo original" 
 			ficha.setTituloOriginal(value);
-		}else if(field.equals("A&ntilde;o")){//Año
+		}else if(field.equals("Año")){//Año: "A&ntilde;o"
 			ficha.setAño(value);
-		}else if(field.equals("Duraci&oacute;n")){//Duración
+		}else if(field.equals("Duración")){//Duración: "Duraci&oacute;n"
 			ficha.setDuracion(value);
-		}else if(field.equals("Pa&iacute;s")){//País
+		}else if(field.equals("País")){//País: "Pa&iacute;s"
 			ficha.setPais(value);
 		}else if(field.equals("Director")){
 			System.out.println("getListFromValueForDirector");
 			ficha.setDirector(this.getListFromValue(value));
-		}else if(field.equals("Gui&oacute;n")){//Guión
+		}else if(field.equals("Guión")){//Guión: "Gui&oacute;n"
 			ficha.setGuion(value);
-		}else if(field.equals("M&uacute;sica")){//Música
+		}else if(field.equals("Música")){//Música: "M&uacute;sica"
 			ficha.setMusica(value);
-		}else if(field.equals("Fotograf&iacute;a")){//Fotografía
+		}else if(field.equals("Fotografía")){//Fotografía: "Fotograf&iacute;a"
 			ficha.setFotografia(value);
 		}else if(field.equals("Reparto")){
 			ficha.setReparto(this.getListFromValue(value));
 		}else if(field.equals("Productora")){
 			ficha.setProductora(value);
-		}else if(field.equals("G&eacute;nero")){//Género
+		}else if(field.equals("Género")){//Género: "G&eacute;nero"
 			String[] generos = this.getListFromValue(value);
 			String genero = "";
 			for (int i = 0; i < generos.length; i++) {
@@ -581,10 +583,10 @@ public class FilmAffinitySearcherModule {
 //	public static void main(String[] args) throws MalformedURLException{
 //		ConnectionManager cm = new ConnectionManager();
 //		FilmAffinitySearcherModule f = new FilmAffinitySearcherModule("www.filmaffinity.es", true, cm);
-//		/*URL url = new URL("http://127.0.0.1:8081");
+//		URL url = new URL("http://127.0.0.1:8081");
 //		System.out.println(url);
-//		Map<String, String> response = cm.sendRequest(url, ConnectionManager.METHOD_POST, true, false, false);*/
-//		//FichaPelicula ficha = f.extractFilmInfo(response.get(ConnectionManager.BODY_TEXT_RESPONSE_KEY));
-//		//System.out.println(ficha);
+//		Map<String, String> response = cm.sendRequest(url, ConnectionManager.METHOD_POST, true, false, false);
+//		FichaPelicula ficha = f.extractFilmInfo(response.get(ConnectionManager.BODY_TEXT_RESPONSE_KEY));
+//		System.out.println(ficha);
 //	}
 }
