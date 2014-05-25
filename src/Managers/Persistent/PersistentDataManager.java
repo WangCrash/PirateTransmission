@@ -17,6 +17,10 @@ import Model.HelperItem;
 import Model.Transmision;
 
 public class PersistentDataManager extends Manager{
+	public static final int CATEGORY_ALL = 0;
+	public static final int CATEGORY_FILMS = 1;
+	public static final int CATEGORY_MUSIC = 2;
+	
 	private final int FICHAPELICULA_ITEM_TYPE = 0;
 	private final int ARTISTA_ITEM_TYPE = 1;
 	private final int ALBUM_ITEM_TYPE = 2;
@@ -59,12 +63,12 @@ public class PersistentDataManager extends Manager{
 		
 	}
 	
-	public Transmision[] listPersistentObjects(){
+	public Transmision[] listPersistentObjects(int category){
 		if(!initialized){
 			return null;
 		}
 		
-		List<Transmision> objects = listTransmissions();
+		List<Transmision> objects = listTransmissions(category);
 		for (Transmision transmission : objects) {
 			System.out.println("ITEM: ");
 			System.out.println(transmission);
@@ -82,10 +86,24 @@ public class PersistentDataManager extends Manager{
 		return Arrays.copyOf(objects.toArray(), objects.size(), Transmision[].class);
 	}
 	
-	private List<Transmision> listTransmissions() {
+	private List<Transmision> listTransmissions(int category) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
-        List<Transmision> result = session.createQuery("from Transmision order by fecha desc").list();
+        List<Transmision> result;
+        switch (category) {
+		case CATEGORY_ALL:
+			 result = session.createQuery("from Transmision order by fecha desc").list();
+			break;
+		case CATEGORY_FILMS:
+			result = session.createQuery("from Transmision where tipoItem like 'Película' order by fecha desc").list();
+			break;
+			
+		case CATEGORY_MUSIC:
+			result = session.createQuery("from Transmision where tipoItem like 'Artista' or tipoItem like 'Disco' order by fecha desc").list();
+			break;
+		default:
+			return null;
+		}
         for (Transmision t : result) {
 			t.setHelperItem(initializeAndUnproxy(t.getHelperItem()));
 		}

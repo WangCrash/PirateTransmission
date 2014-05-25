@@ -332,7 +332,7 @@ public class pruebas {
 		//System.out.println("Deleting peli");
 		//PersistentDataManager.getInstance().deleteTransmission(peli);
 		
-		PersistentDataManager.getInstance().listPersistentObjects();
+		PersistentDataManager.getInstance().listPersistentObjects(PersistentDataManager.CATEGORY_MUSIC);
 		
 		//System.out.println("PELIS");
 		//p.listFilmsFromDB();

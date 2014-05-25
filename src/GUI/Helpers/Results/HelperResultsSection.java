@@ -14,6 +14,7 @@ import Model.FichaPelicula;
 import Model.HelperItem;
 import Utils.UtilTools;
 
+import java.awt.Color;
 import java.awt.FlowLayout;
 
 public class HelperResultsSection extends JPanel {
@@ -42,17 +43,17 @@ public class HelperResultsSection extends JPanel {
 		rootPanel = new JPanel();
 		rootPanel.setOpaque(false);
 		rootPanel.setBackground(PanelProperties.TRANSPARENT_BACKGROUND);
+		FlowLayout fl_rootPanel = new FlowLayout(FlowLayout.CENTER, 0, 0);
+		rootPanel.setLayout(fl_rootPanel);
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addComponent(rootPanel, GroupLayout.DEFAULT_SIZE, 486, Short.MAX_VALUE)
+				.addComponent(rootPanel, GroupLayout.PREFERRED_SIZE, 495, GroupLayout.PREFERRED_SIZE)
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addComponent(rootPanel, GroupLayout.DEFAULT_SIZE, 471, Short.MAX_VALUE)
+				.addComponent(rootPanel, GroupLayout.PREFERRED_SIZE, 482, GroupLayout.PREFERRED_SIZE)
 		);
-		FlowLayout fl_rootPanel = new FlowLayout(FlowLayout.CENTER, 0, 0);
-		rootPanel.setLayout(fl_rootPanel);
 		setLayout(groupLayout);
 	}
 
