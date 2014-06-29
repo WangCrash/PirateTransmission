@@ -110,7 +110,7 @@ public class PirateBayBot extends Manager{
         
         URI uri;
 		try {
-			uri = new URI("http", urlBase + query, null);
+			uri = new URI("https", urlBase + query, null);
 		} catch (URISyntaxException e) {
 			return null;
 		}
