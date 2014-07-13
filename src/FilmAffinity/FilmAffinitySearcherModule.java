@@ -449,7 +449,7 @@ public class FilmAffinitySearcherModule {
 					if(subM.find()){
 						data = subM.group(1);
 					}
-				}else if(label.equals("Pa&iacute;s")){
+				}else if(label.equals("País")){//"Pa&iacute;s"
 					String paisRegex = "<img.*?title=\"(.*?)\".*?>";
 					Pattern subP = Pattern.compile(paisRegex);
 					Matcher subM = subP.matcher(data);
