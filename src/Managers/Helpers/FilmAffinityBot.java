@@ -270,6 +270,26 @@ public class FilmAffinityBot extends HelperManager{
 	
 	public static void main(String[] args){
 		FilmAffinityBot.getInstance().initManager();
+		//oblivion estaba por algo pero no me acuerdo de porque
+		FichaPelicula[] films = FilmAffinityBot.getInstance().searchItem("arma letal", FILMAFFINITY_TITLE_SEARCH_OPTION);
+		if(films.length > 0){
+			System.out.println("\n--------- " + films[0].getTitulo() + " ---------\n");
+			//System.out.println(FilmAffinityBot.getInstance().fillFichaPelicula(films[0]));
+			System.out.println(films[0]);
+		}else{
+			System.out.println("VACÍO");
+		}
+		boolean closed = FilmAffinityBot.getInstance().logout();
+		if (closed) {
+			System.out.println("\nFIN CON CIERRE\n");
+		}else{
+			System.out.println("FIN");
+		}
+	}
+	
+	private static void pruebaOblivion(){
+		FilmAffinityBot.getInstance().initManager();
+		//oblivion estaba por algo pero no me acuerdo de porque
 		FichaPelicula[] films = FilmAffinityBot.getInstance().searchItem("oblivion", FILMAFFINITY_TITLE_SEARCH_OPTION);
 		if(films.length > 0){
 			for (int i = 0; i < films.length; i++) {

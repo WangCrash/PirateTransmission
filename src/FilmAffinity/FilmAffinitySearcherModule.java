@@ -287,7 +287,8 @@ public class FilmAffinitySearcherModule {
 		while(m.find()){
 			String filmCard = m.group(1);
 			System.out.println(filmCard);
-			String filmPosterRegex = "<div class=\"mc-poster\">.*?<img src=\"(.*?)\".*?</a>";
+			//String filmPosterRegex = "<div class=\"mc-poster\">.*?<img src=\"(.*?)\".*?</a>";
+			String filmPosterRegex = "<div class=\"mc-poster\">.*?<img.*?src=\"(.*?)\".*?</a>\\s*?</div>";
 			Pattern subP = Pattern.compile(filmPosterRegex);
 			Matcher subM = subP.matcher(filmCard);
 			String imagen = null;

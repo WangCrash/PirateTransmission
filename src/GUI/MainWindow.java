@@ -63,7 +63,6 @@ public class MainWindow extends JFrame {
 	private HelperResultsSection helperResultsSection;
 	private JMenu mnTransmissions;
 	private JMenuItem mntmVerTransmissions;
-	private JButton helperSessionButton;
 	
 	public static MainWindow getInstance(){
 		synchronized (FilmAffinityBot.class) {
@@ -113,16 +112,7 @@ public class MainWindow extends JFrame {
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
-		
-		helperSessionButton = new JButton();
-		helperSessionButton.setToolTipText("Iniciar sesi\u00F3n");
 		updateHelperSessionButton(ApplicationConfiguration.getInstance().getCurrentHelperManager().isLogged());
-		helperSessionButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				checkHelperSession();
-			}
-		});
-		menuBar.add(helperSessionButton);
 		
 		JMenu settingsMenu = new JMenu("Preferencias");
 		menuBar.add(settingsMenu);
@@ -221,7 +211,6 @@ public class MainWindow extends JFrame {
 		}else{
 			buttonImage = new ImageIcon(MainWindow.class.getResource("/images/login/user_not_logged.jpg"));
 		}
-		helperSessionButton.setIcon(new UtilTools().getScaledImageIcon(buttonImage.getImage(), 20, 20));
 	}
 
 	private void includeSections() {
