@@ -43,6 +43,7 @@ public class RateMovieView extends JDialog {
 	
 	private final JPanel contentPanel = new JPanel();
 	private JTextField rateField;
+	private JLabel titleLabel;
 
 	/**
 	 * Create the dialog.
@@ -84,7 +85,7 @@ public class RateMovieView extends JDialog {
 					.addComponent(panel, GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
 					.addContainerGap())
 		);
-		JLabel titleLabel = new JLabel("T\u00EDtulo");
+		titleLabel = new JLabel(film.getTitulo());
 		titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		rateField = new JTextField();
